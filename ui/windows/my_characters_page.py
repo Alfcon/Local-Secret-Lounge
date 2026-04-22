@@ -391,6 +391,11 @@ class MyCharactersPage(QWidget):
         refresh_btn.clicked.connect(self.refresh)
         top_layout.addWidget(refresh_btn)
 
+        create_btn = QPushButton("＋ Create Character")
+        create_btn.setFixedHeight(32)
+        create_btn.clicked.connect(self._on_create_character)
+        top_layout.addWidget(create_btn)
+
         layout.addWidget(top_bar)
 
         splitter = QSplitter(Qt.Orientation.Horizontal)
@@ -427,6 +432,57 @@ class MyCharactersPage(QWidget):
         splitter.setSizes([280, 780])
 
         layout.addWidget(splitter)
+
+    def _on_create_character(self) -> None:
+        empty_character = {
+            "name": "",
+            "role": "",
+            "story_role": "",
+            "system_prompt": "",
+            "starting_scenario": "",
+            "greeting": "",
+            "identity": {
+                "age_band": "",
+                "public_summary": "",
+                "private_truths": [],
+                "core_traits": [],
+                "values": [],
+                "fears": [],
+                "goals": {
+                    "short_term": [],
+                    "mid_term": [],
+                    "long_term": []
+                },
+                "boundaries": {
+                    "hard": [],
+                    "soft": []
+                },
+                "age": 0
+            },
+            "voice": {
+                "tone": "",
+                "cadence": "",
+                "favored_patterns": [],
+                "avoid_patterns": []
+            },
+            "knowledge": {
+                "known_facts": []
+            },
+            "tags": [],
+            "folder": "General"
+        }
+        dialog = EditCharacterDialog(empty_character, self.character_manager, parent=self)
+        dialog.setWindowTitle("Create Character")
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            self.refresh()
+            # Select the newly created character
+            for i in range(self.char_list.count()):
+                item = self.char_list.item(i)
+                if item:
+                    c = item.data(Qt.ItemDataRole.UserRole)
+                    if str(c.get("name", "")) == dialog.name_edit.text().strip():
+                        self.char_list.setCurrentRow(i)
+                        break
 
     def refresh(self) -> None:
         try:

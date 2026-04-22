@@ -1,27 +1,5 @@
 [
   {
-    "id": "dirty_muse_writer_v01_uncensored_erotica_nsfw_i1_q4_k_m",
-    "name": "Dirty-Muse-Writer-v01-Uncensored-Erotica-NSFW.i1-Q4_K_M",
-    "path": "/home/alfcon/Downloads/Dirty-Muse-Writer-v01-Uncensored-Erotica-NSFW.i1-Q4_K_M.gguf",
-    "source": "local_import",
-    "repo_id": null,
-    "filename": "Dirty-Muse-Writer-v01-Uncensored-Erotica-NSFW.i1-Q4_K_M.gguf",
-    "format": "gguf",
-    "size_bytes": 5761059392,
-    "chat_format": null,
-    "is_default": false,
-    "status": "available",
-    "validation_error": null,
-    "sha256": "fac43b34672e4641b4662603e922f3edf1ab0168009497f3bcd1823607dafe36",
-    "managed_storage": false,
-    "added_at": "2026-04-19T22:03:48",
-    "performance": {
-      "context_size": 4096,
-      "threads": 4,
-      "max_tokens": 384
-    }
-  },
-  {
     "id": "qwen3_5_35b_a3b_uncensored_hauhaucs_aggressive_q3_k_m",
     "name": "Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive-Q3_K_M",
     "path": "/home/alfcon/Downloads/Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive-Q3_K_M.gguf",
