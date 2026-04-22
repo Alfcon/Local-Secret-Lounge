@@ -53,38 +53,124 @@ class EditCharacterDialog(QDialog):
         form.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
         scroll.setWidget(inner)
 
+        def add_section(title: str):
+            lbl = QLabel(title)
+            lbl.setStyleSheet("font-weight: bold; margin-top: 10px; color: #a8a8c8;")
+            form.addRow(lbl)
+
+        add_section("--- Basic ---")
         self.name_edit = QLineEdit()
         form.addRow("Name *", self.name_edit)
 
         self.title_edit = QLineEdit()
         form.addRow("Title / Role", self.title_edit)
 
+        self.story_role_edit = QLineEdit()
+        form.addRow("Story Role", self.story_role_edit)
+
         self.description_edit = QTextEdit()
-        self.description_edit.setMinimumHeight(80)
+        self.description_edit.setMinimumHeight(60)
         form.addRow("Description", self.description_edit)
 
         self.system_prompt_edit = QTextEdit()
-        self.system_prompt_edit.setMinimumHeight(120)
+        self.system_prompt_edit.setMinimumHeight(80)
         form.addRow("System Prompt", self.system_prompt_edit)
 
         self.greeting_edit = QTextEdit()
-        self.greeting_edit.setMinimumHeight(80)
+        self.greeting_edit.setMinimumHeight(60)
         form.addRow("Greeting", self.greeting_edit)
 
         self.scenario_edit = QTextEdit()
-        self.scenario_edit.setMinimumHeight(80)
+        self.scenario_edit.setMinimumHeight(60)
         form.addRow("Starting Scenario", self.scenario_edit)
 
         self.example_dialogue_edit = QTextEdit()
-        self.example_dialogue_edit.setMinimumHeight(80)
+        self.example_dialogue_edit.setMinimumHeight(60)
         form.addRow("Example Dialogue", self.example_dialogue_edit)
 
         self.world_lore_edit = QTextEdit()
-        self.world_lore_edit.setMinimumHeight(80)
+        self.world_lore_edit.setMinimumHeight(60)
         form.addRow("World Lore Notes", self.world_lore_edit)
 
+        add_section("--- Identity ---")
+        self.age_edit = QLineEdit()
+        form.addRow("Age", self.age_edit)
+
+        self.age_band_edit = QLineEdit()
+        form.addRow("Age Band", self.age_band_edit)
+
+        self.public_summary_edit = QTextEdit()
+        self.public_summary_edit.setMinimumHeight(60)
+        form.addRow("Public Summary", self.public_summary_edit)
+
+        self.private_truths_edit = QTextEdit()
+        self.private_truths_edit.setMinimumHeight(60)
+        self.private_truths_edit.setPlaceholderText("One per line")
+        form.addRow("Private Truths", self.private_truths_edit)
+
+        self.core_traits_edit = QLineEdit()
+        self.core_traits_edit.setPlaceholderText("Comma-separated")
+        form.addRow("Core Traits", self.core_traits_edit)
+
+        self.values_edit = QLineEdit()
+        self.values_edit.setPlaceholderText("Comma-separated")
+        form.addRow("Values", self.values_edit)
+
+        self.fears_edit = QLineEdit()
+        self.fears_edit.setPlaceholderText("Comma-separated")
+        form.addRow("Fears", self.fears_edit)
+
+        self.goals_short_edit = QTextEdit()
+        self.goals_short_edit.setMinimumHeight(50)
+        self.goals_short_edit.setPlaceholderText("One per line")
+        form.addRow("Goals (Short Term)", self.goals_short_edit)
+
+        self.goals_mid_edit = QTextEdit()
+        self.goals_mid_edit.setMinimumHeight(50)
+        self.goals_mid_edit.setPlaceholderText("One per line")
+        form.addRow("Goals (Mid Term)", self.goals_mid_edit)
+
+        self.goals_long_edit = QTextEdit()
+        self.goals_long_edit.setMinimumHeight(50)
+        self.goals_long_edit.setPlaceholderText("One per line")
+        form.addRow("Goals (Long Term)", self.goals_long_edit)
+
+        self.boundaries_hard_edit = QTextEdit()
+        self.boundaries_hard_edit.setMinimumHeight(50)
+        self.boundaries_hard_edit.setPlaceholderText("One per line")
+        form.addRow("Boundaries (Hard)", self.boundaries_hard_edit)
+
+        self.boundaries_soft_edit = QTextEdit()
+        self.boundaries_soft_edit.setMinimumHeight(50)
+        self.boundaries_soft_edit.setPlaceholderText("One per line")
+        form.addRow("Boundaries (Soft)", self.boundaries_soft_edit)
+
+        add_section("--- Voice ---")
+        self.voice_tone_edit = QLineEdit()
+        form.addRow("Tone", self.voice_tone_edit)
+
+        self.voice_cadence_edit = QLineEdit()
+        form.addRow("Cadence", self.voice_cadence_edit)
+
+        self.voice_favored_edit = QTextEdit()
+        self.voice_favored_edit.setMinimumHeight(50)
+        self.voice_favored_edit.setPlaceholderText("One per line")
+        form.addRow("Favored Patterns", self.voice_favored_edit)
+
+        self.voice_avoid_edit = QTextEdit()
+        self.voice_avoid_edit.setMinimumHeight(50)
+        self.voice_avoid_edit.setPlaceholderText("One per line")
+        form.addRow("Avoid Patterns", self.voice_avoid_edit)
+
+        add_section("--- Knowledge ---")
+        self.known_facts_edit = QTextEdit()
+        self.known_facts_edit.setMinimumHeight(60)
+        self.known_facts_edit.setPlaceholderText("One per line")
+        form.addRow("Known Facts", self.known_facts_edit)
+
+        add_section("--- Meta ---")
         self.tags_edit = QLineEdit()
-        self.tags_edit.setPlaceholderText("comma-separated tags")
+        self.tags_edit.setPlaceholderText("Comma-separated tags")
         form.addRow("Tags", self.tags_edit)
 
         avatar_row = QHBoxLayout()
@@ -117,6 +203,7 @@ class EditCharacterDialog(QDialog):
         c = self._character
         self.name_edit.setText(str(c.get("name", "")))
         self.title_edit.setText(str(c.get("title", "") or c.get("role", "")))
+        self.story_role_edit.setText(str(c.get("story_role", "")))
         self.description_edit.setPlainText(str(c.get("description", "") or ""))
         self.system_prompt_edit.setPlainText(str(c.get("system_prompt", "") or ""))
         self.greeting_edit.setPlainText(str(c.get("greeting", "") or ""))
@@ -125,6 +212,39 @@ class EditCharacterDialog(QDialog):
         self.world_lore_edit.setPlainText(
             str(c.get("world_lore_notes", "") or c.get("world_lore", "") or "")
         )
+
+        identity = c.get("identity", {})
+        if not isinstance(identity, dict): identity = {}
+        self.age_edit.setText(str(identity.get("age", "")))
+        self.age_band_edit.setText(str(identity.get("age_band", "")))
+        self.public_summary_edit.setPlainText(str(identity.get("public_summary", "")))
+        self.private_truths_edit.setPlainText("\n".join(str(x) for x in identity.get("private_truths", [])))
+        self.core_traits_edit.setText(", ".join(str(x) for x in identity.get("core_traits", [])))
+        self.values_edit.setText(", ".join(str(x) for x in identity.get("values", [])))
+        self.fears_edit.setText(", ".join(str(x) for x in identity.get("fears", [])))
+        
+        goals = identity.get("goals", {})
+        if not isinstance(goals, dict): goals = {}
+        self.goals_short_edit.setPlainText("\n".join(str(x) for x in goals.get("short_term", [])))
+        self.goals_mid_edit.setPlainText("\n".join(str(x) for x in goals.get("mid_term", [])))
+        self.goals_long_edit.setPlainText("\n".join(str(x) for x in goals.get("long_term", [])))
+
+        boundaries = identity.get("boundaries", {})
+        if not isinstance(boundaries, dict): boundaries = {}
+        self.boundaries_hard_edit.setPlainText("\n".join(str(x) for x in boundaries.get("hard", [])))
+        self.boundaries_soft_edit.setPlainText("\n".join(str(x) for x in boundaries.get("soft", [])))
+
+        voice = c.get("voice", {})
+        if not isinstance(voice, dict): voice = {}
+        self.voice_tone_edit.setText(str(voice.get("tone", "")))
+        self.voice_cadence_edit.setText(str(voice.get("cadence", "")))
+        self.voice_favored_edit.setPlainText("\n".join(str(x) for x in voice.get("favored_patterns", [])))
+        self.voice_avoid_edit.setPlainText("\n".join(str(x) for x in voice.get("avoid_patterns", [])))
+
+        knowledge = c.get("knowledge", {})
+        if not isinstance(knowledge, dict): knowledge = {}
+        self.known_facts_edit.setPlainText("\n".join(str(x) for x in knowledge.get("known_facts", [])))
+
         tags = c.get("tags", [])
         self.tags_edit.setText(", ".join(str(t) for t in tags))
         self.avatar_path_edit.setText(str(c.get("avatar_path", "") or ""))
@@ -147,20 +267,58 @@ class EditCharacterDialog(QDialog):
             self.name_edit.setFocus()
             return
 
-        tags_raw = self.tags_edit.text().strip()
-        tags = [t.strip() for t in tags_raw.split(",") if t.strip()] if tags_raw else []
+        def _split_comma(text: str) -> list[str]:
+            return [t.strip() for t in text.split(",") if t.strip()]
+
+        def _split_lines(text: str) -> list[str]:
+            return [t.strip() for t in text.split("\n") if t.strip()]
+
+        tags = _split_comma(self.tags_edit.text())
+
+        try:
+            age_val = int(self.age_edit.text().strip())
+        except ValueError:
+            age_val = 0
 
         updated = dict(self._character)
         updated.update({
             "name": name,
             "title": self.title_edit.text().strip(),
             "role": self.title_edit.text().strip(),
+            "story_role": self.story_role_edit.text().strip(),
             "description": self.description_edit.toPlainText().strip(),
             "system_prompt": self.system_prompt_edit.toPlainText().strip(),
             "greeting": self.greeting_edit.toPlainText().strip(),
             "starting_scenario": self.scenario_edit.toPlainText().strip(),
             "example_dialogue": self.example_dialogue_edit.toPlainText().strip(),
             "world_lore_notes": self.world_lore_edit.toPlainText().strip(),
+            "identity": {
+                "age": age_val,
+                "age_band": self.age_band_edit.text().strip(),
+                "public_summary": self.public_summary_edit.toPlainText().strip(),
+                "private_truths": _split_lines(self.private_truths_edit.toPlainText()),
+                "core_traits": _split_comma(self.core_traits_edit.text()),
+                "values": _split_comma(self.values_edit.text()),
+                "fears": _split_comma(self.fears_edit.text()),
+                "goals": {
+                    "short_term": _split_lines(self.goals_short_edit.toPlainText()),
+                    "mid_term": _split_lines(self.goals_mid_edit.toPlainText()),
+                    "long_term": _split_lines(self.goals_long_edit.toPlainText()),
+                },
+                "boundaries": {
+                    "hard": _split_lines(self.boundaries_hard_edit.toPlainText()),
+                    "soft": _split_lines(self.boundaries_soft_edit.toPlainText()),
+                }
+            },
+            "voice": {
+                "tone": self.voice_tone_edit.text().strip(),
+                "cadence": self.voice_cadence_edit.text().strip(),
+                "favored_patterns": _split_lines(self.voice_favored_edit.toPlainText()),
+                "avoid_patterns": _split_lines(self.voice_avoid_edit.toPlainText()),
+            },
+            "knowledge": {
+                "known_facts": _split_lines(self.known_facts_edit.toPlainText()),
+            },
             "tags": tags,
             "avatar_path": self.avatar_path_edit.text().strip(),
             "folder": self.folder_edit.text().strip() or "General",
@@ -174,8 +332,6 @@ class EditCharacterDialog(QDialog):
             self.accept()
         except Exception as exc:
             self.error_label.setText(str(exc))
-
-
 class CharacterDetailPanel(QWidget):
     """Right-hand panel showing full character details."""
 
