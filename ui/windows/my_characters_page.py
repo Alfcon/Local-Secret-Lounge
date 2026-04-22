@@ -379,6 +379,10 @@ class CharacterDetailPanel(QWidget):
         self.title_label.setStyleSheet("color: #d8d8f0; font-size: 12px; font-weight: bold;")
         name_col.addWidget(self.title_label)
 
+        self.story_role_label = QLabel("")
+        self.story_role_label.setStyleSheet("color: #d8d8f0; font-size: 12px; font-weight: bold;")
+        name_col.addWidget(self.story_role_label)
+
         self.source_label = QLabel("")
         self.source_label.setStyleSheet("color: #a8a8c8; font-size: 11px;")
         name_col.addWidget(self.source_label)
@@ -453,11 +457,23 @@ class CharacterDetailPanel(QWidget):
             character.get("avatar_path", ""),
             name_color,
         )
-        self.name_label.setText(character.get("name", "Unknown"))
+        name = character.get("name", "Unknown")
+        self.name_label.setText(f"Name: {name}")
         self.name_label.setStyleSheet(f"color: {name_color}; font-size: 16px; font-weight: bold;")
 
         title = str(character.get("title", "") or character.get("role", "") or "").strip()
-        self.title_label.setText(title)
+        if title:
+            self.title_label.setText(f"Title / Role: {title}")
+            self.title_label.show()
+        else:
+            self.title_label.hide()
+
+        story_role = str(character.get("story_role", "")).strip()
+        if story_role:
+            self.story_role_label.setText(f"Story Role: {story_role}")
+            self.story_role_label.show()
+        else:
+            self.story_role_label.hide()
 
         source = str(character.get("source", "user"))
         self.source_label.setText(f"Source: {source}")
