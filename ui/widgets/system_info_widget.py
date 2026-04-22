@@ -122,7 +122,6 @@ class SystemInfoWidget(QFrame):
         hdr.addWidget(lbl)
         hdr.addStretch()
         self._refresh_btn = QPushButton("Refresh")
-        self._refresh_btn.setFixedWidth(84)
         self._refresh_btn.setToolTip("Re-read CPU, RAM and GPU information")
         self._refresh_btn.clicked.connect(self._run_detection)
         hdr.addWidget(self._refresh_btn)
