@@ -612,7 +612,9 @@ class CharacterDetailPanel(QWidget):
         self.tags_row.addStretch()
 
         is_discover = str(character.get("source", "")) == "discover"
-        self.edit_btn.setEnabled(not is_discover)        self.memory_btn.setEnabled(not is_discover)        self.delete_btn.setEnabled(not is_discover)
+        self.edit_btn.setEnabled(not is_discover)
+        self.memory_btn.setEnabled(not is_discover)
+        self.delete_btn.setEnabled(not is_discover)
 
     def _on_chat(self) -> None:
         if self._character:
