@@ -2161,9 +2161,9 @@ class ChatWindow(QMainWindow):
             for item in self.participants
         }
 
-        builtin_characters = self.character_manager.list_builtin_characters()
+        all_characters = self.character_manager.list_all_characters()
 
-        for candidate in builtin_characters:
+        for candidate in all_characters:
             candidate_id = str(candidate.get('id', '')).strip()
             key = candidate_id or str(candidate.get('name', '')).strip().lower()
             if not key or key in existing_keys:
@@ -2191,7 +2191,7 @@ class ChatWindow(QMainWindow):
 
             preset = next(
                 (
-                    item for item in builtin_characters
+                    item for item in all_characters
                     if str(item.get('name', '')).strip().lower() == candidate_name.lower()
                 ),
                 None,
