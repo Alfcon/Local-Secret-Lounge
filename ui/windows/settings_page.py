@@ -15,6 +15,7 @@ from core.settings_manager import SettingsManager
 from core.model_manager import ModelManager
 from core.chat_backend import describe_active_backend
 from ui.widgets.system_info_widget import SystemInfoWidget
+from ui.widgets.collapsible_section import CollapsibleSection
 
 logger = logging.getLogger(__name__)
 
@@ -80,13 +81,14 @@ class SettingsPage(QWidget):
         content = QWidget()
         content.setStyleSheet("background-color: #1a1a2e;")
         layout = QVBoxLayout(content)
-        layout.setSpacing(20)
-        layout.setContentsMargins(32, 24, 32, 32)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 24, 0, 32)
 
         # ── User Profile ──────────────────────────────────────────────────
-        profile_group = QGroupBox("User Profile")
-        profile_form = QFormLayout(profile_group)
-        profile_form.setSpacing(12)
+        profile_section = CollapsibleSection("User Profile")
+        profile_form = QFormLayout()
+        profile_form.setHorizontalSpacing(24)
+        profile_form.setVerticalSpacing(12)
 
         self.user_name_input = QLineEdit()
         self.user_name_input.setPlaceholderText("Your name (used by characters)")
@@ -98,12 +100,16 @@ class SettingsPage(QWidget):
         self.user_sex_combo.setFixedHeight(34)
         profile_form.addRow("Your Sex:", self.user_sex_combo)
 
-        layout.addWidget(profile_group)
+        profile_widget = QWidget()
+        profile_widget.setLayout(profile_form)
+        profile_section.set_content_widget(profile_widget)
+        layout.addWidget(profile_section)
 
         # ── Story / Scene context ─────────────────────────────────────────
-        story_group = QGroupBox("Story Location (Optional)")
-        story_form = QFormLayout(story_group)
-        story_form.setSpacing(12)
+        story_section = CollapsibleSection("Story Location (Optional)")
+        story_form = QFormLayout()
+        story_form.setHorizontalSpacing(24)
+        story_form.setVerticalSpacing(12)
 
         self.city_input = QLineEdit()
         self.city_input.setPlaceholderText("e.g. London")
@@ -115,12 +121,16 @@ class SettingsPage(QWidget):
         self.country_input.setFixedHeight(34)
         story_form.addRow("Country:", self.country_input)
 
-        layout.addWidget(story_group)
+        story_widget = QWidget()
+        story_widget.setLayout(story_form)
+        story_section.set_content_widget(story_widget)
+        layout.addWidget(story_section)
 
         # ── LM Studio ────────────────────────────────────────────────────
-        lm_group = QGroupBox("LM Studio Local Server")
-        lm_form = QFormLayout(lm_group)
-        lm_form.setSpacing(12)
+        lm_section = CollapsibleSection("LM Studio Local Server")
+        lm_form = QFormLayout()
+        lm_form.setHorizontalSpacing(24)
+        lm_form.setVerticalSpacing(12)
 
         self.lm_url_input = QLineEdit()
         self.lm_url_input.setPlaceholderText("http://127.0.0.1:1234/v1")
@@ -158,14 +168,17 @@ class SettingsPage(QWidget):
         test_btn.clicked.connect(self._test_lm_studio)
         lm_form.addRow("", test_btn)
 
-        layout.addWidget(lm_group)
+        lm_widget = QWidget()
+        lm_widget.setLayout(lm_form)
+        lm_section.set_content_widget(lm_widget)
+        layout.addWidget(lm_section)
 
         # ── Chat Backend ──────────────────────────────────────────────────
         # Placed between LM Studio and the System & Model Advisor so the
         # backend switch sits directly under the LM Studio settings it may
         # depend on.
-        backend_group = QGroupBox("Chat Backend")
-        backend_layout = QVBoxLayout(backend_group)
+        backend_section = CollapsibleSection("Chat Backend")
+        backend_layout = QVBoxLayout()
         backend_layout.setSpacing(12)
 
         self.backend_combo = QComboBox()
@@ -186,7 +199,10 @@ class SettingsPage(QWidget):
         refresh_status_btn.clicked.connect(self._refresh_backend_status)
         backend_layout.addWidget(refresh_status_btn)
 
-        layout.addWidget(backend_group)
+        backend_widget = QWidget()
+        backend_widget.setLayout(backend_layout)
+        backend_section.set_content_widget(backend_widget)
+        layout.addWidget(backend_section)
 
         # ── System & Model Advisor ────────────────────────────────────────
         # Small card above the Local GGUF Models section that shows the
@@ -196,8 +212,8 @@ class SettingsPage(QWidget):
         layout.addWidget(self.system_info_widget)
 
         # ── Local Models ──────────────────────────────────────────────────
-        models_group = QGroupBox("Local GGUF Models")
-        models_layout = QVBoxLayout(models_group)
+        models_section = CollapsibleSection("Local GGUF Models")
+        models_layout = QVBoxLayout()
         models_layout.setSpacing(10)
 
         self.models_list_label = QLabel("No models registered.")
@@ -219,12 +235,17 @@ class SettingsPage(QWidget):
         models_btn_row.addWidget(refresh_models_btn)
         models_layout.addLayout(models_btn_row)
 
-        layout.addWidget(models_group)
+        models_widget = QWidget()
+        models_widget.setLayout(models_layout)
+        models_section.set_content_widget(models_widget)
+        layout.addWidget(models_section)
+
 
         # ── Generation Defaults ───────────────────────────────────────────
-        gen_group = QGroupBox("Default Generation Settings")
-        gen_form = QFormLayout(gen_group)
-        gen_form.setSpacing(12)
+        gen_section = CollapsibleSection("Default Generation Settings")
+        gen_form = QFormLayout()
+        gen_form.setHorizontalSpacing(24)
+        gen_form.setVerticalSpacing(12)
 
         self.ctx_spin = QSpinBox()
         self.ctx_spin.setRange(256, 131072)
@@ -243,12 +264,16 @@ class SettingsPage(QWidget):
         self.max_tokens_spin.setFixedHeight(34)
         gen_form.addRow("Max Tokens:", self.max_tokens_spin)
 
-        layout.addWidget(gen_group)
+        gen_widget = QWidget()
+        gen_widget.setLayout(gen_form)
+        gen_section.set_content_widget(gen_widget)
+        layout.addWidget(gen_section)
 
         # ── Appearance ────────────────────────────────────────────────────
-        appearance_group = QGroupBox("Appearance")
-        appearance_form = QFormLayout(appearance_group)
-        appearance_form.setSpacing(12)
+        appearance_section = CollapsibleSection("Appearance")
+        appearance_form = QFormLayout()
+        appearance_form.setHorizontalSpacing(24)
+        appearance_form.setVerticalSpacing(12)
 
         self.font_size_spin = QSpinBox()
         self.font_size_spin.setRange(9, 28)
@@ -260,12 +285,16 @@ class SettingsPage(QWidget):
         )
         appearance_form.addRow("Font Size:", self.font_size_spin)
 
-        layout.addWidget(appearance_group)
+        appearance_widget = QWidget()
+        appearance_widget.setLayout(appearance_form)
+        appearance_section.set_content_widget(appearance_widget)
+        layout.addWidget(appearance_section)
 
         # ── Startup ───────────────────────────────────────────────────────
-        startup_group = QGroupBox("Startup")
-        startup_form = QFormLayout(startup_group)
-        startup_form.setSpacing(12)
+        startup_section = CollapsibleSection("Startup")
+        startup_form = QFormLayout()
+        startup_form.setHorizontalSpacing(24)
+        startup_form.setVerticalSpacing(12)
 
         self.startup_combo = QComboBox()
         self.startup_combo.addItems(["discover", "my_characters", "my_chats"])
@@ -286,7 +315,10 @@ class SettingsPage(QWidget):
         )
         startup_form.addRow("", self.developer_mode_check)
 
-        layout.addWidget(startup_group)
+        startup_widget = QWidget()
+        startup_widget.setLayout(startup_form)
+        startup_section.set_content_widget(startup_widget)
+        layout.addWidget(startup_section)
 
         layout.addStretch()
         scroll.setWidget(content)
