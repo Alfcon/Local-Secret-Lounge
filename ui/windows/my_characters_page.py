@@ -546,13 +546,16 @@ class MyCharactersPage(QWidget):
 
     chat_requested = Signal(dict)
 
-    def __init__(self, character_manager: CharacterManager, parent: QWidget | None = None) -> None:
+    def __init__(self, character_manager: CharacterManager, parent: QWidget | None = None, settings_manager=None) -> None:
         super().__init__(parent)
         self.character_manager = character_manager
         self.chat_storage = ChatStorage()
         self._characters: list[dict[str, Any]] = []
+        self.settings_manager = settings_manager
+        self._splitter = None
         self._build_ui()
         self.refresh()
+
 
     def _build_ui(self) -> None:
         layout = QVBoxLayout(self)
@@ -593,6 +596,7 @@ class MyCharactersPage(QWidget):
 
         splitter = QSplitter(Qt.Orientation.Horizontal)
         splitter.setStyleSheet("QSplitter::handle { background-color: #2a2a4a; }")
+        self._splitter = splitter
 
         left_panel = QWidget()
         left_panel.setStyleSheet("background-color: #16213e;")
@@ -622,9 +626,26 @@ class MyCharactersPage(QWidget):
 
         splitter.setStretchFactor(0, 1)
         splitter.setStretchFactor(1, 3)
-        splitter.setSizes([280, 780])
+
+        # Restore splitter ratio from settings if available
+        sizes = None
+        if self.settings_manager:
+            ratio = self.settings_manager.get("my_characters_splitter_ratio", None)
+            if isinstance(ratio, (list, tuple)) and len(ratio) == 2:
+                sizes = ratio
+        if sizes:
+            splitter.setSizes(sizes)
+        else:
+            splitter.setSizes([280, 780])
+
+        splitter.splitterMoved.connect(self._on_splitter_moved)
 
         layout.addWidget(splitter)
+
+    def _on_splitter_moved(self, pos, index):
+        if self.settings_manager and self._splitter:
+            sizes = self._splitter.sizes()
+            self.settings_manager.set("my_characters_splitter_ratio", sizes)
 
     def _on_create_character(self) -> None:
         empty_character = {

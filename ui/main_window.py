@@ -134,7 +134,7 @@ class MainWindow(QMainWindow):
         self._stack.addWidget(self._discover_page)
 
         # 1: My Characters
-        self._my_chars_page = MyCharactersPage(self.character_manager)
+        self._my_chars_page = MyCharactersPage(self.character_manager, settings_manager=self.settings_manager)
         self._my_chars_page.chat_requested.connect(self._open_chat)
         self._stack.addWidget(self._my_chars_page)
 
