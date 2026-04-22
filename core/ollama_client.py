@@ -9,21 +9,20 @@ from urllib.response import addinfourl
 
 from core.settings_manager import SettingsManager
 
-
 logger = logging.getLogger(__name__)
 
 
-class LMStudioError(RuntimeError):
-    """Raised when the LM Studio Local Server cannot be reached or returns an invalid response."""
+class OllamaError(RuntimeError):
+    """Raised when the Ollama Local Server cannot be reached or returns an invalid response."""
 
 
-class LMStudioClient:
+class OllamaClient:
     def __init__(self, base_url: str, api_key: str | None = None, timeout_seconds: float | None = 0.0) -> None:
         normalized = (base_url or '').strip()
         if not normalized:
-            normalized = 'http://127.0.0.1:1234/v1'
+            normalized = 'http://127.0.0.1:11434/v1'
         normalized = normalized.rstrip('/')
-        if normalized.endswith('/v1'):
+        if normalized.endswith('/v1'):  # noqa: SIM113
             self.base_url = normalized
         else:
             self.base_url = f'{normalized}/v1'
@@ -33,20 +32,24 @@ class LMStudioClient:
         self.timeout_seconds: float | None = raw_timeout if raw_timeout > 0 else None
 
     @classmethod
-    def from_settings(cls, settings_manager: SettingsManager) -> 'LMStudioClient':
+    def from_settings(cls, settings_manager: SettingsManager) -> 'OllamaClient':
         return cls(
-            base_url=str(settings_manager.get('lm_studio_base_url', 'http://127.0.0.1:1234/v1')),
-            api_key=str(settings_manager.get('lm_studio_api_key', '') or ''),
-            timeout_seconds=float(settings_manager.get('lm_studio_timeout_seconds', 0.0) or 0.0),
+            base_url=str(settings_manager.get('ollama_base_url', 'http://127.0.0.1:11434/v1')),
+            api_key=str(settings_manager.get('ollama_api_key', '') or ''),
+            timeout_seconds=float(settings_manager.get('ollama_timeout_seconds', 0.0) or 0.0),
         )
 
     def list_models(self) -> list[dict[str, Any]]:
         payload = self._request_json('GET', '/models')
-        if not isinstance(payload, dict):
-            raise LMStudioError('LM Studio returned an invalid response for /models.')
-        data = payload.get('data', [])
+        if isinstance(payload, dict):
+            data = payload.get('data', [])
+        elif isinstance(payload, list):
+            data = payload
+        else:
+            raise OllamaError('Ollama returned an invalid response for /models.')
         if not isinstance(data, list):
-            raise LMStudioError('LM Studio returned an invalid model list.')
+            raise OllamaError('Ollama returned an invalid model list.')
+
         models: list[dict[str, Any]] = []
         for item in data:
             if isinstance(item, dict) and str(item.get('id', '')).strip():
@@ -56,8 +59,8 @@ class LMStudioClient:
     def resolve_model(self, preferred_model_id: str | None = None) -> dict[str, Any]:
         models = self.list_models()
         if not models:
-            raise LMStudioError(
-                'No LM Studio models are available. Start the LM Studio Local Server and load a model first.'
+            raise OllamaError(
+                'No Ollama models are available. Start the Ollama Local Server and load a model first.'
             )
 
         preferred = str(preferred_model_id or '').strip()
@@ -66,8 +69,8 @@ class LMStudioClient:
             selected = next((model for model in models if str(model.get('id')) == preferred), None)
             if selected is None:
                 available = ', '.join(str(model.get('id', '')) for model in models[:8])
-                raise LMStudioError(
-                    f"LM Studio model '{preferred}' was not found on the local server. "
+                raise OllamaError(
+                    f"Ollama model '{preferred}' was not found on the local server. "
                     f"Available models: {available or 'none'}"
                 )
         else:
@@ -75,16 +78,15 @@ class LMStudioClient:
 
         model_id = str(selected.get('id', '')).strip()
         return {
-            'id': f'lmstudio::{model_id}',
-            'name': f'LM Studio — {model_id}',
-            'provider': 'lm_studio',
-            'source': 'lm_studio_server',
+            'id': f'ollama::{model_id}',
+            'name': f'Ollama — {model_id}',
+            'provider': 'ollama',
+            'source': 'ollama_server',
             'path': '',
             'status': 'available',
             'is_default': bool(self.base_url),
-            'chat_format': None,
-            'lm_studio_model_id': model_id,
-            'lm_studio_base_url': self.base_url,
+            'ollama_model_id': model_id,
+            'ollama_base_url': self.base_url,
         }
 
     def chat_completion(
@@ -108,11 +110,11 @@ class LMStudioClient:
 
         response_payload = self._request_json('POST', '/chat/completions', payload)
         if not isinstance(response_payload, dict):
-            raise LMStudioError('LM Studio returned an invalid response for /chat/completions.')
+            raise OllamaError('Ollama returned an invalid response for /chat/completions.')
 
         choices = response_payload.get('choices', [])
         if not isinstance(choices, list) or not choices:
-            raise LMStudioError('LM Studio returned no completion choices.')
+            raise OllamaError('Ollama returned no completion choices.')
 
         first_choice = choices[0] if isinstance(choices[0], dict) else {}
         message = first_choice.get('message', {})
@@ -125,7 +127,7 @@ class LMStudioClient:
         if isinstance(text, str) and text.strip():
             return text.strip()
 
-        raise LMStudioError('LM Studio returned an empty response.')
+        raise OllamaError('Ollama returned an empty response.')
 
     def chat_completion_stream(
         self,
@@ -209,20 +211,20 @@ class LMStudioClient:
             try:
                 detail = exc.read().decode('utf-8', errors='replace').strip()
             except Exception as read_exc:
-                logger.debug('Could not read LM Studio HTTP error payload for %s: %s', endpoint, read_exc)
+                logger.debug('Could not read Ollama HTTP error payload for %s: %s', endpoint, read_exc)
                 detail = ''
-            raise LMStudioError(
-                f'LM Studio request failed with HTTP {exc.code} for {endpoint}: {detail or exc.reason}'
+            raise OllamaError(
+                f'Ollama request failed with HTTP {exc.code} for {endpoint}: {detail or exc.reason}'
             ) from exc
         except socket.timeout as exc:
-            raise LMStudioError(
-                'LM Studio did not finish before the configured timeout. '
-                'Raise lm_studio_timeout_seconds in settings.json, or set it to 0 to wait indefinitely.'
+            raise OllamaError(
+                'Ollama did not finish before the configured timeout. '
+                'Raise ollama_timeout_seconds in settings.json, or set it to 0 to wait indefinitely.'
             ) from exc
         except error.URLError as exc:
-            raise LMStudioError(
-                f'Could not connect to LM Studio at {self.base_url}. '
-                'Start the LM Studio Local Server and confirm the URL in Settings.'
+            raise OllamaError(
+                f'Could not connect to Ollama at {self.base_url}. '
+                'Start the Ollama Local Server and confirm the URL in Settings.'
             ) from exc
         except json.JSONDecodeError as exc:
-            raise LMStudioError(f'LM Studio returned invalid JSON for {endpoint}.') from exc
+            raise OllamaError(f'Ollama returned invalid JSON for {endpoint}.') from exc

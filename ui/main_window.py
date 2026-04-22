@@ -14,6 +14,7 @@ from PySide6.QtGui import QFont
 from core.character_manager import CharacterManager
 from core.chat_storage import ChatStorage
 from core.lm_studio_client import LMStudioClient, LMStudioError
+from core.ollama_client import OllamaClient, OllamaError
 from core.model_manager import ModelManager
 from core.settings_manager import SettingsManager
 
@@ -201,6 +202,29 @@ class MainWindow(QMainWindow):
                     self,
                     'LM Studio error',
                     f'Unexpected error while contacting LM Studio:\n\n{exc}',
+                )
+                return None
+
+        if backend == 'ollama':
+            try:
+                client = OllamaClient.from_settings(self.settings_manager)
+                preferred = str(self.settings_manager.get('ollama_model_id', '') or '').strip()
+                return client.resolve_model(preferred or None)
+            except OllamaError as exc:
+                QMessageBox.warning(
+                    self,
+                    'Ollama not available',
+                    f'Could not connect to Ollama:\n\n{exc}\n\n'
+                    'Open Settings to verify the base URL, start the Ollama Local '
+                    'Server, and load a model — or switch the backend to "Local".',
+                )
+                return None
+            except Exception as exc:  # noqa: BLE001 - defensive catch-all
+                logger.exception('Unexpected Ollama resolution failure: %s', exc)
+                QMessageBox.warning(
+                    self,
+                    'Ollama error',
+                    f'Unexpected error while contacting Ollama:\n\n{exc}',
                 )
                 return None
 

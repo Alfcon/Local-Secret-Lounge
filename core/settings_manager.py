@@ -29,6 +29,11 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     'lm_studio_api_key': '',
     'lm_studio_model_id': '',
     'lm_studio_timeout_seconds': 300,
+    'ollama_enabled': False,
+    'ollama_base_url': 'http://127.0.0.1:11434/v1',
+    'ollama_api_key': '',
+    'ollama_model_id': '',
+    'ollama_timeout_seconds': 300,
     'story_location_city': '',
     'story_location_country': '',
     'ui_font_size': 13,
@@ -54,7 +59,10 @@ class SettingsManager:
         if not isinstance(data, dict):
             data = {}
         if 'chat_backend_preference' not in data:
-            data['chat_backend_preference'] = 'lm_studio' if bool(data.get('lm_studio_enabled', False)) else 'local'
+            if bool(data.get('ollama_enabled', False)):
+                data['chat_backend_preference'] = 'ollama'
+            else:
+                data['chat_backend_preference'] = 'lm_studio' if bool(data.get('lm_studio_enabled', False)) else 'local'
         merged = deepcopy(DEFAULT_SETTINGS)
         merged.update(data)
         self._settings = merged
@@ -98,12 +106,15 @@ class SettingsManager:
 
     def get_chat_backend_preference(self) -> str:
         preference = str(self.get('chat_backend_preference', 'local') or 'local').strip().lower()
-        if preference not in {'local', 'lm_studio'}:
+        if preference not in {'local', 'lm_studio', 'ollama'}:
             return 'local'
         return preference
 
     def is_lm_studio_enabled(self) -> bool:
         return self.get_chat_backend_preference() == 'lm_studio'
+
+    def is_ollama_enabled(self) -> bool:
+        return self.get_chat_backend_preference() == 'ollama'
 
     def is_developer_mode(self) -> bool:
         return bool(self.get('developer_mode', False))

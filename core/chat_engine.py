@@ -5,8 +5,9 @@ from pathlib import Path
 import re
 from typing import Any, Iterable, Iterator
 
-from core.chat_backend import is_lm_studio_model
+from core.chat_backend import is_lm_studio_model, is_ollama_model
 from core.lm_studio_client import LMStudioClient
+from core.ollama_client import OllamaClient
 from core.settings_manager import SettingsManager
 
 
@@ -143,7 +144,12 @@ class ChatEngine:
         )
         cleaned = self.clean_generated_text(collected)
         if not cleaned:
-            provider = 'LM Studio' if is_lm_studio_model(model_entry) else 'local'
+            if is_lm_studio_model(model_entry):
+                provider = 'LM Studio'
+            elif is_ollama_model(model_entry):
+                provider = 'Ollama'
+            else:
+                provider = 'local'
             raise RuntimeError(f'The {provider} model returned an empty response.')
         return cleaned
 
@@ -194,6 +200,42 @@ class ChatEngine:
             if not emitted:
                 reply = client.chat_completion(
                     model_id=str(model_entry.get('lm_studio_model_id') or model_entry.get('id') or '').replace('lmstudio::', ''),
+                    messages=normalized_messages,
+                    temperature=effective_temperature,
+                    max_tokens=effective_max_tokens,
+                    stop=stop_sequences,
+                )
+                if reply:
+                    yield reply
+            return
+
+        if is_ollama_model(model_entry):
+            client = OllamaClient(
+                base_url=str(
+                    model_entry.get('ollama_base_url')
+                    or self.settings_manager.get('ollama_base_url', 'http://127.0.0.1:11434/v1')
+                ),
+                api_key=str(
+                    model_entry.get('ollama_api_key')
+                    or self.settings_manager.get('ollama_api_key', '')
+                    or ''
+                ),
+                timeout_seconds=float(self.settings_manager.get('ollama_timeout_seconds', 0.0) or 0.0),
+            )
+            emitted = False
+            for chunk in client.chat_completion_stream(
+                model_id=str(model_entry.get('ollama_model_id') or model_entry.get('id') or '').replace('ollama::', ''),
+                messages=normalized_messages,
+                temperature=effective_temperature,
+                max_tokens=effective_max_tokens,
+                stop=stop_sequences,
+            ):
+                if chunk:
+                    emitted = True
+                    yield chunk
+            if not emitted:
+                reply = client.chat_completion(
+                    model_id=str(model_entry.get('ollama_model_id') or model_entry.get('id') or '').replace('ollama::', ''),
                     messages=normalized_messages,
                     temperature=effective_temperature,
                     max_tokens=effective_max_tokens,

@@ -174,16 +174,60 @@ class SettingsPage(QWidget):
         lm_section.set_content_widget(lm_widget)
         layout.addWidget(lm_section)
 
+        # ── Ollama ────────────────────────────────────────────────────────
+        ollama_section = CollapsibleSection("Ollama Local Server")
+        ollama_section = CollapsibleSection("Ollama Local Server")
+        ollama_form = QFormLayout()
+        ollama_form.setHorizontalSpacing(24)
+        ollama_form.setVerticalSpacing(12)
+
+        self.ollama_url_input = QLineEdit()
+        self.ollama_url_input.setPlaceholderText("http://127.0.0.1:11434/v1")
+        self.ollama_url_input.setFixedHeight(34)
+        ollama_form.addRow("Base URL:", self.ollama_url_input)
+
+        self.ollama_api_key_input = QLineEdit()
+        self.ollama_api_key_input.setPlaceholderText("Leave blank if not required")
+        self.ollama_api_key_input.setFixedHeight(34)
+        ollama_form.addRow("API Key:", self.ollama_api_key_input)
+
+        self.ollama_model_input = QLineEdit()
+        self.ollama_model_input.setPlaceholderText("Optional preferred model id")
+        self.ollama_model_input.setFixedHeight(34)
+        ollama_form.addRow("Model ID:", self.ollama_model_input)
+
+        self.ollama_timeout_spin = QSpinBox()
+        self.ollama_timeout_spin.setRange(0, 3600)
+        self.ollama_timeout_spin.setSuffix(" s  (0 = no limit)")
+        self.ollama_timeout_spin.setFixedHeight(34)
+        ollama_form.addRow("Timeout:", self.ollama_timeout_spin)
+
+        self.ollama_active_model_label = QLabel("")
+        self.ollama_active_model_label.setWordWrap(True)
+        self.ollama_active_model_label.setStyleSheet(
+            "color: #4caf50; font-size: 11px; padding: 4px 0px;"
+        )
+        self.ollama_active_model_label.setVisible(False)
+        ollama_form.addRow("Active Model:", self.ollama_active_model_label)
+
+        ollama_test_btn = QPushButton("Test Ollama Connection")
+        ollama_test_btn.setObjectName("secondary_btn")
+        ollama_test_btn.setFixedHeight(32)
+        ollama_test_btn.clicked.connect(self._test_ollama)
+        ollama_form.addRow("", ollama_test_btn)
+
+        ollama_widget = QWidget()
+        ollama_widget.setLayout(ollama_form)
+        ollama_section.set_content_widget(ollama_widget)
+        layout.addWidget(ollama_section)
+
         # ── Chat Backend ──────────────────────────────────────────────────
-        # Placed between LM Studio and the System & Model Advisor so the
-        # backend switch sits directly under the LM Studio settings it may
-        # depend on.
         backend_section = CollapsibleSection("Chat Backend")
         backend_layout = QVBoxLayout()
         backend_layout.setSpacing(12)
 
         self.backend_combo = QComboBox()
-        self.backend_combo.addItems(["local", "lm_studio"])
+        self.backend_combo.addItems(["local", "ollama", "lm_studio"])
         self.backend_combo.setFixedHeight(34)
         self.backend_combo.currentTextChanged.connect(self._on_backend_changed)
         backend_layout.addWidget(QLabel("Backend:"))
@@ -372,6 +416,11 @@ class SettingsPage(QWidget):
         self.lm_model_input.setText(str(sm.get("lm_studio_model_id", "") or ""))
         self.lm_timeout_spin.setValue(int(sm.get("lm_studio_timeout_seconds", 0) or 0))
 
+        self.ollama_url_input.setText(str(sm.get("ollama_base_url", "http://127.0.0.1:11434/v1") or ""))
+        self.ollama_api_key_input.setText(str(sm.get("ollama_api_key", "") or ""))
+        self.ollama_model_input.setText(str(sm.get("ollama_model_id", "") or ""))
+        self.ollama_timeout_spin.setValue(int(sm.get("ollama_timeout_seconds", 0) or 0))
+
         self.ctx_spin.setValue(int(sm.get("default_context_size", 4096) or 4096))
         self.threads_spin.setValue(int(sm.get("default_threads", 4) or 4))
         self.max_tokens_spin.setValue(int(sm.get("default_max_tokens", 384) or 384))
@@ -409,6 +458,10 @@ class SettingsPage(QWidget):
             "lm_studio_api_key": self.lm_api_key_input.text().strip(),
             "lm_studio_model_id": self.lm_model_input.text().strip(),
             "lm_studio_timeout_seconds": self.lm_timeout_spin.value(),
+            "ollama_base_url": self.ollama_url_input.text().strip() or "http://127.0.0.1:11434/v1",
+            "ollama_api_key": self.ollama_api_key_input.text().strip(),
+            "ollama_model_id": self.ollama_model_input.text().strip(),
+            "ollama_timeout_seconds": self.ollama_timeout_spin.value(),
             "default_context_size": self.ctx_spin.value(),
             "default_threads": self.threads_spin.value(),
             "default_max_tokens": self.max_tokens_spin.value(),
@@ -416,6 +469,7 @@ class SettingsPage(QWidget):
             "offline_mode": self.offline_check.isChecked(),
             "developer_mode": self.developer_mode_check.isChecked(),
             "lm_studio_enabled": self.backend_combo.currentText() == "lm_studio",
+            "ollama_enabled": self.backend_combo.currentText() == "ollama",
             "ui_font_size": new_font_size,
         })
 
@@ -486,8 +540,30 @@ class SettingsPage(QWidget):
                         "color: #e94560; font-size: 11px; padding: 4px 0px;"
                     )
                 self.lm_active_model_label.setVisible(True)
+                self.ollama_active_model_label.setVisible(False)
+            elif backend == "ollama":
+                model_entry, err = get_preferred_chat_model(
+                    self.settings_manager, self.model_manager
+                )
+                if model_entry is not None:
+                    active_id = str(
+                        model_entry.get("ollama_model_id")
+                        or model_entry.get("name", "")
+                    )
+                    self.ollama_active_model_label.setText(active_id)
+                    self.ollama_active_model_label.setStyleSheet(
+                        "color: #4caf50; font-size: 11px; padding: 4px 0px;"
+                    )
+                else:
+                    self.ollama_active_model_label.setText(err or "No model loaded")
+                    self.ollama_active_model_label.setStyleSheet(
+                        "color: #e94560; font-size: 11px; padding: 4px 0px;"
+                    )
+                self.ollama_active_model_label.setVisible(True)
+                self.lm_active_model_label.setVisible(False)
             else:
                 self.lm_active_model_label.setVisible(False)
+                self.ollama_active_model_label.setVisible(False)
         except Exception as exc:  # noqa: BLE001
             import logging
             logging.getLogger(__name__).debug("LM Studio active model label refresh failed: %s", exc)
@@ -633,6 +709,22 @@ class SettingsPage(QWidget):
             QMessageBox.information(
                 self,
                 "LM Studio Connected",
+                f"Connection successful!\n\nAvailable models:\n" + "\n".join(names or ["(none loaded)"]),
+            )
+        except Exception as exc:
+            QMessageBox.warning(self, "Connection Failed", str(exc))
+
+    def _test_ollama(self) -> None:
+        from core.ollama_client import OllamaClient, OllamaError
+        url = self.ollama_url_input.text().strip() or "http://127.0.0.1:11434/v1"
+        api_key = self.ollama_api_key_input.text().strip()
+        try:
+            client = OllamaClient(base_url=url, api_key=api_key or None)
+            models = client.list_models()
+            names = [str(m.get("id", "")) for m in models[:5]]
+            QMessageBox.information(
+                self,
+                "Ollama Connected",
                 f"Connection successful!\n\nAvailable models:\n" + "\n".join(names or ["(none loaded)"]),
             )
         except Exception as exc:

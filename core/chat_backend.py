@@ -3,9 +3,11 @@ from __future__ import annotations
 from typing import Any
 
 from core.lm_studio_client import LMStudioClient, LMStudioError
+from core.ollama_client import OllamaClient, OllamaError
 
 
-REMOTE_SOURCE = 'lm_studio_server'
+REMOTE_SOURCE_LM_STUDIO = 'lm_studio_server'
+REMOTE_SOURCE_OLLAMA = 'ollama_server'
 
 
 def get_chat_backend_preference(settings_manager) -> str:
@@ -17,7 +19,7 @@ def get_chat_backend_preference(settings_manager) -> str:
         if raw is None:
             raw = 'lm_studio' if bool(settings_manager.get('lm_studio_enabled', False)) else 'local'
         preference = str(raw or 'local').strip().lower()
-    if preference not in {'local', 'lm_studio'}:
+    if preference not in {'local', 'lm_studio', 'ollama'}:
         return 'local'
     return preference
 
@@ -26,15 +28,31 @@ def is_lm_studio_enabled(settings_manager) -> bool:
     return get_chat_backend_preference(settings_manager) == 'lm_studio'
 
 
+def is_ollama_enabled(settings_manager) -> bool:
+    return get_chat_backend_preference(settings_manager) == 'ollama'
+
+
 def is_lm_studio_model(model_entry: dict[str, Any] | None) -> bool:
     if not model_entry:
         return False
-    return str(model_entry.get('source', '')).strip() == REMOTE_SOURCE
+    return str(model_entry.get('source', '')).strip() == REMOTE_SOURCE_LM_STUDIO
+
+
+def is_ollama_model(model_entry: dict[str, Any] | None) -> bool:
+    if not model_entry:
+        return False
+    return str(model_entry.get('source', '')).strip() == REMOTE_SOURCE_OLLAMA
 
 
 def resolve_lm_studio_model(settings_manager) -> dict[str, Any]:
     client = LMStudioClient.from_settings(settings_manager)
     preferred_model_id = str(settings_manager.get('lm_studio_model_id', '') or '').strip()
+    return client.resolve_model(preferred_model_id or None)
+
+
+def resolve_ollama_model(settings_manager) -> dict[str, Any]:
+    client = OllamaClient.from_settings(settings_manager)
+    preferred_model_id = str(settings_manager.get('ollama_model_id', '') or '').strip()
     return client.resolve_model(preferred_model_id or None)
 
 
@@ -46,6 +64,12 @@ def get_preferred_chat_model(settings_manager, model_manager) -> tuple[dict[str,
             model = resolve_lm_studio_model(settings_manager)
             return model, None
         except LMStudioError as exc:
+            return None, str(exc)
+    if backend_preference == 'ollama':
+        try:
+            model = resolve_ollama_model(settings_manager)
+            return model, None
+        except OllamaError as exc:
             return None, str(exc)
 
     available_models = [model for model in model_manager.list_models() if model.get('status') == 'available']
@@ -70,6 +94,11 @@ def describe_active_backend(settings_manager, model_manager) -> tuple[str, bool]
         model_id = str(model_entry.get('lm_studio_model_id', 'model'))
         base_url = str(model_entry.get('lm_studio_base_url', ''))
         return f'LM Studio Local Server is selected and ready for chats.\n\nModel: {model_id}\nURL: {base_url}', True
+
+    if model_entry is not None and is_ollama_model(model_entry):
+        model_id = str(model_entry.get('ollama_model_id', 'model'))
+        base_url = str(model_entry.get('ollama_base_url', ''))
+        return f'Ollama Local Server is selected and ready for chats.\n\nModel: {model_id}\nURL: {base_url}', True
 
     if model_entry is not None:
         return (

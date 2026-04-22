@@ -1,5 +1,0 @@
-PySide6
-psutil
-
-# Optional: needed only for local GGUF runtime support inside the app
-# llama-cpp-python
