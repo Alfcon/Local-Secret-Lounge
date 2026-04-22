@@ -421,7 +421,9 @@ class CharacterDetailPanel(QWidget):
 
     chat_requested = Signal(dict)
     edit_requested = Signal(dict)
-    delete_requested = Signal(str)    memory_requested = Signal(dict)
+    delete_requested = Signal(str)
+    memory_requested = Signal(dict)
+
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._character: dict[str, Any] | None = None
