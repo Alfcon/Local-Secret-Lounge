@@ -102,43 +102,6 @@ class CharacterManager:
             with memory_path.open('w', encoding='utf-8') as fh:
                 json.dump(blank, fh, indent=2, ensure_ascii=False)
 
-    # ── Memory load / save ────────────────────────────────────────────────
-
-    def load_memory(self, character_id: str) -> dict[str, Any]:
-        """Load and return the memory.json for *character_id*.
-
-        Returns a blank (but structurally valid) dict if the file is absent or
-        unreadable.
-        """
-        slug = str(character_id).strip()
-        self._ensure_memory(slug)
-        memory_path = self._character_memory_file(slug)
-        try:
-            with memory_path.open('r', encoding='utf-8') as fh:
-                data = json.load(fh)
-            return data if isinstance(data, dict) else {}
-        except Exception as exc:
-            logger.warning('Could not load memory for %s: %s', slug, exc)
-            return {}
-
-    def save_memory(self, character_id: str, memory_data: dict[str, Any]) -> None:
-        """Persist *memory_data* to the character's memory.json.
-
-        The character directory must already exist (i.e. the character must
-        have been saved at least once via :meth:`save_character`).
-        """
-        slug = str(character_id).strip()
-        char_dir = self._character_dir(slug)
-        if not char_dir.is_dir():
-            raise FileNotFoundError(
-                f"Character directory not found for '{slug}'. "
-                "Save the character first before editing its memory."
-            )
-        memory_path = self._character_memory_file(slug)
-        with memory_path.open('w', encoding='utf-8') as fh:
-            json.dump(memory_data, fh, indent=2, ensure_ascii=False)
-        logger.info('Memory saved for character %s', slug)
-
     # ── Public character listing ──────────────────────────────────────────
 
     def list_builtin_characters(self) -> list[dict[str, Any]]:

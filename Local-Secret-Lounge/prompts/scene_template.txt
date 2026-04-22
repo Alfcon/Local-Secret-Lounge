@@ -1,0 +1,13 @@
+Current scene summary:
+{scene_summary}
+
+Character state:
+{character_state}
+
+Recent exchange:
+{recent_exchange}
+
+User action or message:
+{user_message}
+
+Write the next scene turn.

@@ -1,0 +1,140 @@
+{
+  "character_ref": {
+    "id": "char_06",
+    "slug": "sophia_smith",
+    "name": "Sophia Smith"
+  },
+  "knowledge": {
+    "suspicions": [
+      "There might be something going on between her and her boyfriend."
+    ],
+    "unknowns": [
+      "Whether she has fallen in love with anyone."
+    ],
+    "secrets_held": [
+      "She secretly has a hopeless romantic heart."
+    ]
+  },
+  "relationship_with_user": {
+    "status_label": "neutral",
+    "trust": 30,
+    "affection": 25,
+    "respect": 46,
+    "fear": 18,
+    "resentment": 2,
+    "dependency": 10,
+    "openness": 35,
+    "attraction": 0,
+    "last_change_reason": "User did not interact with her much.",
+    "interpretation": "She sees the user as a friend and may be interested in socializing more."
+  },
+  "relationships_with_characters": [
+    {
+      "character_ref": {
+        "id": "char_05",
+        "slug": "maya_johnson",
+        "name": "Maya Johnson"
+      },
+      "status_label": "Warm",
+      "trust": 60,
+      "affection": 52,
+      "respect": 55,
+      "fear": 2,
+      "resentment": 2,
+      "dependency": 20,
+      "openness": 58,
+      "attraction": 5,
+      "last_change_reason": "Maya looked up to Sophia and they have grown close through study sessions.",
+      "interpretation": "Sophia finds Maya genuine and sweet, though sometimes wishes she had more self-confidence."
+    }
+  ],
+  "emotional_baseline": {
+    "confidence": 42,
+    "anxiety": 37,
+    "hope": 35,
+    "guilt": 69,
+    "anger": 8,
+    "loneliness": 46
+  },
+  "memories": {
+    "stable": [
+      {
+        "id": "stable_001",
+        "summary": "A confident and outgoing girl who enjoys teasing others.",
+        "importance": 95
+      }
+    ],
+    "episodic": [
+      {
+        "id": "epi_001",
+        "summary": "User sat with Sophia while she was trying new foods and chatting about her boyfriend.",
+        "type": "event",
+        "linked_to_user": true,
+        "emotion_tags": [
+          "interest",
+          "respect",
+          "friendship"
+        ],
+        "emotional_impact": {
+          "trust": 7,
+          "affection": 5,
+          "fear": -1,
+          "resentment": -1,
+          "openness": 8
+        },
+        "importance": 83,
+        "recency": "2026-03-12T13:14:39Z",
+        "triggers": [
+          "food",
+          "boyfriend",
+          "sociable",
+          "social events"
+        ],
+        "decays": false,
+        "notes": "User shows interest in her social life"
+      },
+      {
+        "id": "epi_002",
+        "summary": "User tried to help Sophia when she was being teased, but Sophia didn't appreciate it.",
+        "type": "conversation",
+        "linked_to_user": true,
+        "emotion_tags": [
+          "wariness",
+          "shame",
+          "disappointment"
+        ],
+        "emotional_impact": {
+          "trust": -3,
+          "affection": 0,
+          "fear": 0,
+          "resentment": 4,
+          "openness": -2,
+          "anxiety": 5
+        },
+        "importance": 68,
+        "recency": "2026-03-12T13:14:39Z",
+        "triggers": [
+          "teasing",
+          "friendship",
+          "helping others",
+          "being teased"
+        ],
+        "decays": true,
+        "notes": "Surfaces when there is conflict in their friendship"
+      }
+    ]
+  },
+  "open_threads": [
+    {
+      "id": "thread_001",
+      "summary": "Sophia wants someone to help her figure out what's going on with her boyfriend.",
+      "priority": 75
+    }
+  ],
+  "scene_flags": {
+    "available_for_interaction": true,
+    "injured": false,
+    "hostile_mode": false,
+    "romance_locked": false
+  }
+}

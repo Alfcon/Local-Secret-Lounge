@@ -1,0 +1,68 @@
+[
+  {
+    "id": "qwen3_5_35b_a3b_uncensored_hauhaucs_aggressive_q3_k_m",
+    "name": "Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive-Q3_K_M",
+    "path": "/home/alfcon/Downloads/Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive-Q3_K_M.gguf",
+    "source": "local_import",
+    "repo_id": null,
+    "filename": "Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive-Q3_K_M.gguf",
+    "format": "gguf",
+    "size_bytes": 16760832064,
+    "chat_format": null,
+    "is_default": false,
+    "status": "available",
+    "validation_error": null,
+    "sha256": "79f945c09eb140e58da88fc1722d311e3d5717cc930a2b64b03952657afbcae6",
+    "managed_storage": false,
+    "added_at": "2026-04-20T12:12:45",
+    "performance": {
+      "context_size": 4096,
+      "threads": 4,
+      "max_tokens": 384
+    }
+  },
+  {
+    "id": "qwen3_5_9b_uncensored_hauhaucs_aggressive_q4_k_m",
+    "name": "Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M",
+    "path": "/home/alfcon/Downloads/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf",
+    "source": "local_import",
+    "repo_id": null,
+    "filename": "Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf",
+    "format": "gguf",
+    "size_bytes": 5627044224,
+    "chat_format": null,
+    "is_default": false,
+    "status": "available",
+    "validation_error": null,
+    "sha256": "2ca636d9e81d3d23ca9b60c234fe185d30ec082eeba69ce770fdb0c76559a4f5",
+    "managed_storage": false,
+    "added_at": "2026-04-20T12:48:16",
+    "performance": {
+      "context_size": 4096,
+      "threads": 16,
+      "max_tokens": 1024
+    }
+  },
+  {
+    "id": "dirty_muse_writer_v01_uncensored_erotica_nsfw_q5_k_m",
+    "name": "dirty-muse-writer-v01-uncensored-erotica-nsfw-q5_k_m",
+    "path": "/home/alfcon/.lmstudio/models/Recouper/Dirty-Muse-Writer-v01-Uncensored-Erotica-NSFW-Q5_K_M-GGUF/dirty-muse-writer-v01-uncensored-erotica-nsfw-q5_k_m.gguf",
+    "source": "local_import",
+    "repo_id": null,
+    "filename": "dirty-muse-writer-v01-uncensored-erotica-nsfw-q5_k_m.gguf",
+    "format": "gguf",
+    "size_bytes": 6647367488,
+    "chat_format": null,
+    "is_default": true,
+    "status": "available",
+    "validation_error": null,
+    "sha256": "f32ba2e2b19f997f19ab7af6dcdfb8258303ec805f01fb49553ebbf98082a679",
+    "managed_storage": false,
+    "added_at": "2026-04-22T10:07:06",
+    "performance": {
+      "context_size": 4096,
+      "threads": 16,
+      "max_tokens": 2048
+    }
+  }
+]
