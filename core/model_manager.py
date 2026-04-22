@@ -298,7 +298,7 @@ class ModelManager:
             is_managed = self.is_managed_model_path(model_path)
             if not is_managed and not allow_external_delete:
                 raise PermissionError(
-                    "Refusing to delete a file outside The_App's managed models folder without explicit confirmation."
+                    "Refusing to delete a file outside Local Secret Lounge's managed models folder without explicit confirmation."
                 )
             model_path.unlink()
             deleted_file = True
@@ -367,7 +367,7 @@ class ModelManager:
         and True is returned so the caller can persist the corrected registry.
 
         This makes models.json fully portable: a registry written on Windows
-        (e.g. E:\\The_App\\data\\models\\model.gguf) is transparently repaired
+        (e.g. E:\\LocalSecretLounge\\data\\models\\model.gguf) is transparently repaired
         when the app is run from a USB drive on Linux or macOS.
         """
         stored = Path(model.get("path", ""))

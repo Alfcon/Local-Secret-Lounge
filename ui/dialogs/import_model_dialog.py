@@ -30,7 +30,7 @@ class ImportModelDialog(QDialog):
         self.path_edit = QLineEdit()
         self.name_edit = QLineEdit()
         self.chat_format_edit = QLineEdit()
-        self.copy_checkbox = QCheckBox("Copy model into The_App's managed models folder")
+        self.copy_checkbox = QCheckBox("Copy model into Local Secret Lounge's managed models folder")
         self.copy_checkbox.setChecked(True)
         self.default_checkbox = QCheckBox("Set as default model after import")
 

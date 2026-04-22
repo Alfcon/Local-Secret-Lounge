@@ -41,10 +41,10 @@ def main() -> int:
     configure_logging()
 
     app = QApplication(sys.argv)
-    app.setApplicationName("The_App")
-    app.setOrganizationName("The_App Local")
+    app.setApplicationName("Local Secret Lounge")
+    app.setOrganizationName("Local Secret Lounge")
 
-    logging.getLogger(__name__).info('Starting The_App.')
+    logging.getLogger(__name__).info('Starting Local Secret Lounge.')
 
     settings_manager = SettingsManager()
     model_manager = ModelManager(settings_manager)

@@ -85,7 +85,7 @@ class DownloadModelDialog(QDialog):
         self.token_edit = QLineEdit()
         self.token_edit.setEchoMode(QLineEdit.Password)
         self.default_checkbox = QCheckBox('Set as default model after download')
-        self.managed_checkbox = QCheckBox('Store inside The_App managed models folder')
+        self.managed_checkbox = QCheckBox('Store inside Local Secret Lounge managed models folder')
         self.managed_checkbox.setChecked(True)
         self.progress_bar = QProgressBar()
         self.progress_bar.setValue(0)

@@ -1,4 +1,4 @@
-The_App
+Local Secret Lounge
 
 Overview
 - Desktop PySide6 character-chat application
@@ -104,7 +104,7 @@ Chat and character data
 - Story-generated character template: data/template.json
 
 Run
-cd ~/The_App
+cd ~/LocalSecretLounge
 python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
@@ -119,7 +119,7 @@ python -m unittest discover -s tests -v
 LM Studio Local Server
 1. Open LM Studio.
 2. Start the Local Server from the Developer tab.
-3. In The_App, open Settings.
+3. In Local Secret Lounge, open Settings.
 4. Enter the LM Studio base URL, usually http://127.0.0.1:1234/v1.
 5. Set the chat backend preference to LM Studio.
 6. Optionally set a preferred LM Studio model id, then test the connection.

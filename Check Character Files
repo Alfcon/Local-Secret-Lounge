@@ -2,7 +2,7 @@ python3 - <<'PY'
 import json
 from pathlib import Path
 
-base = Path.home() / "The_App/data/discover_characters"
+base = Path.home() / "LocalSecretLounge/data/discover_characters"
 
 for f in sorted(base.glob("*/*.json")):
     try:

@@ -16,7 +16,7 @@ class InitialSetupDialog(QDialog):
     def __init__(self, settings_manager: SettingsManager, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.settings_manager = settings_manager
-        self.setWindowTitle("Welcome to The App — Setup")
+        self.setWindowTitle("Welcome to Local Secret Lounge — Setup")
         self.setMinimumWidth(480)
         self.setModal(True)
         self._build_ui()

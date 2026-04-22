@@ -66,7 +66,7 @@ class MainWindow(QMainWindow):
         self.character_manager = character_manager
         self.chat_storage = chat_storage
 
-        self.setWindowTitle("The App")
+        self.setWindowTitle("Local Secret Lounge")
         self.setMinimumSize(1100, 720)
         self.resize(1280, 800)
 
@@ -97,7 +97,7 @@ class MainWindow(QMainWindow):
         sidebar_layout.setContentsMargins(8, 16, 8, 16)
 
         # App title
-        app_title = QLabel("The App")
+        app_title = QLabel("Local Secret Lounge")
         font = QFont()
         font.setPointSize(16)
         font.setBold(True)
