@@ -208,8 +208,10 @@ class SettingsPage(QWidget):
         # Small card above the Local GGUF Models section that shows the
         # user's CPU / RAM / GPU (VRAM) and recommended settings based on
         # their hardware and the currently-default model.
+        advisor_section = CollapsibleSection("System & Model Advisor")
         self.system_info_widget = SystemInfoWidget(model_manager=self.model_manager)
-        layout.addWidget(self.system_info_widget)
+        advisor_section.set_content_widget(self.system_info_widget)
+        layout.addWidget(advisor_section)
 
         # ── Local Models ──────────────────────────────────────────────────
         models_section = CollapsibleSection("Local GGUF Models")
