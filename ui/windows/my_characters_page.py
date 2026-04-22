@@ -364,8 +364,9 @@ class CharacterDetailPanel(QWidget):
         # column on narrow windows; it grows with the layout beyond that.
         header_row = QHBoxLayout()
         self.avatar = CharacterImage(minimum_size=(192, 192))
-        self.avatar.setMaximumHeight(360)
-        header_row.addWidget(self.avatar, stretch=0)
+        # self.avatar.setMaximumHeight(360)      
+        # header_row.addWidget(self.avatar, stretch=1)
+        header_row.addWidget(self.avatar, 2)
 
         name_col = QVBoxLayout()
         self.name_label = QLabel("")
@@ -381,6 +382,7 @@ class CharacterDetailPanel(QWidget):
 
         self.story_role_label = QLabel("")
         self.story_role_label.setStyleSheet("color: #d8d8f0; font-size: 12px; font-weight: bold;")
+        self.story_role_label.setWordWrap(True)
         name_col.addWidget(self.story_role_label)
 
         self.source_label = QLabel("")
@@ -392,14 +394,18 @@ class CharacterDetailPanel(QWidget):
         header_row.addStretch()
         detail_layout.addLayout(header_row)
 
+        self.desc_heading = QLabel("Description")
+        self.desc_heading.setObjectName("section_label")
+        detail_layout.addWidget(self.desc_heading)
+
         self.desc_label = QLabel("")
         self.desc_label.setWordWrap(True)
         self.desc_label.setStyleSheet("color: #f0f0ff; font-size: 12px; line-height: 1.5;")
         detail_layout.addWidget(self.desc_label)
 
-        prompt_heading = QLabel("System Prompt")
-        prompt_heading.setObjectName("section_label")
-        detail_layout.addWidget(prompt_heading)
+        self.prompt_heading = QLabel("System Prompt")
+        self.prompt_heading.setObjectName("section_label")
+        detail_layout.addWidget(self.prompt_heading)
 
         self.prompt_preview = QTextEdit()
         self.prompt_preview.setReadOnly(True)
@@ -478,8 +484,23 @@ class CharacterDetailPanel(QWidget):
         source = str(character.get("source", "user"))
         self.source_label.setText(f"Source: {source}")
 
-        self.desc_label.setText(str(character.get("description", "") or "").strip())
-        self.prompt_preview.setPlainText(str(character.get("system_prompt", "") or "").strip())
+        desc = str(character.get("description", "") or "").strip()
+        self.desc_label.setText(desc)
+        if desc:
+            self.desc_heading.show()
+            self.desc_label.show()
+        else:
+            self.desc_heading.hide()
+            self.desc_label.hide()
+
+        sys_prompt = str(character.get("system_prompt", "") or "").strip()
+        self.prompt_preview.setPlainText(sys_prompt)
+        if sys_prompt:
+            self.prompt_heading.show()
+            self.prompt_preview.show()
+        else:
+            self.prompt_heading.hide()
+            self.prompt_preview.hide()
 
         while self.tags_row.count():
             item = self.tags_row.takeAt(0)
