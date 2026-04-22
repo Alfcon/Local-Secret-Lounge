@@ -1,0 +1,430 @@
+2026-03-20 18:35:56,312 INFO [__main__] Starting The_App.
+2026-04-19 02:57:22,633 INFO [__main__] Starting The_App.
+2026-04-19 05:25:39,302 INFO [__main__] Starting The_App.
+2026-04-19 05:50:20,413 INFO [__main__] Starting The_App.
+2026-04-19 06:02:29,570 INFO [__main__] Starting The_App.
+2026-04-19 06:11:21,868 INFO [__main__] Starting The_App.
+2026-04-19 06:19:48,583 INFO [__main__] Starting The_App.
+2026-04-19 07:56:58,583 INFO [__main__] Starting The_App.
+2026-04-19 07:57:30,103 INFO [__main__] Starting The_App.
+2026-04-19 07:59:42,288 INFO [__main__] Starting The_App.
+2026-04-19 08:00:27,745 INFO [__main__] Starting The_App.
+2026-04-19 08:01:44,830 INFO [__main__] Starting The_App.
+2026-04-19 08:14:41,461 INFO [__main__] Starting The_App.
+2026-04-19 08:20:18,813 INFO [__main__] Starting The_App.
+2026-04-19 08:23:09,595 INFO [__main__] Starting The_App.
+2026-04-19 08:25:24,545 INFO [__main__] Starting The_App.
+2026-04-19 08:43:41,845 INFO [__main__] Starting The_App.
+2026-04-19 09:37:13,637 INFO [__main__] Starting The_App.
+2026-04-19 10:02:41,359 INFO [__main__] Starting The_App.
+2026-04-19 10:24:26,689 INFO [__main__] Starting The_App.
+2026-04-19 10:51:55,942 INFO [__main__] Starting The_App.
+2026-04-19 12:16:55,582 INFO [__main__] Starting The_App.
+2026-04-19 12:21:41,873 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_105259: prompt_tokens=3572 budget=3520
+2026-04-19 12:21:41,891 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_105259: prompt_tokens=4008 budget=3520
+2026-04-19 12:23:31,079 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_105259: prompt_tokens=3711 budget=3520
+2026-04-19 12:23:31,145 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_105259: prompt_tokens=4013 budget=3520
+2026-04-19 12:28:44,707 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_105259: prompt_tokens=4036 budget=3520
+2026-04-19 12:28:44,727 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_105259: prompt_tokens=4192 budget=3520
+2026-04-19 12:36:08,137 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_105259: prompt_tokens=4009 budget=3520
+2026-04-19 12:36:08,156 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_105259: prompt_tokens=4165 budget=3520
+2026-04-19 12:36:56,397 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_105259: prompt_tokens=4165 budget=3520
+2026-04-19 12:52:15,242 INFO [__main__] Starting The_App.
+2026-04-19 13:00:52,288 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=3062 budget=2800
+2026-04-19 13:06:21,308 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=3033 budget=2800
+2026-04-19 13:06:21,323 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=3255 budget=2800
+2026-04-19 13:11:55,380 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=3901 budget=2800
+2026-04-19 13:11:55,399 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=4061 budget=2800
+2026-04-19 13:15:52,196 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=3873 budget=2800
+2026-04-19 13:15:52,214 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=4011 budget=2800
+2026-04-19 13:51:21,338 INFO [__main__] Starting The_App.
+2026-04-19 13:51:21,349 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 13:51:21,514 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 13:51:21,742 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 14:18:09,546 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 14:18:18,304 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=3390 budget=2800
+2026-04-19 14:18:18,326 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=4484 budget=2800
+2026-04-19 14:24:45,243 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 14:24:55,604 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=3641 budget=2800
+2026-04-19 14:24:55,626 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=4777 budget=2800
+2026-04-19 14:34:02,785 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 14:34:09,657 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=3828 budget=2800
+2026-04-19 14:34:09,683 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=4952 budget=2800
+2026-04-19 14:35:45,913 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 14:43:36,185 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 14:43:43,124 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=4052 budget=2800
+2026-04-19 14:43:43,148 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=5128 budget=2800
+2026-04-19 14:48:29,378 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 14:48:36,260 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=4258 budget=2800
+2026-04-19 14:48:36,286 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=5340 budget=2800
+2026-04-19 14:54:24,276 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 14:54:31,021 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=4522 budget=2800
+2026-04-19 14:54:31,048 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=5624 budget=2800
+2026-04-19 15:01:43,532 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 15:01:50,271 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=4603 budget=2800
+2026-04-19 15:01:50,301 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=5783 budget=2800
+2026-04-19 15:07:44,551 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 15:07:51,246 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=4611 budget=2800
+2026-04-19 15:07:51,274 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=5827 budget=2800
+2026-04-19 15:13:36,177 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 15:13:43,087 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=4878 budget=2800
+2026-04-19 15:13:43,119 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=5884 budget=2800
+2026-04-19 15:22:39,419 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 15:22:48,902 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=5241 budget=2800
+2026-04-19 15:22:48,934 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260419_123725: prompt_tokens=6057 budget=2800
+2026-04-19 17:31:26,254 INFO [__main__] Starting The_App.
+2026-04-19 17:31:26,265 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 17:31:26,529 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 17:39:15,432 INFO [__main__] Starting The_App.
+2026-04-19 17:39:15,443 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 17:39:15,602 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 17:44:56,159 INFO [__main__] Starting The_App.
+2026-04-19 17:44:56,171 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 17:44:56,339 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 17:46:33,675 INFO [__main__] Starting The_App.
+2026-04-19 17:46:33,689 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 17:46:33,856 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 17:47:18,521 INFO [__main__] Starting The_App.
+2026-04-19 17:47:18,533 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 17:47:18,698 WARNING [core.character_manager] Failed to load discover character pack from E:\The_App\data\discover_characters\sarah_thompson\character_static.json: Expecting ',' delimiter: line 6 column 3 (char 127)
+2026-04-19 17:54:22,627 INFO [__main__] Starting The_App.
+2026-04-19 20:26:29,449 INFO [__main__] Starting The_App.
+2026-04-19 20:39:47,885 INFO [__main__] Starting The_App.
+2026-04-19 22:01:46,571 INFO [__main__] Starting The_App.
+2026-04-19 22:04:13,668 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-19 22:06:11,144 INFO [__main__] Starting The_App.
+2026-04-19 22:09:33,581 INFO [__main__] Starting The_App.
+2026-04-19 22:23:30,856 INFO [__main__] Starting The_App.
+2026-04-19 22:34:29,433 INFO [__main__] Starting The_App.
+2026-04-19 22:39:54,053 INFO [__main__] Starting The_App.
+2026-04-19 22:50:36,467 INFO [__main__] Starting The_App.
+2026-04-20 08:03:54,080 INFO [__main__] Starting The_App.
+2026-04-20 08:19:17,797 INFO [__main__] Starting The_App.
+2026-04-20 08:45:57,967 INFO [__main__] Starting The_App.
+2026-04-20 08:50:55,551 INFO [__main__] Starting The_App.
+2026-04-20 08:52:56,032 INFO [__main__] Starting The_App.
+2026-04-20 08:55:23,437 INFO [__main__] Starting The_App.
+2026-04-20 09:40:33,031 INFO [__main__] Starting The_App.
+2026-04-20 09:46:08,945 INFO [__main__] Starting The_App.
+2026-04-20 10:11:56,285 INFO [__main__] Starting The_App.
+2026-04-20 10:19:12,674 INFO [__main__] Starting The_App.
+2026-04-20 10:34:44,396 INFO [__main__] Starting The_App.
+2026-04-20 10:44:04,756 INFO [__main__] Starting The_App.
+2026-04-20 10:52:09,123 INFO [__main__] Starting The_App.
+2026-04-20 12:13:26,907 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 13:36:57,946 INFO [__main__] Starting The_App.
+2026-04-20 13:37:49,108 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 13:45:40,226 INFO [__main__] Starting The_App.
+2026-04-20 13:49:36,705 INFO [__main__] Starting The_App.
+2026-04-20 13:50:05,395 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 13:59:32,343 INFO [__main__] Starting The_App.
+2026-04-20 14:02:02,892 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 14:02:30,495 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 14:06:25,750 INFO [__main__] Starting The_App.
+2026-04-20 14:06:40,295 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 14:07:44,597 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 14:08:28,158 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 14:58:37,999 INFO [__main__] Starting The_App.
+2026-04-20 15:00:26,938 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_145924: prompt_tokens=1871 budget=1856
+2026-04-20 15:00:26,950 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_145924: prompt_tokens=1951 budget=1856
+2026-04-20 15:02:59,955 INFO [__main__] Starting The_App.
+2026-04-20 15:03:40,527 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=1968 budget=1856
+2026-04-20 15:08:52,572 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=2381 budget=1856
+2026-04-20 15:08:52,591 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=2541 budget=1856
+2026-04-20 15:10:51,412 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 15:12:28,993 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 15:14:37,479 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=2801 budget=1856
+2026-04-20 15:14:37,484 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=3000 budget=1856
+2026-04-20 15:15:50,824 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=2923 budget=1856
+2026-04-20 15:15:50,830 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=3104 budget=1856
+2026-04-20 15:16:32,336 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=2986 budget=1856
+2026-04-20 15:16:32,342 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=3141 budget=1856
+2026-04-20 15:17:14,714 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=3098 budget=1856
+2026-04-20 15:17:14,721 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=3235 budget=1856
+2026-04-20 15:22:48,451 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=3562 budget=1856
+2026-04-20 15:22:48,461 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=3695 budget=1856
+2026-04-20 15:26:51,596 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=3792 budget=1856
+2026-04-20 15:26:51,606 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4024 budget=1856
+2026-04-20 15:28:58,272 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4017 budget=1856
+2026-04-20 15:28:58,286 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4241 budget=1856
+2026-04-20 15:30:15,441 INFO [__main__] Starting The_App.
+2026-04-20 15:59:26,346 INFO [__main__] Starting The_App.
+2026-04-20 16:03:08,114 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=3887 budget=1856
+2026-04-20 16:03:08,125 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4041 budget=1856
+2026-04-20 16:07:58,596 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4202 budget=1856
+2026-04-20 16:07:58,610 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4356 budget=1856
+2026-04-20 16:19:36,898 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4370 budget=1856
+2026-04-20 16:19:36,909 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4570 budget=1856
+2026-04-20 16:20:35,110 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4570 budget=1856
+2026-04-20 16:44:00,860 INFO [__main__] Starting The_App.
+2026-04-20 16:44:27,244 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4570 budget=1856
+2026-04-20 16:44:32,208 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4570 budget=1856
+2026-04-20 16:54:27,177 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4570 budget=1856
+2026-04-20 16:59:49,569 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4570 budget=1856
+2026-04-20 17:00:45,775 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4459 budget=1856
+2026-04-20 17:00:45,792 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4630 budget=1856
+2026-04-20 17:03:43,559 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4871 budget=1856
+2026-04-20 17:03:43,580 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=5025 budget=1856
+2026-04-20 17:05:02,923 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4982 budget=1856
+2026-04-20 17:05:02,940 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=5042 budget=1856
+2026-04-20 17:07:35,197 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4766 budget=1856
+2026-04-20 17:07:35,236 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4790 budget=1856
+2026-04-20 17:11:34,090 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=5101 budget=1856
+2026-04-20 17:11:34,115 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=5104 budget=1856
+2026-04-20 17:14:06,459 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4993 budget=1856
+2026-04-20 17:14:06,486 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=5091 budget=1856
+2026-04-20 17:36:57,646 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=5013 budget=1856
+2026-04-20 17:36:57,677 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4951 budget=1856
+2026-04-20 17:46:17,388 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4989 budget=1856
+2026-04-20 17:46:17,408 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4920 budget=1856
+2026-04-20 17:48:13,357 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4884 budget=1856
+2026-04-20 17:48:13,377 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4845 budget=1856
+2026-04-20 17:49:46,972 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4838 budget=1856
+2026-04-20 17:49:46,991 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4899 budget=1856
+2026-04-20 17:56:16,437 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=5142 budget=1856
+2026-04-20 17:56:16,458 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=5105 budget=1856
+2026-04-20 17:59:59,124 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=5170 budget=1856
+2026-04-20 17:59:59,150 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=5240 budget=1856
+2026-04-20 18:01:08,167 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4961 budget=1856
+2026-04-20 18:01:08,191 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=5046 budget=1856
+2026-04-20 18:03:44,030 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 18:17:22,762 INFO [__main__] Starting The_App.
+2026-04-20 18:17:40,712 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 18:26:06,196 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4867 budget=1856
+2026-04-20 18:26:06,224 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4786 budget=1856
+2026-04-20 18:27:10,883 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4915 budget=1856
+2026-04-20 18:27:10,913 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4874 budget=1856
+2026-04-20 18:28:32,728 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4844 budget=1856
+2026-04-20 18:28:32,752 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4866 budget=1856
+2026-04-20 18:30:29,990 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4990 budget=1856
+2026-04-20 18:30:30,010 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4906 budget=1856
+2026-04-20 18:32:54,942 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4961 budget=1856
+2026-04-20 18:32:54,964 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat maya_johnson_20260420_150302: prompt_tokens=4987 budget=1856
+2026-04-20 19:05:35,427 INFO [__main__] Starting The_App.
+2026-04-20 19:49:55,657 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-20 19:53:26,197 INFO [__main__] Starting The_App.
+2026-04-20 20:11:09,507 INFO [__main__] Starting The_App.
+2026-04-20 20:17:19,927 INFO [__main__] Starting The_App.
+2026-04-20 20:18:14,151 INFO [__main__] Starting The_App.
+2026-04-20 20:25:00,990 INFO [__main__] Starting The_App.
+2026-04-20 20:36:26,910 INFO [__main__] Starting The_App.
+2026-04-20 20:39:52,325 INFO [__main__] Starting The_App.
+2026-04-20 20:59:27,166 INFO [__main__] Starting The_App.
+2026-04-20 21:12:03,059 INFO [__main__] Starting The_App.
+2026-04-20 21:18:40,423 INFO [__main__] Starting The_App.
+2026-04-20 21:21:00,699 INFO [__main__] Starting The_App.
+2026-04-20 21:35:47,467 INFO [__main__] Starting The_App.
+2026-04-20 21:55:15,896 INFO [__main__] Starting The_App.
+2026-04-20 22:24:58,094 INFO [__main__] Starting The_App.
+2026-04-20 22:49:44,524 INFO [__main__] Starting The_App.
+2026-04-21 08:20:19,238 INFO [__main__] Starting The_App.
+2026-04-21 08:22:34,491 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_082119: prompt_tokens=1975 budget=1856
+2026-04-21 08:22:34,494 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_082119: prompt_tokens=2014 budget=1856
+2026-04-21 08:31:00,747 INFO [__main__] Starting The_App.
+2026-04-21 09:02:13,811 INFO [__main__] Starting The_App.
+2026-04-21 09:05:39,483 INFO [__main__] Starting The_App.
+2026-04-21 09:06:27,012 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=2296 budget=1856
+2026-04-21 09:06:27,015 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=2336 budget=1856
+2026-04-21 09:07:35,202 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=2514 budget=1856
+2026-04-21 09:07:35,205 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=2670 budget=1856
+2026-04-21 09:08:42,938 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=2823 budget=1856
+2026-04-21 09:08:42,943 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=2996 budget=1856
+2026-04-21 09:10:29,938 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3167 budget=1856
+2026-04-21 09:10:29,945 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3368 budget=1856
+2026-04-21 09:11:20,050 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3257 budget=1856
+2026-04-21 09:11:20,057 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3406 budget=1856
+2026-04-21 09:12:35,799 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3318 budget=1856
+2026-04-21 09:12:35,807 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3471 budget=1856
+2026-04-21 09:14:40,013 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3572 budget=1856
+2026-04-21 09:14:40,022 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3750 budget=1856
+2026-04-21 09:15:56,138 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3658 budget=1856
+2026-04-21 09:15:56,149 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3803 budget=1856
+2026-04-21 09:17:01,366 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3756 budget=1856
+2026-04-21 09:17:01,375 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=3916 budget=1856
+2026-04-21 09:19:04,942 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=4182 budget=1856
+2026-04-21 09:19:04,953 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=4383 budget=1856
+2026-04-21 09:20:30,947 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=4187 budget=1856
+2026-04-21 09:20:30,959 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=4335 budget=1856
+2026-04-21 09:21:52,412 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=4356 budget=1856
+2026-04-21 09:21:52,426 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=4513 budget=1856
+2026-04-21 09:23:19,377 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=4586 budget=1856
+2026-04-21 09:23:19,388 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=4781 budget=1856
+2026-04-21 09:24:18,196 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=4836 budget=1856
+2026-04-21 09:24:18,208 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5032 budget=1856
+2026-04-21 09:25:47,378 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5019 budget=1856
+2026-04-21 09:25:47,392 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5164 budget=1856
+2026-04-21 09:27:03,126 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5153 budget=1856
+2026-04-21 09:27:03,143 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5138 budget=1856
+2026-04-21 09:29:01,123 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5023 budget=1856
+2026-04-21 09:29:01,138 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5030 budget=1856
+2026-04-21 09:29:53,612 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=4950 budget=1856
+2026-04-21 09:29:53,626 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=4924 budget=1856
+2026-04-21 09:31:17,126 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5066 budget=1856
+2026-04-21 09:31:17,142 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5075 budget=1856
+2026-04-21 09:32:57,919 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5167 budget=1856
+2026-04-21 09:32:57,936 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5228 budget=1856
+2026-04-21 09:34:30,055 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5248 budget=1856
+2026-04-21 09:34:30,070 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5266 budget=1856
+2026-04-21 09:35:05,999 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5144 budget=1856
+2026-04-21 09:35:06,014 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5065 budget=1856
+2026-04-21 09:36:45,677 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5112 budget=1856
+2026-04-21 09:36:45,700 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5156 budget=1856
+2026-04-21 09:38:57,748 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5315 budget=1856
+2026-04-21 09:38:57,774 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5392 budget=1856
+2026-04-21 09:39:34,298 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5468 budget=1856
+2026-04-21 09:39:34,319 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5518 budget=1856
+2026-04-21 09:40:44,730 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5393 budget=1856
+2026-04-21 09:40:44,749 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5396 budget=1856
+2026-04-21 09:42:11,219 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5472 budget=1856
+2026-04-21 09:42:11,245 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5517 budget=1856
+2026-04-21 09:44:21,779 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5607 budget=1856
+2026-04-21 09:44:21,800 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5656 budget=1856
+2026-04-21 09:45:35,588 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5646 budget=1856
+2026-04-21 09:45:35,611 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5755 budget=1856
+2026-04-21 09:47:52,840 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5785 budget=1856
+2026-04-21 09:47:52,865 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5861 budget=1856
+2026-04-21 09:49:25,413 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5848 budget=1856
+2026-04-21 09:49:25,443 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5896 budget=1856
+2026-04-21 09:51:54,177 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5949 budget=1856
+2026-04-21 09:51:54,203 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5977 budget=1856
+2026-04-21 09:54:18,135 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5919 budget=1856
+2026-04-21 09:54:18,160 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6021 budget=1856
+2026-04-21 09:55:45,721 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5833 budget=1856
+2026-04-21 09:55:45,745 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5808 budget=1856
+2026-04-21 09:58:10,141 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5840 budget=1856
+2026-04-21 09:58:10,170 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5848 budget=1856
+2026-04-21 10:00:24,237 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5910 budget=1856
+2026-04-21 10:00:24,262 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5872 budget=1856
+2026-04-21 10:01:43,834 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5863 budget=1856
+2026-04-21 10:01:43,860 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5833 budget=1856
+2026-04-21 10:03:48,824 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5916 budget=1856
+2026-04-21 10:03:48,858 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5954 budget=1856
+2026-04-21 10:07:47,549 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6000 budget=1856
+2026-04-21 10:07:47,580 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6000 budget=1856
+2026-04-21 10:10:56,745 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6096 budget=1856
+2026-04-21 10:10:56,777 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6096 budget=1856
+2026-04-21 10:12:14,202 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6080 budget=1856
+2026-04-21 10:12:14,235 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6080 budget=1856
+2026-04-21 10:14:13,699 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6082 budget=1856
+2026-04-21 10:14:13,736 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6082 budget=1856
+2026-04-21 10:19:35,834 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6087 budget=1856
+2026-04-21 10:19:35,870 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6087 budget=1856
+2026-04-21 10:23:25,916 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6077 budget=1856
+2026-04-21 10:23:25,953 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6077 budget=1856
+2026-04-21 10:26:38,306 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6046 budget=1856
+2026-04-21 10:26:38,347 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6056 budget=1856
+2026-04-21 10:28:43,256 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5790 budget=1856
+2026-04-21 10:28:43,288 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5785 budget=1856
+2026-04-21 10:33:04,416 INFO [__main__] Starting The_App.
+2026-04-21 10:33:25,995 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-21 10:33:45,062 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-21 10:36:03,742 INFO [__main__] Starting The_App.
+2026-04-21 10:36:57,235 INFO [__main__] Starting The_App.
+2026-04-21 10:49:55,624 INFO [__main__] Starting The_App.
+2026-04-21 10:51:40,319 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5731 budget=1856
+2026-04-21 10:51:40,351 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5701 budget=1856
+2026-04-21 10:52:03,795 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5701 budget=1856
+2026-04-21 10:52:08,699 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5701 budget=1856
+2026-04-21 10:53:13,994 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5707 budget=1856
+2026-04-21 10:53:14,028 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5677 budget=1856
+2026-04-21 10:55:50,918 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5938 budget=1856
+2026-04-21 10:55:50,959 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5980 budget=1856
+2026-04-21 10:57:11,841 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5863 budget=1856
+2026-04-21 10:57:11,873 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5823 budget=1856
+2026-04-21 10:58:23,024 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5665 budget=1856
+2026-04-21 10:58:23,058 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5595 budget=1856
+2026-04-21 11:00:48,045 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5779 budget=1856
+2026-04-21 11:00:48,104 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5747 budget=1856
+2026-04-21 11:02:25,998 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5761 budget=1856
+2026-04-21 11:02:26,038 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5719 budget=1856
+2026-04-21 11:03:52,003 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5759 budget=1856
+2026-04-21 11:03:52,048 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5729 budget=1856
+2026-04-21 11:05:04,668 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5593 budget=1856
+2026-04-21 11:05:04,715 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5495 budget=1856
+2026-04-21 11:06:03,673 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5475 budget=1856
+2026-04-21 11:06:03,710 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5409 budget=1856
+2026-04-21 11:07:04,923 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5306 budget=1856
+2026-04-21 11:07:04,974 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5217 budget=1856
+2026-04-21 11:09:14,989 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5302 budget=1856
+2026-04-21 11:09:15,027 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5247 budget=1856
+2026-04-21 11:11:28,167 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5449 budget=1856
+2026-04-21 11:11:28,217 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5533 budget=1856
+2026-04-21 11:14:21,414 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5521 budget=1856
+2026-04-21 11:14:21,454 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=5552 budget=1856
+2026-04-21 11:16:06,741 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=7217 budget=1856
+2026-04-21 11:16:06,780 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=7171 budget=1856
+2026-04-21 11:17:28,109 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=7024 budget=1856
+2026-04-21 11:17:28,147 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=7029 budget=1856
+2026-04-21 11:22:25,260 INFO [__main__] Starting The_App.
+2026-04-21 11:23:58,036 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6982 budget=1856
+2026-04-21 11:23:58,082 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=6976 budget=1856
+2026-04-21 11:26:10,387 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=7028 budget=1856
+2026-04-21 11:26:10,424 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=7013 budget=1856
+2026-04-21 11:27:41,141 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=7130 budget=1856
+2026-04-21 11:27:41,180 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=7143 budget=1856
+2026-04-21 11:29:13,606 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=7243 budget=1856
+2026-04-21 11:29:13,655 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat katie_thompson_20260421_090542: prompt_tokens=7301 budget=1856
+2026-04-21 13:23:48,192 INFO [__main__] Starting The_App.
+2026-04-21 13:52:09,714 INFO [__main__] Starting The_App.
+2026-04-21 13:52:17,352 WARNING [ui.windows.chat_window] Developer window refresh failed: DeveloperWindow.update_snapshot() got an unexpected keyword argument 'last_user_text'
+2026-04-21 13:53:26,318 WARNING [ui.windows.chat_window] Developer window refresh failed: DeveloperWindow.update_snapshot() got an unexpected keyword argument 'last_user_text'
+2026-04-21 13:53:26,322 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_132530: prompt_tokens=2406 budget=1856
+2026-04-21 13:53:26,326 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_132530: prompt_tokens=2567 budget=1856
+2026-04-21 13:53:44,120 WARNING [ui.windows.chat_window] Developer window refresh failed: DeveloperWindow.update_snapshot() got an unexpected keyword argument 'last_user_text'
+2026-04-21 14:05:41,892 INFO [__main__] Starting The_App.
+2026-04-21 14:05:54,956 WARNING [ui.windows.chat_window] Developer window refresh failed: DeveloperWindow.update_snapshot() got an unexpected keyword argument 'last_user_text'
+2026-04-21 14:06:59,696 INFO [__main__] Starting The_App.
+2026-04-21 14:13:06,652 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_132530: prompt_tokens=2718 budget=1856
+2026-04-21 14:13:06,657 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_132530: prompt_tokens=2861 budget=1856
+2026-04-21 14:14:01,864 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_132530: prompt_tokens=3881 budget=1856
+2026-04-21 14:14:01,874 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_132530: prompt_tokens=4025 budget=1856
+2026-04-21 14:32:36,985 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_132530: prompt_tokens=3956 budget=1856
+2026-04-21 14:32:36,993 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_132530: prompt_tokens=4079 budget=1856
+2026-04-21 18:56:24,693 INFO [__main__] Starting The_App.
+2026-04-21 19:03:25,247 INFO [__main__] Starting The_App.
+2026-04-21 19:26:30,929 INFO [__main__] Starting The_App.
+2026-04-21 19:55:37,539 INFO [__main__] Starting The_App.
+2026-04-21 20:03:03,907 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_200143: prompt_tokens=2308 budget=1856
+2026-04-21 20:03:03,910 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_200143: prompt_tokens=2470 budget=1856
+2026-04-21 20:04:29,467 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_200143: prompt_tokens=3770 budget=1856
+2026-04-21 20:04:29,472 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat lila_thompson_20260421_200143: prompt_tokens=3912 budget=1856
+2026-04-21 20:13:35,242 INFO [__main__] Starting The_App.
+2026-04-21 20:15:13,327 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_201351: prompt_tokens=3866 budget=1856
+2026-04-21 20:15:13,331 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_201351: prompt_tokens=4012 budget=1856
+2026-04-21 20:16:01,735 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_201351: prompt_tokens=4081 budget=1856
+2026-04-21 20:16:01,740 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_201351: prompt_tokens=4247 budget=1856
+2026-04-21 20:37:18,867 INFO [__main__] Starting The_App.
+2026-04-21 20:40:27,880 INFO [__main__] Starting The_App.
+2026-04-21 20:41:08,391 INFO [__main__] Starting The_App.
+2026-04-21 20:44:05,414 INFO [__main__] Starting The_App.
+2026-04-21 20:51:07,908 INFO [__main__] Starting The_App.
+2026-04-21 20:51:23,232 WARNING [ui.windows.chat_window] Developer window refresh failed: 'DeveloperWindow' object has no attribute '_prev_snapshot'
+2026-04-21 20:51:39,149 WARNING [ui.windows.chat_window] Developer window refresh failed: 'DeveloperWindow' object has no attribute '_prev_snapshot'
+2026-04-21 20:51:39,156 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_201351: prompt_tokens=4309 budget=1856
+2026-04-21 20:51:39,161 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_201351: prompt_tokens=4446 budget=1856
+2026-04-21 20:51:58,056 WARNING [ui.windows.chat_window] Developer window refresh failed: 'DeveloperWindow' object has no attribute '_prev_snapshot'
+2026-04-21 20:53:22,694 INFO [__main__] Starting The_App.
+2026-04-21 20:53:39,120 WARNING [ui.windows.chat_window] Developer window refresh failed: 'DeveloperWindow' object has no attribute '_prev_snapshot'
+2026-04-21 20:54:35,353 INFO [__main__] Starting The_App.
+2026-04-21 20:57:12,354 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_205543: prompt_tokens=3938 budget=1856
+2026-04-21 20:57:12,359 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_205543: prompt_tokens=4084 budget=1856
+2026-04-21 21:17:35,321 INFO [__main__] Starting The_App.
+2026-04-21 21:20:08,209 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_205543: prompt_tokens=4299 budget=1856
+2026-04-21 21:20:08,214 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_205543: prompt_tokens=4485 budget=1856
+2026-04-21 21:26:56,053 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_205543: prompt_tokens=4384 budget=1856
+2026-04-21 21:26:56,060 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_205543: prompt_tokens=4540 budget=1856
+2026-04-21 21:27:34,836 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_205543: prompt_tokens=4537 budget=1856
+2026-04-21 21:27:34,843 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_205543: prompt_tokens=4677 budget=1856
+2026-04-21 21:28:54,126 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_205543: prompt_tokens=4677 budget=1856
+2026-04-21 21:33:22,936 INFO [__main__] Starting The_App.
+2026-04-21 21:36:01,938 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_213348: prompt_tokens=4016 budget=1856
+2026-04-21 21:36:01,942 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_213348: prompt_tokens=4161 budget=1856
+2026-04-21 22:04:06,964 INFO [__main__] Starting The_App.
+2026-04-21 22:04:38,083 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_213348: prompt_tokens=4059 budget=1856
+2026-04-21 22:04:38,088 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_213348: prompt_tokens=4204 budget=1856
+2026-04-21 22:07:53,822 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_213348: prompt_tokens=4233 budget=1856
+2026-04-21 22:07:53,827 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260421_213348: prompt_tokens=4431 budget=1856
+2026-04-21 22:14:20,935 INFO [__main__] Starting The_App.
+2026-04-22 07:36:34,192 INFO [__main__] Starting The_App.
+2026-04-22 07:37:34,765 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-22 07:38:12,761 INFO [ui.main_window] Settings saved — reloading models and characters.
