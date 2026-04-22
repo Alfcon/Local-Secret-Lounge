@@ -7,7 +7,8 @@ from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QFrame, QLineEdit, QComboBox, QSpinBox, QCheckBox,
     QScrollArea, QGroupBox, QFormLayout, QTabWidget,
-    QSizePolicy, QMessageBox, QFileDialog,
+    QSizePolicy, QMessageBox, QFileDialog, QTableWidget,
+    QTableWidgetItem, QAbstractItemView, QHeaderView,
 )
 from PySide6.QtCore import Qt, Signal
 
