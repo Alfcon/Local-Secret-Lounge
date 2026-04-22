@@ -1,0 +1,40 @@
+{
+  "character_ref": {
+    "id": "julie_jones",
+    "slug": "julie_jones",
+    "name": "Julie Jones"
+  },
+  "knowledge": {
+    "suspicions": [],
+    "unknowns": [],
+    "secrets_held": []
+  },
+  "relationship_with_user": {
+    "status_label": "",
+    "trust": 0,
+    "affection": 0,
+    "respect": 0,
+    "fear": 0,
+    "resentment": 0,
+    "dependency": 0,
+    "openness": 0,
+    "attraction": 0,
+    "last_change_reason": "",
+    "interpretation": ""
+  },
+  "relationships_with_characters": [],
+  "emotional_baseline": {
+    "confidence": 0,
+    "anxiety": 0,
+    "hope": 0,
+    "guilt": 0,
+    "anger": 0,
+    "loneliness": 0
+  },
+  "memories": {
+    "stable": [],
+    "episodic": []
+  },
+  "open_threads": [],
+  "scene_flags": {}
+}

@@ -1,0 +1,111 @@
+{
+  "character_static": {
+    "id": "char_XX",
+    "slug": "new_character_slug",
+    "name": "New Character Name",
+    "role": "One-line role summary for the character.",
+    "story_role": "How this character functions in the story and social world.",
+    "system_prompt": "You are New Character Name. Stay fully in character, drawing from the details in this card.",
+    "starting_scenario": "Describe the opening scene and the character’s immediate situation.",
+    "greeting": "Opening line or first interaction prompt.",
+    "identity": {
+      "age_band": "young_adult",
+      "public_summary": "What most people would say about this character.",
+      "private_truths": [
+        "A private truth that shapes the character but is not openly known."
+      ],
+      "core_traits": [
+        "trait_1",
+        "trait_2"
+      ],
+      "values": [
+        "value_1",
+        "value_2"
+      ],
+      "fears": [
+        "fear_1",
+        "fear_2"
+      ],
+      "goals": {
+        "short_term": [
+          "short term goal"
+        ],
+        "mid_term": [
+          "mid term goal"
+        ],
+        "long_term": [
+          "long term goal"
+        ]
+      },
+      "boundaries": {
+        "hard": [
+          "hard boundary"
+        ],
+        "soft": [
+          "soft boundary"
+        ]
+      },
+      "age": 20
+    },
+    "voice": {
+      "tone": "brief tone description",
+      "cadence": "how they tend to speak",
+      "favored_patterns": [
+        "Example phrase or pattern."
+      ],
+      "avoid_patterns": [
+        "Pattern to avoid."
+      ]
+    },
+    "knowledge": {
+      "known_facts": [
+        "Stable background fact about the character."
+      ]
+    }
+  },
+  "memory": {
+    "character_ref": {
+      "id": "char_XX",
+      "slug": "new_character_slug",
+      "name": "New Character Name"
+    },
+    "knowledge": {
+      "suspicions": [],
+      "unknowns": [],
+      "secrets_held": []
+    },
+    "relationship_with_user": {
+      "status_label": "Neutral",
+      "trust": 0,
+      "affection": 0,
+      "respect": 0,
+      "fear": 0,
+      "resentment": 0,
+      "dependency": 0,
+      "openness": 0,
+      "attraction": 0,
+      "last_change_reason": "",
+      "interpretation": ""
+    },
+    "relationships_with_characters": [],
+    "emotional_baseline": {
+      "confidence": 50,
+      "anxiety": 50,
+      "hope": 50,
+      "guilt": 0,
+      "anger": 0,
+      "loneliness": 50
+    },
+    "memories": {
+      "stable": [],
+      "episodic": []
+    },
+    "open_threads": [],
+    "scene_flags": {
+      "available_for_interaction": true,
+      "injured": false,
+      "hostile_mode": false,
+      "romance_locked": false
+    }
+  }
+}
