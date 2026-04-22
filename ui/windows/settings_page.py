@@ -570,7 +570,7 @@ class SettingsPage(QWidget):
         
         if reply == QMessageBox.Yes:
             try:
-                self.model_manager.remove_model(model_id, delete_file=True)
+                self.model_manager.remove_model(model_id, delete_file=True, allow_external_delete=True)
                 self._refresh_models()
             except Exception as exc:
                 logger.error("Failed to delete model: %s", exc)
