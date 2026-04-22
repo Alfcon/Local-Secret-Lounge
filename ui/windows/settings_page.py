@@ -218,10 +218,19 @@ class SettingsPage(QWidget):
         models_layout = QVBoxLayout()
         models_layout.setSpacing(10)
 
-        self.models_list_label = QLabel("No models registered.")
-        self.models_list_label.setStyleSheet("color: #c8c8e0; font-size: 12px;")
-        self.models_list_label.setWordWrap(True)
-        models_layout.addWidget(self.models_list_label)
+        self.models_table = QTableWidget()
+        self.models_table.setColumnCount(3)
+        self.models_table.setHorizontalHeaderLabels(["Name", "Size (MB)", "Status"])
+        self.models_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
+        self.models_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeToContents)
+        self.models_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        self.models_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.models_table.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.models_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.models_table.verticalHeader().setVisible(False)
+        self.models_table.itemSelectionChanged.connect(self._on_model_selection_changed)
+        self.models_table.setFixedHeight(200)
+        models_layout.addWidget(self.models_table)
 
         models_btn_row = QHBoxLayout()
         import_btn = QPushButton("Import GGUF Model…")
@@ -229,6 +238,20 @@ class SettingsPage(QWidget):
         import_btn.setFixedHeight(32)
         import_btn.clicked.connect(self._import_model)
         models_btn_row.addWidget(import_btn)
+
+        self.set_default_model_btn = QPushButton("Set Default")
+        self.set_default_model_btn.setObjectName("secondary_btn")
+        self.set_default_model_btn.setFixedHeight(32)
+        self.set_default_model_btn.setEnabled(False)
+        self.set_default_model_btn.clicked.connect(self._set_selected_model_default)
+        models_btn_row.addWidget(self.set_default_model_btn)
+
+        self.delete_model_btn = QPushButton("Delete")
+        self.delete_model_btn.setObjectName("danger_btn")
+        self.delete_model_btn.setFixedHeight(32)
+        self.delete_model_btn.setEnabled(False)
+        self.delete_model_btn.clicked.connect(self._delete_selected_model)
+        models_btn_row.addWidget(self.delete_model_btn)
 
         refresh_models_btn = QPushButton("↻ Refresh Models")
         refresh_models_btn.setObjectName("secondary_btn")
@@ -475,21 +498,82 @@ class SettingsPage(QWidget):
         except Exception as exc:
             logger.error("Model refresh failed: %s", exc)
             models = []
-        if not models:
-            self.models_list_label.setText("No models registered. Import a .gguf file to get started.")
-        else:
-            lines = []
-            for m in models:
-                status = str(m.get("status", ""))
-                status_icon = "✓" if status == "available" else "✗"
-                size_mb = int(m.get("size_bytes", 0) or 0) // (1024 * 1024)
-                default_mark = " [default]" if m.get("is_default") else ""
-                lines.append(f"{status_icon} {m.get('name', 'Unknown')}  —  {size_mb} MB{default_mark}")
-            self.models_list_label.setText("\n".join(lines))
+            
+        self.models_table.setRowCount(0)
+        self.models_table.setRowCount(len(models))
+        
+        for row, m in enumerate(models):
+            status = str(m.get("status", ""))
+            status_icon = "✓" if status == "available" else "✗"
+            name = m.get('name', 'Unknown')
+            default_mark = " [default]" if m.get("is_default") else ""
+            
+            name_item = QTableWidgetItem(f"{name}{default_mark}")
+            name_item.setData(Qt.UserRole, m.get("id"))
+            
+            size_mb = int(m.get("size_bytes", 0) or 0) // (1024 * 1024)
+            size_item = QTableWidgetItem(f"{size_mb}")
+            size_item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            
+            status_item = QTableWidgetItem(status_icon)
+            status_item.setTextAlignment(Qt.AlignCenter)
+            
+            self.models_table.setItem(row, 0, name_item)
+            self.models_table.setItem(row, 1, size_item)
+            self.models_table.setItem(row, 2, status_item)
+
+        self.models_table.clearSelection()
+        self._on_model_selection_changed()
 
         # Refresh the System & Model Advisor so recommendations reflect the
         # current default model (or the first available model as a fallback).
         self._refresh_system_advisor(models)
+
+    def _on_model_selection_changed(self) -> None:
+        has_selection = len(self.models_table.selectedItems()) > 0
+        self.set_default_model_btn.setEnabled(has_selection)
+        self.delete_model_btn.setEnabled(has_selection)
+
+    def _set_selected_model_default(self) -> None:
+        selected = self.models_table.selectedItems()
+        if not selected:
+            return
+            
+        row = selected[0].row()
+        item = self.models_table.item(row, 0)
+        model_id = str(item.data(Qt.UserRole))
+        
+        try:
+            self.model_manager.set_default_model(model_id)
+            self._refresh_models()
+        except Exception as exc:
+            logger.error("Failed to set default model: %s", exc)
+            QMessageBox.warning(self, "Error", f"Failed to set default model:\n{exc}")
+
+    def _delete_selected_model(self) -> None:
+        selected = self.models_table.selectedItems()
+        if not selected:
+            return
+            
+        row = selected[0].row()
+        item = self.models_table.item(row, 0)
+        model_id = str(item.data(Qt.UserRole))
+        
+        reply = QMessageBox.question(
+            self,
+            "Delete Model",
+            f"Are you sure you want to delete the model:\n{item.text()}?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No,
+        )
+        
+        if reply == QMessageBox.Yes:
+            try:
+                self.model_manager.remove_model(model_id, delete_file=True)
+                self._refresh_models()
+            except Exception as exc:
+                logger.error("Failed to delete model: %s", exc)
+                QMessageBox.warning(self, "Error", f"Failed to delete model:\n{exc}")
 
     def _refresh_system_advisor(self, models: list[dict[str, Any]] | None = None) -> None:
         """Push the default model's id into the System & Model Advisor."""
