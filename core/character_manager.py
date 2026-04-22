@@ -224,6 +224,47 @@ class CharacterManager:
                 return character
         return None
 
+    def get_character_memory(self, character_id: str) -> dict[str, Any] | None:
+        character = self.get_character(character_id)
+        if character is None:
+            raise ValueError(f"Character '{character_id}' not found.")
+        if str(character.get('source', 'user')) != 'user':
+            raise ValueError('Memory editing is only supported for user-created characters.')
+
+        slug = str(character.get('slug') or character.get('id') or '').strip()
+        if not slug:
+            raise ValueError('Unable to determine character storage location for memory.')
+
+        self._ensure_memory(slug)
+        memory_path = self._character_memory_file(slug)
+        try:
+            with memory_path.open(encoding='utf-8') as fh:
+                data = json.load(fh)
+            if not isinstance(data, dict):
+                raise ValueError('Character memory file is invalid.')
+            return data
+        except json.JSONDecodeError as exc:
+            raise ValueError('Character memory file contains invalid JSON.') from exc
+
+    def save_character_memory(self, character_id: str, memory_payload: dict[str, Any]) -> None:
+        character = self.get_character(character_id)
+        if character is None:
+            raise ValueError(f"Character '{character_id}' not found.")
+        if str(character.get('source', 'user')) != 'user':
+            raise ValueError('Memory editing is only supported for user-created characters.')
+
+        if not isinstance(memory_payload, dict):
+            raise ValueError('Memory payload must be a JSON object.')
+
+        slug = str(character.get('slug') or character.get('id') or '').strip()
+        if not slug:
+            raise ValueError('Unable to determine character storage location for memory.')
+
+        self._ensure_memory(slug)
+        memory_path = self._character_memory_file(slug)
+        with memory_path.open('w', encoding='utf-8') as fh:
+            json.dump(memory_payload, fh, indent=2, ensure_ascii=False)
+
     # ── Save / Delete / Duplicate / Export / Import ───────────────────────
 
     def save_character(

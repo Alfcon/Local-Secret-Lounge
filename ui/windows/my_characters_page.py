@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import logging
 from pathlib import Path
 from typing import Any
@@ -332,13 +333,95 @@ class EditCharacterDialog(QDialog):
             self.accept()
         except Exception as exc:
             self.error_label.setText(str(exc))
+
+
+class EditCharacterMemoryDialog(QDialog):
+    """Dialog for editing a user character's memory JSON."""
+
+    def __init__(
+        self,
+        character: dict[str, Any],
+        character_manager: CharacterManager,
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self._character = character
+        self.character_manager = character_manager
+        self.setWindowTitle(f"Edit Memory — {character.get('name', '')}")
+        self.setMinimumSize(760, 700)
+        self.setModal(True)
+        self._build_ui()
+        self._populate()
+
+    def _build_ui(self) -> None:
+        root = QVBoxLayout(self)
+        root.setSpacing(12)
+        root.setContentsMargins(24, 24, 24, 24)
+
+        instruction = QLabel(
+            "Edit the raw memory JSON for this character. Save will validate the JSON before writing it to disk."
+        )
+        instruction.setWordWrap(True)
+        instruction.setStyleSheet("color: #d8d8f0; margin-bottom: 12px;")
+        root.addWidget(instruction)
+
+        self.memory_edit = QTextEdit()
+        self.memory_edit.setFont(QFont("Courier", 11))
+        self.memory_edit.setLineWrapMode(QTextEdit.WidgetWidth)
+        self.memory_edit.setAcceptRichText(False)
+        self.memory_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 6px;"
+        )
+        root.addWidget(self.memory_edit, 1)
+
+        btns = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
+        )
+        btns.accepted.connect(self._on_save)
+        btns.rejected.connect(self.reject)
+        root.addWidget(btns)
+
+        self.error_label = QLabel("")
+        self.error_label.setStyleSheet("color: #ff6578; font-size: 12px; font-weight: bold;")
+        root.addWidget(self.error_label)
+
+    def _populate(self) -> None:
+        try:
+            memory = self.character_manager.get_character_memory(str(self._character.get('id', '')))
+            self.memory_edit.setPlainText(json.dumps(memory, indent=2, ensure_ascii=False))
+        except Exception as exc:
+            self.memory_edit.setPlainText('{}')
+            self.error_label.setText(str(exc))
+
+    def _on_save(self) -> None:
+        text = self.memory_edit.toPlainText().strip()
+        if not text:
+            self.error_label.setText('Memory content cannot be empty.')
+            return
+        try:
+            payload = json.loads(text)
+            if not isinstance(payload, dict):
+                raise ValueError('Memory must be a JSON object at the top level.')
+        except Exception as exc:
+            self.error_label.setText(f'Invalid JSON: {exc}')
+            return
+
+        try:
+            self.character_manager.save_character_memory(
+                str(self._character.get('id', '')),
+                payload,
+            )
+            self.accept()
+        except Exception as exc:
+            self.error_label.setText(str(exc))
+
+
 class CharacterDetailPanel(QWidget):
     """Right-hand panel showing full character details."""
 
     chat_requested = Signal(dict)
     edit_requested = Signal(dict)
-    delete_requested = Signal(str)
-
+    delete_requested = Signal(str)    memory_requested = Signal(dict)
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._character: dict[str, Any] | None = None
@@ -436,6 +519,12 @@ class CharacterDetailPanel(QWidget):
         self.edit_btn.clicked.connect(self._on_edit)
         btn_row.addWidget(self.edit_btn)
 
+        self.memory_btn = QPushButton("🧠  Edit Memory")
+        self.memory_btn.setObjectName("secondary_btn")
+        self.memory_btn.setFixedHeight(36)
+        self.memory_btn.clicked.connect(self._on_memory)
+        btn_row.addWidget(self.memory_btn)
+
         self.delete_btn = QPushButton("🗑  Delete")
         self.delete_btn.setObjectName("danger_btn")
         self.delete_btn.setFixedHeight(36)
@@ -521,8 +610,7 @@ class CharacterDetailPanel(QWidget):
         self.tags_row.addStretch()
 
         is_discover = str(character.get("source", "")) == "discover"
-        self.edit_btn.setEnabled(not is_discover)
-        self.delete_btn.setEnabled(not is_discover)
+        self.edit_btn.setEnabled(not is_discover)        self.memory_btn.setEnabled(not is_discover)        self.delete_btn.setEnabled(not is_discover)
 
     def _on_chat(self) -> None:
         if self._character:
@@ -531,6 +619,10 @@ class CharacterDetailPanel(QWidget):
     def _on_edit(self) -> None:
         if self._character:
             self.edit_requested.emit(self._character)
+
+    def _on_memory(self) -> None:
+        if self._character:
+            self.memory_requested.emit(self._character)
 
     def _on_delete(self) -> None:
         if self._character:
@@ -625,6 +717,7 @@ class MyCharactersPage(QWidget):
         self.detail_panel = CharacterDetailPanel()
         self.detail_panel.chat_requested.connect(self.chat_requested.emit)
         self.detail_panel.edit_requested.connect(self._on_edit_character)
+        self.detail_panel.memory_requested.connect(self._on_edit_memory)
         self.detail_panel.delete_requested.connect(self._on_delete_character)
         splitter.addWidget(self.detail_panel)
 
@@ -769,12 +862,26 @@ class MyCharactersPage(QWidget):
         if dialog.exec() == QDialog.DialogCode.Accepted:
             self.refresh()
             # Re-select the edited character
-            edited_name = character.get("name", "")
+            edited_name = dialog.name_edit.text().strip()
             for i in range(self.char_list.count()):
                 item = self.char_list.item(i)
                 if item:
                     c = item.data(Qt.ItemDataRole.UserRole)
                     if str(c.get("name", "")) == edited_name:
+                        self.char_list.setCurrentRow(i)
+                        break
+
+    def _on_edit_memory(self, character: dict[str, Any]) -> None:
+        dialog = EditCharacterMemoryDialog(character, self.character_manager, parent=self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            self.refresh()
+            # keep the same character selected after memory save
+            selected_name = character.get("name", "")
+            for i in range(self.char_list.count()):
+                item = self.char_list.item(i)
+                if item:
+                    c = item.data(Qt.ItemDataRole.UserRole)
+                    if str(c.get("name", "")) == selected_name:
                         self.char_list.setCurrentRow(i)
                         break
 
