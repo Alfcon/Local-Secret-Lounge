@@ -178,7 +178,7 @@ class EditCharacterDialog(QDialog):
         self.avatar_path_edit.setPlaceholderText("Path to avatar image (optional)")
         avatar_row.addWidget(self.avatar_path_edit)
         browse_btn = QPushButton("Browse…")
-        browse_btn.setFixedWidth(80)
+        browse_btn.setStyleSheet("font-size: 11px;")
         browse_btn.clicked.connect(self._browse_avatar)
         avatar_row.addWidget(browse_btn)
         form.addRow("Avatar Image", avatar_row)
