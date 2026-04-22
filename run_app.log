@@ -442,3 +442,6 @@
 2026-04-22 11:25:26,324 INFO [__main__] Starting Local Secret Lounge.
 2026-04-22 11:56:50,259 INFO [__main__] Starting Local Secret Lounge.
 2026-04-22 11:57:12,707 INFO [ui.main_window] Settings saved — reloading models and characters.
+2026-04-22 12:09:42,136 INFO [__main__] Starting Local Secret Lounge.
+2026-04-22 12:13:09,465 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260422_121021: prompt_tokens=2485 budget=1856
+2026-04-22 12:13:09,485 WARNING [ui.windows.chat_window] System prompt alone exceeds the request budget for chat julie_jones_20260422_121021: prompt_tokens=2622 budget=1856
