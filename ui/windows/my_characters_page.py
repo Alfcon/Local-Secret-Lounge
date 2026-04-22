@@ -364,7 +364,7 @@ class CharacterDetailPanel(QWidget):
         left_col = QVBoxLayout()
         left_col.setSpacing(0)
         left_col.setContentsMargins(0, 0, 0, 0)
-        self.avatar = CharacterImage(minimum_size=(192, 192))
+        self.avatar = CharacterImage(minimum_size=(192, 600))
         self.avatar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         left_col.addWidget(self.avatar, alignment=Qt.AlignmentFlag.AlignTop)
         left_col.addStretch()

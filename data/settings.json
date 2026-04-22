@@ -23,5 +23,9 @@
   "story_location_city": "",
   "story_location_country": "",
   "ui_font_size": 14,
-  "developer_mode": true
+  "developer_mode": true,
+  "my_characters_splitter_ratio": [
+    265,
+    1033
+  ]
 }
