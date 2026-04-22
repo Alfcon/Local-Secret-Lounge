@@ -344,6 +344,7 @@ class CharacterDetailPanel(QWidget):
         self._character: dict[str, Any] | None = None
         self._build_ui()
 
+
     def _build_ui(self) -> None:
         layout = QVBoxLayout(self)
         layout.setSpacing(16)
@@ -355,57 +356,56 @@ class CharacterDetailPanel(QWidget):
         layout.addWidget(self.empty_label)
 
         self.detail_widget = QWidget()
-        detail_layout = QVBoxLayout(self.detail_widget)
-        detail_layout.setSpacing(12)
+        detail_layout = QHBoxLayout(self.detail_widget)
+        detail_layout.setSpacing(16)
         detail_layout.setContentsMargins(0, 0, 0, 0)
 
-        # Avatar — scalable rounded square, consistent with the chat window
-        # and Discover page. Minimum ensures it is not swallowed by the text
-        # column on narrow windows; it grows with the layout beyond that.
-        header_row = QHBoxLayout()
+        # Left column: Character image (33%)
+        left_col = QVBoxLayout()
+        left_col.setSpacing(0)
+        left_col.setContentsMargins(0, 0, 0, 0)
         self.avatar = CharacterImage(minimum_size=(192, 192))
-        # self.avatar.setMaximumHeight(360)      
-        # header_row.addWidget(self.avatar, stretch=1)
-        header_row.addWidget(self.avatar, 2)
+        self.avatar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        left_col.addWidget(self.avatar, alignment=Qt.AlignmentFlag.AlignTop)
+        left_col.addStretch()
 
-        name_col = QVBoxLayout()
+        # Right column: Character details (67%)
+        right_col = QVBoxLayout()
+        right_col.setSpacing(12)
+        right_col.setContentsMargins(0, 0, 0, 0)
+
         self.name_label = QLabel("")
         font = QFont()
         font.setBold(True)
         font.setPointSize(16)
         self.name_label.setFont(font)
-        name_col.addWidget(self.name_label)
+        right_col.addWidget(self.name_label)
 
         self.title_label = QLabel("")
         self.title_label.setStyleSheet("color: #d8d8f0; font-size: 12px; font-weight: bold;")
-        name_col.addWidget(self.title_label)
+        right_col.addWidget(self.title_label)
 
         self.story_role_label = QLabel("")
         self.story_role_label.setStyleSheet("color: #d8d8f0; font-size: 12px; font-weight: bold;")
         self.story_role_label.setWordWrap(True)
-        name_col.addWidget(self.story_role_label)
+        right_col.addWidget(self.story_role_label)
 
         self.source_label = QLabel("")
         self.source_label.setStyleSheet("color: #a8a8c8; font-size: 11px;")
-        name_col.addWidget(self.source_label)
-
-        name_col.addStretch()
-        header_row.addLayout(name_col)
-        header_row.addStretch()
-        detail_layout.addLayout(header_row)
+        right_col.addWidget(self.source_label)
 
         self.desc_heading = QLabel("Description")
         self.desc_heading.setObjectName("section_label")
-        detail_layout.addWidget(self.desc_heading)
+        right_col.addWidget(self.desc_heading)
 
         self.desc_label = QLabel("")
         self.desc_label.setWordWrap(True)
         self.desc_label.setStyleSheet("color: #f0f0ff; font-size: 12px; line-height: 1.5;")
-        detail_layout.addWidget(self.desc_label)
+        right_col.addWidget(self.desc_label)
 
         self.prompt_heading = QLabel("System Prompt")
         self.prompt_heading.setObjectName("section_label")
-        detail_layout.addWidget(self.prompt_heading)
+        right_col.addWidget(self.prompt_heading)
 
         self.prompt_preview = QTextEdit()
         self.prompt_preview.setReadOnly(True)
@@ -414,13 +414,13 @@ class CharacterDetailPanel(QWidget):
             "background-color: #12122a; color: #e0e0f8; "
             "border: 1px solid #3a3a5a; border-radius: 6px; font-size: 11px;"
         )
-        detail_layout.addWidget(self.prompt_preview)
+        right_col.addWidget(self.prompt_preview)
 
         self.tags_row = QHBoxLayout()
         self.tags_row.setSpacing(6)
-        detail_layout.addLayout(self.tags_row)
+        right_col.addLayout(self.tags_row)
 
-        detail_layout.addStretch()
+        right_col.addStretch()
 
         btn_row = QHBoxLayout()
         btn_row.setSpacing(10)
@@ -442,7 +442,11 @@ class CharacterDetailPanel(QWidget):
         self.delete_btn.clicked.connect(self._on_delete)
         btn_row.addWidget(self.delete_btn)
 
-        detail_layout.addLayout(btn_row)
+        right_col.addLayout(btn_row)
+
+        # Add columns to main detail layout
+        detail_layout.addLayout(left_col, 1)
+        detail_layout.addLayout(right_col, 2)
 
         layout.addWidget(self.detail_widget)
         self.detail_widget.hide()
