@@ -647,7 +647,8 @@ class EditCharacterDialog(QDialog):
                     "interpretation": self.interpretation_edit.text(),
                 },
                 "relationships_with_characters": self._parse_json_or_lines(
-                    self.relationships_with_chars_edit.toPlainText().strip() or "[]"
+                    self.relationships_with_chars_edit.toPlainText().strip() or "[]",
+                    "Relationships with Characters"
                 ),
                 "emotional_baseline": {
                     "confidence": self.confidence_spin.value(),
