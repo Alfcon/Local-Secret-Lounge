@@ -487,18 +487,18 @@ class EditCharacterDialog(QDialog):
 
         rels_chars = memory.get("relationships_with_characters", [])
         self.relationships_with_chars_edit.setPlainText(
-            json.dumps(rels_chars, indent=2, ensure_ascii=False)
+            "\n".join(str(x) for x in rels_chars)
         )
 
         knowledge_mem = memory.get("knowledge", {})
         self.suspicions_edit.setPlainText(
-            json.dumps(knowledge_mem.get("suspicions", []), indent=2, ensure_ascii=False)
+            "\n".join(str(x) for x in knowledge_mem.get("suspicions", []))
         )
         self.unknowns_edit.setPlainText(
-            json.dumps(knowledge_mem.get("unknowns", []), indent=2, ensure_ascii=False)
+            "\n".join(str(x) for x in knowledge_mem.get("unknowns", []))
         )
         self.secrets_held_edit.setPlainText(
-            json.dumps(knowledge_mem.get("secrets_held", []), indent=2, ensure_ascii=False)
+            "\n".join(str(x) for x in knowledge_mem.get("secrets_held", []))
         )
 
         emotional = memory.get("emotional_baseline", {})
@@ -511,15 +511,15 @@ class EditCharacterDialog(QDialog):
 
         memories = memory.get("memories", {})
         self.stable_memories_edit.setPlainText(
-            json.dumps(memories.get("stable", []), indent=2, ensure_ascii=False)
+            "\n".join(str(x) for x in memories.get("stable", []))
         )
         self.episodic_memories_edit.setPlainText(
-            json.dumps(memories.get("episodic", []), indent=2, ensure_ascii=False)
+            "\n".join(str(x) for x in memories.get("episodic", []))
         )
 
         open_threads = memory.get("open_threads", [])
         self.open_threads_edit.setPlainText(
-            json.dumps(open_threads, indent=2, ensure_ascii=False)
+            "\n".join(str(x) for x in open_threads)
         )
 
         flags = memory.get("scene_flags", {})
@@ -731,16 +731,16 @@ class CharacterDetailPanel(QWidget):
         right_col.addWidget(self.name_label)
 
         self.title_label = QLabel("")
-        self.title_label.setStyleSheet("color: #d8d8f0; font-size: 12px; font-weight: bold;")
+        self.title_label.setStyleSheet("color: #d8d8f0; font-weight: bold;")
         right_col.addWidget(self.title_label)
 
         self.story_role_label = QLabel("")
-        self.story_role_label.setStyleSheet("color: #d8d8f0; font-size: 12px; font-weight: bold;")
+        self.story_role_label.setStyleSheet("color: #d8d8f0; font-weight: bold;")
         self.story_role_label.setWordWrap(True)
         right_col.addWidget(self.story_role_label)
 
         self.source_label = QLabel("")
-        self.source_label.setStyleSheet("color: #a8a8c8; font-size: 11px;")
+        self.source_label.setStyleSheet("color: #a8a8c8;")
         right_col.addWidget(self.source_label)
 
         self.desc_heading = QLabel("Description")
@@ -749,20 +749,18 @@ class CharacterDetailPanel(QWidget):
 
         self.desc_label = QLabel("")
         self.desc_label.setWordWrap(True)
-        self.desc_label.setStyleSheet("color: #f0f0ff; font-size: 12px; line-height: 1.5;")
+        self.desc_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        self.desc_label.setStyleSheet("color: #f0f0ff; line-height: 1.5;")
         right_col.addWidget(self.desc_label)
 
         self.prompt_heading = QLabel("System Prompt")
         self.prompt_heading.setObjectName("section_label")
         right_col.addWidget(self.prompt_heading)
 
-        self.prompt_preview = QTextEdit()
-        self.prompt_preview.setReadOnly(True)
-        self.prompt_preview.setMinimumHeight(80)
-        self.prompt_preview.setStyleSheet(
-            "background-color: #12122a; color: #e0e0f8; "
-            "border: 1px solid #3a3a5a; border-radius: 6px; font-size: 11px;"
-        )
+        self.prompt_preview = QLabel("")
+        self.prompt_preview.setWordWrap(True)
+        self.prompt_preview.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        self.prompt_preview.setStyleSheet("color: #f0f0ff; line-height: 1.5;")
         right_col.addWidget(self.prompt_preview)
 
         self.tags_row = QHBoxLayout()
@@ -847,7 +845,7 @@ class CharacterDetailPanel(QWidget):
             self.desc_label.hide()
 
         sys_prompt = str(character.get("system_prompt", "") or "").strip()
-        self.prompt_preview.setPlainText(sys_prompt)
+        self.prompt_preview.setText(sys_prompt)
         if sys_prompt:
             self.prompt_heading.show()
             self.prompt_preview.show()

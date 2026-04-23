@@ -13,7 +13,7 @@
   },
   "relationship_with_user": {
     "status_label": "Neutral",
-    "trust": 0,
+    "trust": 50,
     "affection": 0,
     "respect": 0,
     "fear": 0,

@@ -4,7 +4,7 @@
   "chat_backend_preference": "ollama",
   "startup_page": "discover",
   "default_context_size": 4096,
-  "default_threads": 16,
+  "default_threads": 18,
   "default_max_tokens": 2048,
   "last_model_id": null,
   "last_character_id": null,
@@ -27,10 +27,10 @@
   "ollama_timeout_seconds": 300,
   "story_location_city": "",
   "story_location_country": "",
-  "ui_font_size": 14,
+  "ui_font_size": 12,
   "developer_mode": true,
   "my_characters_splitter_ratio": [
     180,
-    1438
+    1118
   ]
 }
