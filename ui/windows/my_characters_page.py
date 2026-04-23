@@ -287,7 +287,8 @@ class EditCharacterDialog(QDialog):
         self.relationships_with_chars_edit.setStyleSheet(
             "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
         )
-        form.addRow("Relationships with Characters (JSON):", self.relationships_with_chars_edit)
+        self.relationships_with_chars_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Relationships with Characters:", self.relationships_with_chars_edit)
 
         knowledge_label = QLabel("Knowledge")
         knowledge_label.setStyleSheet("font-weight: bold; margin-top: 10px; color: #a8a8c8;")
@@ -612,7 +613,7 @@ class EditCharacterDialog(QDialog):
 
         try:
             list_fields = [
-                ("Relationships with Characters", self.relationships_with_chars_edit),
+                # Relationships field now accepts plain text or JSON
             ]
             for field_name, widget in list_fields:
                 text = widget.toPlainText().strip()
@@ -645,7 +646,7 @@ class EditCharacterDialog(QDialog):
                     "last_change_reason": self.last_change_reason_edit.text(),
                     "interpretation": self.interpretation_edit.text(),
                 },
-                "relationships_with_characters": json.loads(
+                "relationships_with_characters": self._parse_json_or_lines(
                     self.relationships_with_chars_edit.toPlainText().strip() or "[]"
                 ),
                 "emotional_baseline": {
