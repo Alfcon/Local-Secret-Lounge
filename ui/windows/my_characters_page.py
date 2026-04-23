@@ -287,7 +287,7 @@ class EditCharacterDialog(QDialog):
         self.relationships_with_chars_edit.setStyleSheet(
             "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
         )
-        self.relationships_with_chars_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        self.relationships_with_chars_edit.setPlaceholderText("One relationship per line (e.g., Alice: friend)")
         form.addRow("Relationships with Characters:", self.relationships_with_chars_edit)
 
         knowledge_label = QLabel("Knowledge")
@@ -300,7 +300,7 @@ class EditCharacterDialog(QDialog):
         self.suspicions_edit.setStyleSheet(
             "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
         )
-        self.suspicions_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        self.suspicions_edit.setPlaceholderText("One suspicion per line")
         form.addRow("Suspicions:", self.suspicions_edit)
 
         self.unknowns_edit = QTextEdit()
@@ -309,7 +309,7 @@ class EditCharacterDialog(QDialog):
         self.unknowns_edit.setStyleSheet(
             "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
         )
-        self.unknowns_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        self.unknowns_edit.setPlaceholderText("One unknown per line")
         form.addRow("Unknowns:", self.unknowns_edit)
 
         self.secrets_held_edit = QTextEdit()
@@ -318,7 +318,7 @@ class EditCharacterDialog(QDialog):
         self.secrets_held_edit.setStyleSheet(
             "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
         )
-        self.secrets_held_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        self.secrets_held_edit.setPlaceholderText("One secret per line")
         form.addRow("Secrets Held:", self.secrets_held_edit)
 
         emotional_label = QLabel("Emotional Baseline")
@@ -359,7 +359,7 @@ class EditCharacterDialog(QDialog):
         self.stable_memories_edit.setStyleSheet(
             "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
         )
-        self.stable_memories_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        self.stable_memories_edit.setPlaceholderText("One stable memory per line")
         form.addRow("Stable Memories:", self.stable_memories_edit)
 
         self.episodic_memories_edit = QTextEdit()
@@ -368,7 +368,7 @@ class EditCharacterDialog(QDialog):
         self.episodic_memories_edit.setStyleSheet(
             "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
         )
-        self.episodic_memories_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        self.episodic_memories_edit.setPlaceholderText("One episodic memory per line")
         form.addRow("Episodic Memories:", self.episodic_memories_edit)
 
         self.open_threads_edit = QTextEdit()
@@ -377,7 +377,7 @@ class EditCharacterDialog(QDialog):
         self.open_threads_edit.setStyleSheet(
             "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
         )
-        self.open_threads_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        self.open_threads_edit.setPlaceholderText("One open thread per line")
         form.addRow("Open Threads:", self.open_threads_edit)
 
         flags_label = QLabel("Scene Flags")
