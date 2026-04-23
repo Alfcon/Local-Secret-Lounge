@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QListWidget, QListWidgetItem, QFrame, QSplitter,
     QTextEdit, QFileDialog, QMessageBox, QLineEdit, QFormLayout,
     QScrollArea, QSizePolicy, QDialog, QDialogButtonBox,
+    QTabWidget, QSpinBox, QCheckBox,
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
@@ -336,7 +337,7 @@ class EditCharacterDialog(QDialog):
 
 
 class EditCharacterMemoryDialog(QDialog):
-    """Dialog for editing a user character's memory JSON."""
+    """Dialog for editing a user character's memory with labeled fields and tabs."""
 
     def __init__(
         self,
@@ -347,33 +348,49 @@ class EditCharacterMemoryDialog(QDialog):
         super().__init__(parent)
         self._character = character
         self.character_manager = character_manager
+        self._memory: dict[str, Any] = {}
         self.setWindowTitle(f"Edit Memory — {character.get('name', '')}")
-        self.setMinimumSize(760, 700)
+        self.setMinimumSize(900, 750)
         self.setModal(True)
         self._build_ui()
         self._populate()
 
     def _build_ui(self) -> None:
+        """Build the tabbed form interface."""
         root = QVBoxLayout(self)
         root.setSpacing(12)
         root.setContentsMargins(24, 24, 24, 24)
 
         instruction = QLabel(
-            "Edit the raw memory JSON for this character. Save will validate the JSON before writing it to disk."
+            "Edit the character's memory using the labeled fields below. All changes are validated before saving."
         )
         instruction.setWordWrap(True)
         instruction.setStyleSheet("color: #d8d8f0; margin-bottom: 12px;")
         root.addWidget(instruction)
 
-        self.memory_edit = QTextEdit()
-        self.memory_edit.setFont(QFont("Courier", 11))
-        self.memory_edit.setLineWrapMode(QTextEdit.WidgetWidth)
-        self.memory_edit.setAcceptRichText(False)
-        self.memory_edit.setStyleSheet(
-            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 6px;"
-        )
-        root.addWidget(self.memory_edit, 1)
+        # Create tabs
+        self.tabs = QTabWidget()
+        root.addWidget(self.tabs, 1)
 
+        # Relationship tab
+        self.tabs.addTab(self._build_relationship_tab(), "Relationship")
+
+        # Knowledge tab
+        self.tabs.addTab(self._build_knowledge_tab(), "Knowledge")
+
+        # Emotional Baseline tab
+        self.tabs.addTab(self._build_emotional_baseline_tab(), "Emotional Baseline")
+
+        # Memories tab
+        self.tabs.addTab(self._build_memories_tab(), "Memories")
+
+        # Scene Flags tab
+        self.tabs.addTab(self._build_scene_flags_tab(), "Scene Flags")
+
+        # Other tab
+        self.tabs.addTab(self._build_other_tab(), "Other")
+
+        # Buttons
         btns = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
         )
@@ -385,35 +402,368 @@ class EditCharacterMemoryDialog(QDialog):
         self.error_label.setStyleSheet("color: #ff6578; font-size: 12px; font-weight: bold;")
         root.addWidget(self.error_label)
 
-    def _populate(self) -> None:
+    def _create_scroll_widget_with_form(self) -> tuple[QWidget, QFormLayout]:
+        """Create a scrollable widget with a form layout."""
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.NoFrame)
+
+        container = QWidget()
+        form = QFormLayout(container)
+        form.setHorizontalSpacing(24)
+        form.setVerticalSpacing(12)
+
+        scroll_area.setWidget(container)
+        return scroll_area, form
+
+    def _parse_json_or_lines(self, text: str, field_name: str) -> list[Any]:
+        """Parse a text field as either JSON array or newline-delimited list."""
+        cleaned = text.strip()
+        if not cleaned:
+            return []
+
         try:
-            memory = self.character_manager.get_character_memory(str(self._character.get('id', '')))
-            self.memory_edit.setPlainText(json.dumps(memory, indent=2, ensure_ascii=False))
+            parsed = json.loads(cleaned)
+        except json.JSONDecodeError:
+            return [line.strip() for line in cleaned.splitlines() if line.strip()]
+
+        if not isinstance(parsed, list):
+            raise ValueError(f"{field_name} must be a JSON array or one item per line.")
+        return parsed
+
+    def _build_relationship_tab(self) -> QWidget:
+        """Build the Relationship with User tab."""
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
+        self.status_label_edit = QLineEdit()
+        form.addRow("Status Label:", self.status_label_edit)
+
+        self.trust_spin = QSpinBox()
+        self.trust_spin.setRange(0, 100)
+        form.addRow("Trust:", self.trust_spin)
+
+        self.affection_spin = QSpinBox()
+        self.affection_spin.setRange(0, 100)
+        form.addRow("Affection:", self.affection_spin)
+
+        self.respect_spin = QSpinBox()
+        self.respect_spin.setRange(0, 100)
+        form.addRow("Respect:", self.respect_spin)
+
+        self.fear_spin = QSpinBox()
+        self.fear_spin.setRange(0, 100)
+        form.addRow("Fear:", self.fear_spin)
+
+        self.resentment_spin = QSpinBox()
+        self.resentment_spin.setRange(0, 100)
+        form.addRow("Resentment:", self.resentment_spin)
+
+        self.dependency_spin = QSpinBox()
+        self.dependency_spin.setRange(0, 100)
+        form.addRow("Dependency:", self.dependency_spin)
+
+        self.openness_spin = QSpinBox()
+        self.openness_spin.setRange(0, 100)
+        form.addRow("Openness:", self.openness_spin)
+
+        self.attraction_spin = QSpinBox()
+        self.attraction_spin.setRange(0, 100)
+        form.addRow("Attraction:", self.attraction_spin)
+
+        self.last_change_reason_edit = QLineEdit()
+        form.addRow("Last Change Reason:", self.last_change_reason_edit)
+
+        self.interpretation_edit = QLineEdit()
+        form.addRow("Interpretation:", self.interpretation_edit)
+
+        self.relationships_with_chars_edit = QTextEdit()
+        self.relationships_with_chars_edit.setFont(QFont("Courier", 10))
+        self.relationships_with_chars_edit.setFixedHeight(150)
+        self.relationships_with_chars_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        form.addRow("Relationships with Characters (JSON):", self.relationships_with_chars_edit)
+
+        return scroll_widget
+
+    def _build_knowledge_tab(self) -> QWidget:
+        """Build the Knowledge tab."""
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
+        self.suspicions_edit = QTextEdit()
+        self.suspicions_edit.setFont(QFont("Courier", 10))
+        self.suspicions_edit.setFixedHeight(120)
+        self.suspicions_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.suspicions_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Suspicions (JSON array or lines):", self.suspicions_edit)
+
+        self.unknowns_edit = QTextEdit()
+        self.unknowns_edit.setFont(QFont("Courier", 10))
+        self.unknowns_edit.setFixedHeight(120)
+        self.unknowns_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.unknowns_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Unknowns (JSON array or lines):", self.unknowns_edit)
+
+        self.secrets_held_edit = QTextEdit()
+        self.secrets_held_edit.setFont(QFont("Courier", 10))
+        self.secrets_held_edit.setFixedHeight(120)
+        self.secrets_held_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.secrets_held_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Secrets Held (JSON array or lines):", self.secrets_held_edit)
+
+        return scroll_widget
+
+    def _build_emotional_baseline_tab(self) -> QWidget:
+        """Build the Emotional Baseline tab."""
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
+        self.confidence_spin = QSpinBox()
+        self.confidence_spin.setRange(0, 100)
+        form.addRow("Confidence:", self.confidence_spin)
+
+        self.anxiety_spin = QSpinBox()
+        self.anxiety_spin.setRange(0, 100)
+        form.addRow("Anxiety:", self.anxiety_spin)
+
+        self.hope_spin = QSpinBox()
+        self.hope_spin.setRange(0, 100)
+        form.addRow("Hope:", self.hope_spin)
+
+        self.guilt_spin = QSpinBox()
+        self.guilt_spin.setRange(0, 100)
+        form.addRow("Guilt:", self.guilt_spin)
+
+        self.anger_spin = QSpinBox()
+        self.anger_spin.setRange(0, 100)
+        form.addRow("Anger:", self.anger_spin)
+
+        self.loneliness_spin = QSpinBox()
+        self.loneliness_spin.setRange(0, 100)
+        form.addRow("Loneliness:", self.loneliness_spin)
+
+        return scroll_widget
+
+    def _build_memories_tab(self) -> QWidget:
+        """Build the Memories tab."""
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
+        self.stable_memories_edit = QTextEdit()
+        self.stable_memories_edit.setFont(QFont("Courier", 10))
+        self.stable_memories_edit.setFixedHeight(150)
+        self.stable_memories_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.stable_memories_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Stable Memories (JSON array or lines):", self.stable_memories_edit)
+
+        self.episodic_memories_edit = QTextEdit()
+        self.episodic_memories_edit.setFont(QFont("Courier", 10))
+        self.episodic_memories_edit.setFixedHeight(150)
+        self.episodic_memories_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.episodic_memories_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Episodic Memories (JSON array or lines):", self.episodic_memories_edit)
+
+        self.open_threads_edit = QTextEdit()
+        self.open_threads_edit.setFont(QFont("Courier", 10))
+        self.open_threads_edit.setFixedHeight(120)
+        self.open_threads_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.open_threads_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Open Threads (JSON array or lines):", self.open_threads_edit)
+
+        return scroll_widget
+
+    def _build_scene_flags_tab(self) -> QWidget:
+        """Build the Scene Flags tab."""
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
+        self.available_checkbox = QCheckBox()
+        form.addRow("Available for Interaction:", self.available_checkbox)
+
+        self.injured_checkbox = QCheckBox()
+        form.addRow("Injured:", self.injured_checkbox)
+
+        self.hostile_mode_checkbox = QCheckBox()
+        form.addRow("Hostile Mode:", self.hostile_mode_checkbox)
+
+        self.romance_locked_checkbox = QCheckBox()
+        form.addRow("Romance Locked:", self.romance_locked_checkbox)
+
+        return scroll_widget
+
+    def _build_other_tab(self) -> QWidget:
+        """Build the Other tab for character reference (read-only display)."""
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
+        self.char_id_label = QLabel()
+        form.addRow("Character ID:", self.char_id_label)
+
+        self.char_slug_label = QLabel()
+        form.addRow("Slug:", self.char_slug_label)
+
+        self.char_name_label = QLabel()
+        form.addRow("Name:", self.char_name_label)
+
+        return scroll_widget
+
+    def _populate(self) -> None:
+        """Load memory data and populate form fields."""
+        try:
+            self._memory = self.character_manager.get_character_memory(
+                str(self._character.get('id', ''))
+            )
         except Exception as exc:
-            self.memory_edit.setPlainText('{}')
-            self.error_label.setText(str(exc))
+            self._memory = {}
+            self.error_label.setText(f"Failed to load memory: {exc}")
+            return
+
+        # Relationship with User
+        rel = self._memory.get("relationship_with_user", {})
+        self.status_label_edit.setText(rel.get("status_label", ""))
+        self.trust_spin.setValue(rel.get("trust", 0))
+        self.affection_spin.setValue(rel.get("affection", 0))
+        self.respect_spin.setValue(rel.get("respect", 0))
+        self.fear_spin.setValue(rel.get("fear", 0))
+        self.resentment_spin.setValue(rel.get("resentment", 0))
+        self.dependency_spin.setValue(rel.get("dependency", 0))
+        self.openness_spin.setValue(rel.get("openness", 0))
+        self.attraction_spin.setValue(rel.get("attraction", 0))
+        self.last_change_reason_edit.setText(rel.get("last_change_reason", ""))
+        self.interpretation_edit.setText(rel.get("interpretation", ""))
+
+        rels_chars = self._memory.get("relationships_with_characters", [])
+        self.relationships_with_chars_edit.setPlainText(
+            json.dumps(rels_chars, indent=2, ensure_ascii=False)
+        )
+
+        # Knowledge
+        knowledge = self._memory.get("knowledge", {})
+        self.suspicions_edit.setPlainText(
+            json.dumps(knowledge.get("suspicions", []), indent=2, ensure_ascii=False)
+        )
+        self.unknowns_edit.setPlainText(
+            json.dumps(knowledge.get("unknowns", []), indent=2, ensure_ascii=False)
+        )
+        self.secrets_held_edit.setPlainText(
+            json.dumps(knowledge.get("secrets_held", []), indent=2, ensure_ascii=False)
+        )
+
+        # Emotional Baseline
+        emotional = self._memory.get("emotional_baseline", {})
+        self.confidence_spin.setValue(emotional.get("confidence", 50))
+        self.anxiety_spin.setValue(emotional.get("anxiety", 50))
+        self.hope_spin.setValue(emotional.get("hope", 50))
+        self.guilt_spin.setValue(emotional.get("guilt", 0))
+        self.anger_spin.setValue(emotional.get("anger", 0))
+        self.loneliness_spin.setValue(emotional.get("loneliness", 50))
+
+        # Memories
+        memories = self._memory.get("memories", {})
+        self.stable_memories_edit.setPlainText(
+            json.dumps(memories.get("stable", []), indent=2, ensure_ascii=False)
+        )
+        self.episodic_memories_edit.setPlainText(
+            json.dumps(memories.get("episodic", []), indent=2, ensure_ascii=False)
+        )
+
+        open_threads = self._memory.get("open_threads", [])
+        self.open_threads_edit.setPlainText(
+            json.dumps(open_threads, indent=2, ensure_ascii=False)
+        )
+
+        # Scene Flags
+        flags = self._memory.get("scene_flags", {})
+        self.available_checkbox.setChecked(flags.get("available_for_interaction", True))
+        self.injured_checkbox.setChecked(flags.get("injured", False))
+        self.hostile_mode_checkbox.setChecked(flags.get("hostile_mode", False))
+        self.romance_locked_checkbox.setChecked(flags.get("romance_locked", False))
+
+        # Character Reference
+        char_ref = self._memory.get("character_ref", {})
+        self.char_id_label.setText(char_ref.get("id", ""))
+        self.char_slug_label.setText(char_ref.get("slug", ""))
+        self.char_name_label.setText(char_ref.get("name", ""))
 
     def _on_save(self) -> None:
-        text = self.memory_edit.toPlainText().strip()
-        if not text:
-            self.error_label.setText('Memory content cannot be empty.')
-            return
+        """Validate form data and save to memory."""
         try:
-            payload = json.loads(text)
-            if not isinstance(payload, dict):
-                raise ValueError('Memory must be a JSON object at the top level.')
-        except Exception as exc:
-            self.error_label.setText(f'Invalid JSON: {exc}')
-            return
+            # Validate the JSON-only text field(s)
+            list_fields = [
+                ("Relationships with Characters", self.relationships_with_chars_edit),
+            ]
 
-        try:
+            for field_name, widget in list_fields:
+                text = widget.toPlainText().strip()
+                if text:
+                    try:
+                        parsed = json.loads(text)
+                        if not isinstance(parsed, list):
+                            raise json.JSONDecodeError("Expected a JSON array", text, 0)
+                    except json.JSONDecodeError as e:
+                        self.error_label.setText(f"Invalid JSON in {field_name}: {e}")
+                        return
+
+            # Reconstruct memory object
+            payload = {
+                "character_ref": self._memory.get("character_ref", {}),
+                "knowledge": {
+                    "suspicions": self._parse_json_or_lines(self.suspicions_edit.toPlainText(), "Suspicions"),
+                    "unknowns": self._parse_json_or_lines(self.unknowns_edit.toPlainText(), "Unknowns"),
+                    "secrets_held": self._parse_json_or_lines(self.secrets_held_edit.toPlainText(), "Secrets Held"),
+                },
+                "relationship_with_user": {
+                    "status_label": self.status_label_edit.text(),
+                    "trust": self.trust_spin.value(),
+                    "affection": self.affection_spin.value(),
+                    "respect": self.respect_spin.value(),
+                    "fear": self.fear_spin.value(),
+                    "resentment": self.resentment_spin.value(),
+                    "dependency": self.dependency_spin.value(),
+                    "openness": self.openness_spin.value(),
+                    "attraction": self.attraction_spin.value(),
+                    "last_change_reason": self.last_change_reason_edit.text(),
+                    "interpretation": self.interpretation_edit.text(),
+                },
+                "relationships_with_characters": json.loads(
+                    self.relationships_with_chars_edit.toPlainText().strip() or "[]"
+                ),
+                "emotional_baseline": {
+                    "confidence": self.confidence_spin.value(),
+                    "anxiety": self.anxiety_spin.value(),
+                    "hope": self.hope_spin.value(),
+                    "guilt": self.guilt_spin.value(),
+                    "anger": self.anger_spin.value(),
+                    "loneliness": self.loneliness_spin.value(),
+                },
+                "memories": {
+                    "stable": self._parse_json_or_lines(self.stable_memories_edit.toPlainText(), "Stable Memories"),
+                    "episodic": self._parse_json_or_lines(self.episodic_memories_edit.toPlainText(), "Episodic Memories"),
+                },
+                "open_threads": self._parse_json_or_lines(self.open_threads_edit.toPlainText(), "Open Threads"),
+                "scene_flags": {
+                    "available_for_interaction": self.available_checkbox.isChecked(),
+                    "injured": self.injured_checkbox.isChecked(),
+                    "hostile_mode": self.hostile_mode_checkbox.isChecked(),
+                    "romance_locked": self.romance_locked_checkbox.isChecked(),
+                },
+            }
+
             self.character_manager.save_character_memory(
                 str(self._character.get('id', '')),
                 payload,
             )
             self.accept()
         except Exception as exc:
-            self.error_label.setText(str(exc))
+            self.error_label.setText(f"Error saving memory: {exc}")
 
 
 class CharacterDetailPanel(QWidget):

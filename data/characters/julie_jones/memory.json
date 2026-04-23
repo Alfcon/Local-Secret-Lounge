@@ -5,7 +5,9 @@
     "name": "Julie Jones"
   },
   "knowledge": {
-    "suspicions": [],
+    "suspicions": [
+      "She is suspicious of other wowmen."
+    ],
     "unknowns": [],
     "secrets_held": []
   },
@@ -15,10 +17,10 @@
     "affection": 0,
     "respect": 0,
     "fear": 0,
-    "resentment": 0,
-    "dependency": 0,
+    "resentment": 1,
+    "dependency": 1,
     "openness": 0,
-    "attraction": 0,
+    "attraction": 9,
     "last_change_reason": "",
     "interpretation": ""
   },
