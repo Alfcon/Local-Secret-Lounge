@@ -35,6 +35,18 @@ class EditCharacterDialog(QDialog):
         super().__init__(parent)
         self._character = dict(character)
         self.character_manager = character_manager
+        self._memory: dict[str, Any] = {}
+
+        character_id = str(self._character.get("id", ""))
+        if character_id:
+            try:
+                memory = self.character_manager.get_character_memory(character_id)
+                if isinstance(memory, dict):
+                    self._memory = memory
+            except Exception as exc:
+                logger.warning(f"Failed to load character memory for {character_id}: {exc}")
+                self._memory = {}
+
         self.setWindowTitle(f"Edit Character — {character.get('name', '')}")
         self.setMinimumSize(680, 700)
         self.setModal(True)
@@ -46,21 +58,58 @@ class EditCharacterDialog(QDialog):
         root.setSpacing(12)
         root.setContentsMargins(24, 24, 24, 24)
 
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setFrameShape(QFrame.Shape.NoFrame)
-        inner = QWidget()
-        form = QFormLayout(inner)
-        form.setSpacing(10)
+        self.tabs = QTabWidget()
+        root.addWidget(self.tabs, 1)
+
+        self.tabs.addTab(self._build_basic_tab(), "Basic")
+        self.tabs.addTab(self._build_identity_tab(), "Identity")
+        self.tabs.addTab(self._build_voice_tab(), "Voice")
+        self.tabs.addTab(self._build_knowledge_tab(), "Knowledge")
+        self.tabs.addTab(self._build_memory_tab(), "Memory")
+        self.tabs.addTab(self._build_meta_tab(), "Meta")
+
+        btns = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
+        )
+        btns.accepted.connect(self._on_save)
+        btns.rejected.connect(self.reject)
+        root.addWidget(btns)
+
+        self.error_label = QLabel("")
+        self.error_label.setStyleSheet("color: #ff6578; font-size: 12px; font-weight: bold;")
+        root.addWidget(self.error_label)
+
+    def _create_scroll_widget_with_form(self) -> tuple[QWidget, QFormLayout]:
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.Shape.NoFrame)
+
+        container = QWidget()
+        form = QFormLayout(container)
+        form.setHorizontalSpacing(24)
+        form.setVerticalSpacing(12)
         form.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
-        scroll.setWidget(inner)
 
-        def add_section(title: str):
-            lbl = QLabel(title)
-            lbl.setStyleSheet("font-weight: bold; margin-top: 10px; color: #a8a8c8;")
-            form.addRow(lbl)
+        scroll_area.setWidget(container)
+        return scroll_area, form
 
-        add_section("--- Basic ---")
+    def _parse_json_or_lines(self, text: str, field_name: str) -> list[Any]:
+        cleaned = text.strip()
+        if not cleaned:
+            return []
+
+        try:
+            parsed = json.loads(cleaned)
+        except json.JSONDecodeError:
+            return [line.strip() for line in cleaned.splitlines() if line.strip()]
+
+        if not isinstance(parsed, list):
+            raise ValueError(f"{field_name} must be a JSON array or one item per line.")
+        return parsed
+
+    def _build_basic_tab(self) -> QWidget:
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
         self.name_edit = QLineEdit()
         form.addRow("Name *", self.name_edit)
 
@@ -94,7 +143,11 @@ class EditCharacterDialog(QDialog):
         self.world_lore_edit.setMinimumHeight(60)
         form.addRow("World Lore Notes", self.world_lore_edit)
 
-        add_section("--- Identity ---")
+        return scroll_widget
+
+    def _build_identity_tab(self) -> QWidget:
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
         self.age_edit = QLineEdit()
         form.addRow("Age", self.age_edit)
 
@@ -147,7 +200,11 @@ class EditCharacterDialog(QDialog):
         self.boundaries_soft_edit.setPlaceholderText("One per line")
         form.addRow("Boundaries (Soft)", self.boundaries_soft_edit)
 
-        add_section("--- Voice ---")
+        return scroll_widget
+
+    def _build_voice_tab(self) -> QWidget:
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
         self.voice_tone_edit = QLineEdit()
         form.addRow("Tone", self.voice_tone_edit)
 
@@ -164,13 +221,185 @@ class EditCharacterDialog(QDialog):
         self.voice_avoid_edit.setPlaceholderText("One per line")
         form.addRow("Avoid Patterns", self.voice_avoid_edit)
 
-        add_section("--- Knowledge ---")
+        return scroll_widget
+
+    def _build_knowledge_tab(self) -> QWidget:
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
         self.known_facts_edit = QTextEdit()
         self.known_facts_edit.setMinimumHeight(60)
         self.known_facts_edit.setPlaceholderText("One per line")
         form.addRow("Known Facts", self.known_facts_edit)
 
-        add_section("--- Meta ---")
+        return scroll_widget
+
+    def _build_memory_tab(self) -> QWidget:
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
+        relationship_label = QLabel("Relationship with User")
+        relationship_label.setStyleSheet("font-weight: bold; margin-top: 10px; color: #a8a8c8;")
+        form.addRow(relationship_label)
+
+        self.status_label_edit = QLineEdit()
+        form.addRow("Status Label:", self.status_label_edit)
+
+        self.trust_spin = QSpinBox()
+        self.trust_spin.setRange(0, 100)
+        form.addRow("Trust:", self.trust_spin)
+
+        self.affection_spin = QSpinBox()
+        self.affection_spin.setRange(0, 100)
+        form.addRow("Affection:", self.affection_spin)
+
+        self.respect_spin = QSpinBox()
+        self.respect_spin.setRange(0, 100)
+        form.addRow("Respect:", self.respect_spin)
+
+        self.fear_spin = QSpinBox()
+        self.fear_spin.setRange(0, 100)
+        form.addRow("Fear:", self.fear_spin)
+
+        self.resentment_spin = QSpinBox()
+        self.resentment_spin.setRange(0, 100)
+        form.addRow("Resentment:", self.resentment_spin)
+
+        self.dependency_spin = QSpinBox()
+        self.dependency_spin.setRange(0, 100)
+        form.addRow("Dependency:", self.dependency_spin)
+
+        self.openness_spin = QSpinBox()
+        self.openness_spin.setRange(0, 100)
+        form.addRow("Openness:", self.openness_spin)
+
+        self.attraction_spin = QSpinBox()
+        self.attraction_spin.setRange(0, 100)
+        form.addRow("Attraction:", self.attraction_spin)
+
+        self.last_change_reason_edit = QLineEdit()
+        form.addRow("Last Change Reason:", self.last_change_reason_edit)
+
+        self.interpretation_edit = QLineEdit()
+        form.addRow("Interpretation:", self.interpretation_edit)
+
+        self.relationships_with_chars_edit = QTextEdit()
+        self.relationships_with_chars_edit.setFont(QFont("Courier", 10))
+        self.relationships_with_chars_edit.setFixedHeight(150)
+        self.relationships_with_chars_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        form.addRow("Relationships with Characters (JSON):", self.relationships_with_chars_edit)
+
+        knowledge_label = QLabel("Knowledge")
+        knowledge_label.setStyleSheet("font-weight: bold; margin-top: 10px; color: #a8a8c8;")
+        form.addRow(knowledge_label)
+
+        self.suspicions_edit = QTextEdit()
+        self.suspicions_edit.setFont(QFont("Courier", 10))
+        self.suspicions_edit.setFixedHeight(120)
+        self.suspicions_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.suspicions_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Suspicions:", self.suspicions_edit)
+
+        self.unknowns_edit = QTextEdit()
+        self.unknowns_edit.setFont(QFont("Courier", 10))
+        self.unknowns_edit.setFixedHeight(120)
+        self.unknowns_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.unknowns_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Unknowns:", self.unknowns_edit)
+
+        self.secrets_held_edit = QTextEdit()
+        self.secrets_held_edit.setFont(QFont("Courier", 10))
+        self.secrets_held_edit.setFixedHeight(120)
+        self.secrets_held_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.secrets_held_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Secrets Held:", self.secrets_held_edit)
+
+        emotional_label = QLabel("Emotional Baseline")
+        emotional_label.setStyleSheet("font-weight: bold; margin-top: 10px; color: #a8a8c8;")
+        form.addRow(emotional_label)
+
+        self.confidence_spin = QSpinBox()
+        self.confidence_spin.setRange(0, 100)
+        form.addRow("Confidence:", self.confidence_spin)
+
+        self.anxiety_spin = QSpinBox()
+        self.anxiety_spin.setRange(0, 100)
+        form.addRow("Anxiety:", self.anxiety_spin)
+
+        self.hope_spin = QSpinBox()
+        self.hope_spin.setRange(0, 100)
+        form.addRow("Hope:", self.hope_spin)
+
+        self.guilt_spin = QSpinBox()
+        self.guilt_spin.setRange(0, 100)
+        form.addRow("Guilt:", self.guilt_spin)
+
+        self.anger_spin = QSpinBox()
+        self.anger_spin.setRange(0, 100)
+        form.addRow("Anger:", self.anger_spin)
+
+        self.loneliness_spin = QSpinBox()
+        self.loneliness_spin.setRange(0, 100)
+        form.addRow("Loneliness:", self.loneliness_spin)
+
+        memories_label = QLabel("Memories")
+        memories_label.setStyleSheet("font-weight: bold; margin-top: 10px; color: #a8a8c8;")
+        form.addRow(memories_label)
+
+        self.stable_memories_edit = QTextEdit()
+        self.stable_memories_edit.setFont(QFont("Courier", 10))
+        self.stable_memories_edit.setFixedHeight(150)
+        self.stable_memories_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.stable_memories_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Stable Memories:", self.stable_memories_edit)
+
+        self.episodic_memories_edit = QTextEdit()
+        self.episodic_memories_edit.setFont(QFont("Courier", 10))
+        self.episodic_memories_edit.setFixedHeight(150)
+        self.episodic_memories_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.episodic_memories_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Episodic Memories:", self.episodic_memories_edit)
+
+        self.open_threads_edit = QTextEdit()
+        self.open_threads_edit.setFont(QFont("Courier", 10))
+        self.open_threads_edit.setFixedHeight(120)
+        self.open_threads_edit.setStyleSheet(
+            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
+        )
+        self.open_threads_edit.setPlaceholderText("Enter a JSON array or one item per line")
+        form.addRow("Open Threads:", self.open_threads_edit)
+
+        flags_label = QLabel("Scene Flags")
+        flags_label.setStyleSheet("font-weight: bold; margin-top: 10px; color: #a8a8c8;")
+        form.addRow(flags_label)
+
+        self.available_checkbox = QCheckBox()
+        form.addRow("Available for Interaction:", self.available_checkbox)
+
+        self.injured_checkbox = QCheckBox()
+        form.addRow("Injured:", self.injured_checkbox)
+
+        self.hostile_mode_checkbox = QCheckBox()
+        form.addRow("Hostile Mode:", self.hostile_mode_checkbox)
+
+        self.romance_locked_checkbox = QCheckBox()
+        form.addRow("Romance Locked:", self.romance_locked_checkbox)
+
+        return scroll_widget
+
+    def _build_meta_tab(self) -> QWidget:
+        scroll_widget, form = self._create_scroll_widget_with_form()
+
         self.tags_edit = QLineEdit()
         self.tags_edit.setPlaceholderText("Comma-separated tags")
         form.addRow("Tags", self.tags_edit)
@@ -188,18 +417,7 @@ class EditCharacterDialog(QDialog):
         self.folder_edit = QLineEdit()
         form.addRow("Folder", self.folder_edit)
 
-        root.addWidget(scroll)
-
-        btns = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
-        )
-        btns.accepted.connect(self._on_save)
-        btns.rejected.connect(self.reject)
-        root.addWidget(btns)
-
-        self.error_label = QLabel("")
-        self.error_label.setStyleSheet("color: #ff6578; font-size: 12px; font-weight: bold;")
-        root.addWidget(self.error_label)
+        return scroll_widget
 
     def _populate(self) -> None:
         c = self._character
@@ -251,6 +469,63 @@ class EditCharacterDialog(QDialog):
         self.tags_edit.setText(", ".join(str(t) for t in tags))
         self.avatar_path_edit.setText(str(c.get("avatar_path", "") or ""))
         self.folder_edit.setText(str(c.get("folder", "General")))
+
+        memory = self._memory or {}
+        rel = memory.get("relationship_with_user", {})
+        self.status_label_edit.setText(rel.get("status_label", ""))
+        self.trust_spin.setValue(rel.get("trust", 0))
+        self.affection_spin.setValue(rel.get("affection", 0))
+        self.respect_spin.setValue(rel.get("respect", 0))
+        self.fear_spin.setValue(rel.get("fear", 0))
+        self.resentment_spin.setValue(rel.get("resentment", 0))
+        self.dependency_spin.setValue(rel.get("dependency", 0))
+        self.openness_spin.setValue(rel.get("openness", 0))
+        self.attraction_spin.setValue(rel.get("attraction", 0))
+        self.last_change_reason_edit.setText(rel.get("last_change_reason", ""))
+        self.interpretation_edit.setText(rel.get("interpretation", ""))
+
+        rels_chars = memory.get("relationships_with_characters", [])
+        self.relationships_with_chars_edit.setPlainText(
+            json.dumps(rels_chars, indent=2, ensure_ascii=False)
+        )
+
+        knowledge_mem = memory.get("knowledge", {})
+        self.suspicions_edit.setPlainText(
+            json.dumps(knowledge_mem.get("suspicions", []), indent=2, ensure_ascii=False)
+        )
+        self.unknowns_edit.setPlainText(
+            json.dumps(knowledge_mem.get("unknowns", []), indent=2, ensure_ascii=False)
+        )
+        self.secrets_held_edit.setPlainText(
+            json.dumps(knowledge_mem.get("secrets_held", []), indent=2, ensure_ascii=False)
+        )
+
+        emotional = memory.get("emotional_baseline", {})
+        self.confidence_spin.setValue(emotional.get("confidence", 50))
+        self.anxiety_spin.setValue(emotional.get("anxiety", 50))
+        self.hope_spin.setValue(emotional.get("hope", 50))
+        self.guilt_spin.setValue(emotional.get("guilt", 0))
+        self.anger_spin.setValue(emotional.get("anger", 0))
+        self.loneliness_spin.setValue(emotional.get("loneliness", 50))
+
+        memories = memory.get("memories", {})
+        self.stable_memories_edit.setPlainText(
+            json.dumps(memories.get("stable", []), indent=2, ensure_ascii=False)
+        )
+        self.episodic_memories_edit.setPlainText(
+            json.dumps(memories.get("episodic", []), indent=2, ensure_ascii=False)
+        )
+
+        open_threads = memory.get("open_threads", [])
+        self.open_threads_edit.setPlainText(
+            json.dumps(open_threads, indent=2, ensure_ascii=False)
+        )
+
+        flags = memory.get("scene_flags", {})
+        self.available_checkbox.setChecked(flags.get("available_for_interaction", True))
+        self.injured_checkbox.setChecked(flags.get("injured", False))
+        self.hostile_mode_checkbox.setChecked(flags.get("hostile_mode", False))
+        self.romance_locked_checkbox.setChecked(flags.get("romance_locked", False))
 
     def _browse_avatar(self) -> None:
         path, _ = QFileDialog.getOpenFileName(
@@ -331,376 +606,14 @@ class EditCharacterDialog(QDialog):
                 updated,
                 copy_avatar_to_managed_storage=bool(self.avatar_path_edit.text().strip()),
             )
-            self.accept()
         except Exception as exc:
             self.error_label.setText(str(exc))
-
-
-class EditCharacterMemoryDialog(QDialog):
-    """Dialog for editing a user character's memory with labeled fields and tabs."""
-
-    def __init__(
-        self,
-        character: dict[str, Any],
-        character_manager: CharacterManager,
-        parent: QWidget | None = None,
-    ) -> None:
-        super().__init__(parent)
-        self._character = character
-        self.character_manager = character_manager
-        self._memory: dict[str, Any] = {}
-        self.setWindowTitle(f"Edit Memory — {character.get('name', '')}")
-        self.setMinimumSize(900, 750)
-        self.setModal(True)
-        self._build_ui()
-        self._populate()
-
-    def _build_ui(self) -> None:
-        """Build the tabbed form interface."""
-        root = QVBoxLayout(self)
-        root.setSpacing(12)
-        root.setContentsMargins(24, 24, 24, 24)
-
-        instruction = QLabel(
-            "Edit the character's memory using the labeled fields below. All changes are validated before saving."
-        )
-        instruction.setWordWrap(True)
-        instruction.setStyleSheet("color: #d8d8f0; margin-bottom: 12px;")
-        root.addWidget(instruction)
-
-        # Create tabs
-        self.tabs = QTabWidget()
-        root.addWidget(self.tabs, 1)
-
-        # Relationship tab
-        self.tabs.addTab(self._build_relationship_tab(), "Relationship")
-
-        # Knowledge tab
-        self.tabs.addTab(self._build_knowledge_tab(), "Knowledge")
-
-        # Emotional Baseline tab
-        self.tabs.addTab(self._build_emotional_baseline_tab(), "Emotional Baseline")
-
-        # Memories tab
-        self.tabs.addTab(self._build_memories_tab(), "Memories")
-
-        # Scene Flags tab
-        self.tabs.addTab(self._build_scene_flags_tab(), "Scene Flags")
-
-        # Other tab
-        self.tabs.addTab(self._build_other_tab(), "Other")
-
-        # Buttons
-        btns = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
-        )
-        btns.accepted.connect(self._on_save)
-        btns.rejected.connect(self.reject)
-        root.addWidget(btns)
-
-        self.error_label = QLabel("")
-        self.error_label.setStyleSheet("color: #ff6578; font-size: 12px; font-weight: bold;")
-        root.addWidget(self.error_label)
-
-    def _create_scroll_widget_with_form(self) -> tuple[QWidget, QFormLayout]:
-        """Create a scrollable widget with a form layout."""
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setFrameShape(QFrame.NoFrame)
-
-        container = QWidget()
-        form = QFormLayout(container)
-        form.setHorizontalSpacing(24)
-        form.setVerticalSpacing(12)
-
-        scroll_area.setWidget(container)
-        return scroll_area, form
-
-    def _parse_json_or_lines(self, text: str, field_name: str) -> list[Any]:
-        """Parse a text field as either JSON array or newline-delimited list."""
-        cleaned = text.strip()
-        if not cleaned:
-            return []
-
-        try:
-            parsed = json.loads(cleaned)
-        except json.JSONDecodeError:
-            return [line.strip() for line in cleaned.splitlines() if line.strip()]
-
-        if not isinstance(parsed, list):
-            raise ValueError(f"{field_name} must be a JSON array or one item per line.")
-        return parsed
-
-    def _build_relationship_tab(self) -> QWidget:
-        """Build the Relationship with User tab."""
-        scroll_widget, form = self._create_scroll_widget_with_form()
-
-        self.status_label_edit = QLineEdit()
-        form.addRow("Status Label:", self.status_label_edit)
-
-        self.trust_spin = QSpinBox()
-        self.trust_spin.setRange(0, 100)
-        form.addRow("Trust:", self.trust_spin)
-
-        self.affection_spin = QSpinBox()
-        self.affection_spin.setRange(0, 100)
-        form.addRow("Affection:", self.affection_spin)
-
-        self.respect_spin = QSpinBox()
-        self.respect_spin.setRange(0, 100)
-        form.addRow("Respect:", self.respect_spin)
-
-        self.fear_spin = QSpinBox()
-        self.fear_spin.setRange(0, 100)
-        form.addRow("Fear:", self.fear_spin)
-
-        self.resentment_spin = QSpinBox()
-        self.resentment_spin.setRange(0, 100)
-        form.addRow("Resentment:", self.resentment_spin)
-
-        self.dependency_spin = QSpinBox()
-        self.dependency_spin.setRange(0, 100)
-        form.addRow("Dependency:", self.dependency_spin)
-
-        self.openness_spin = QSpinBox()
-        self.openness_spin.setRange(0, 100)
-        form.addRow("Openness:", self.openness_spin)
-
-        self.attraction_spin = QSpinBox()
-        self.attraction_spin.setRange(0, 100)
-        form.addRow("Attraction:", self.attraction_spin)
-
-        self.last_change_reason_edit = QLineEdit()
-        form.addRow("Last Change Reason:", self.last_change_reason_edit)
-
-        self.interpretation_edit = QLineEdit()
-        form.addRow("Interpretation:", self.interpretation_edit)
-
-        self.relationships_with_chars_edit = QTextEdit()
-        self.relationships_with_chars_edit.setFont(QFont("Courier", 10))
-        self.relationships_with_chars_edit.setFixedHeight(150)
-        self.relationships_with_chars_edit.setStyleSheet(
-            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
-        )
-        form.addRow("Relationships with Characters (JSON):", self.relationships_with_chars_edit)
-
-        return scroll_widget
-
-    def _build_knowledge_tab(self) -> QWidget:
-        """Build the Knowledge tab."""
-        scroll_widget, form = self._create_scroll_widget_with_form()
-
-        self.suspicions_edit = QTextEdit()
-        self.suspicions_edit.setFont(QFont("Courier", 10))
-        self.suspicions_edit.setFixedHeight(120)
-        self.suspicions_edit.setStyleSheet(
-            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
-        )
-        self.suspicions_edit.setPlaceholderText("Enter a JSON array or one item per line")
-        form.addRow("Suspicions (JSON array or lines):", self.suspicions_edit)
-
-        self.unknowns_edit = QTextEdit()
-        self.unknowns_edit.setFont(QFont("Courier", 10))
-        self.unknowns_edit.setFixedHeight(120)
-        self.unknowns_edit.setStyleSheet(
-            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
-        )
-        self.unknowns_edit.setPlaceholderText("Enter a JSON array or one item per line")
-        form.addRow("Unknowns (JSON array or lines):", self.unknowns_edit)
-
-        self.secrets_held_edit = QTextEdit()
-        self.secrets_held_edit.setFont(QFont("Courier", 10))
-        self.secrets_held_edit.setFixedHeight(120)
-        self.secrets_held_edit.setStyleSheet(
-            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
-        )
-        self.secrets_held_edit.setPlaceholderText("Enter a JSON array or one item per line")
-        form.addRow("Secrets Held (JSON array or lines):", self.secrets_held_edit)
-
-        return scroll_widget
-
-    def _build_emotional_baseline_tab(self) -> QWidget:
-        """Build the Emotional Baseline tab."""
-        scroll_widget, form = self._create_scroll_widget_with_form()
-
-        self.confidence_spin = QSpinBox()
-        self.confidence_spin.setRange(0, 100)
-        form.addRow("Confidence:", self.confidence_spin)
-
-        self.anxiety_spin = QSpinBox()
-        self.anxiety_spin.setRange(0, 100)
-        form.addRow("Anxiety:", self.anxiety_spin)
-
-        self.hope_spin = QSpinBox()
-        self.hope_spin.setRange(0, 100)
-        form.addRow("Hope:", self.hope_spin)
-
-        self.guilt_spin = QSpinBox()
-        self.guilt_spin.setRange(0, 100)
-        form.addRow("Guilt:", self.guilt_spin)
-
-        self.anger_spin = QSpinBox()
-        self.anger_spin.setRange(0, 100)
-        form.addRow("Anger:", self.anger_spin)
-
-        self.loneliness_spin = QSpinBox()
-        self.loneliness_spin.setRange(0, 100)
-        form.addRow("Loneliness:", self.loneliness_spin)
-
-        return scroll_widget
-
-    def _build_memories_tab(self) -> QWidget:
-        """Build the Memories tab."""
-        scroll_widget, form = self._create_scroll_widget_with_form()
-
-        self.stable_memories_edit = QTextEdit()
-        self.stable_memories_edit.setFont(QFont("Courier", 10))
-        self.stable_memories_edit.setFixedHeight(150)
-        self.stable_memories_edit.setStyleSheet(
-            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
-        )
-        self.stable_memories_edit.setPlaceholderText("Enter a JSON array or one item per line")
-        form.addRow("Stable Memories (JSON array or lines):", self.stable_memories_edit)
-
-        self.episodic_memories_edit = QTextEdit()
-        self.episodic_memories_edit.setFont(QFont("Courier", 10))
-        self.episodic_memories_edit.setFixedHeight(150)
-        self.episodic_memories_edit.setStyleSheet(
-            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
-        )
-        self.episodic_memories_edit.setPlaceholderText("Enter a JSON array or one item per line")
-        form.addRow("Episodic Memories (JSON array or lines):", self.episodic_memories_edit)
-
-        self.open_threads_edit = QTextEdit()
-        self.open_threads_edit.setFont(QFont("Courier", 10))
-        self.open_threads_edit.setFixedHeight(120)
-        self.open_threads_edit.setStyleSheet(
-            "background-color: #12122a; color: #e0e0f8; border: 1px solid #3a3a5a; border-radius: 4px;"
-        )
-        self.open_threads_edit.setPlaceholderText("Enter a JSON array or one item per line")
-        form.addRow("Open Threads (JSON array or lines):", self.open_threads_edit)
-
-        return scroll_widget
-
-    def _build_scene_flags_tab(self) -> QWidget:
-        """Build the Scene Flags tab."""
-        scroll_widget, form = self._create_scroll_widget_with_form()
-
-        self.available_checkbox = QCheckBox()
-        form.addRow("Available for Interaction:", self.available_checkbox)
-
-        self.injured_checkbox = QCheckBox()
-        form.addRow("Injured:", self.injured_checkbox)
-
-        self.hostile_mode_checkbox = QCheckBox()
-        form.addRow("Hostile Mode:", self.hostile_mode_checkbox)
-
-        self.romance_locked_checkbox = QCheckBox()
-        form.addRow("Romance Locked:", self.romance_locked_checkbox)
-
-        return scroll_widget
-
-    def _build_other_tab(self) -> QWidget:
-        """Build the Other tab for character reference (read-only display)."""
-        scroll_widget, form = self._create_scroll_widget_with_form()
-
-        self.char_id_label = QLabel()
-        form.addRow("Character ID:", self.char_id_label)
-
-        self.char_slug_label = QLabel()
-        form.addRow("Slug:", self.char_slug_label)
-
-        self.char_name_label = QLabel()
-        form.addRow("Name:", self.char_name_label)
-
-        return scroll_widget
-
-    def _populate(self) -> None:
-        """Load memory data and populate form fields."""
-        try:
-            self._memory = self.character_manager.get_character_memory(
-                str(self._character.get('id', ''))
-            )
-        except Exception as exc:
-            self._memory = {}
-            self.error_label.setText(f"Failed to load memory: {exc}")
             return
 
-        # Relationship with User
-        rel = self._memory.get("relationship_with_user", {})
-        self.status_label_edit.setText(rel.get("status_label", ""))
-        self.trust_spin.setValue(rel.get("trust", 0))
-        self.affection_spin.setValue(rel.get("affection", 0))
-        self.respect_spin.setValue(rel.get("respect", 0))
-        self.fear_spin.setValue(rel.get("fear", 0))
-        self.resentment_spin.setValue(rel.get("resentment", 0))
-        self.dependency_spin.setValue(rel.get("dependency", 0))
-        self.openness_spin.setValue(rel.get("openness", 0))
-        self.attraction_spin.setValue(rel.get("attraction", 0))
-        self.last_change_reason_edit.setText(rel.get("last_change_reason", ""))
-        self.interpretation_edit.setText(rel.get("interpretation", ""))
-
-        rels_chars = self._memory.get("relationships_with_characters", [])
-        self.relationships_with_chars_edit.setPlainText(
-            json.dumps(rels_chars, indent=2, ensure_ascii=False)
-        )
-
-        # Knowledge
-        knowledge = self._memory.get("knowledge", {})
-        self.suspicions_edit.setPlainText(
-            json.dumps(knowledge.get("suspicions", []), indent=2, ensure_ascii=False)
-        )
-        self.unknowns_edit.setPlainText(
-            json.dumps(knowledge.get("unknowns", []), indent=2, ensure_ascii=False)
-        )
-        self.secrets_held_edit.setPlainText(
-            json.dumps(knowledge.get("secrets_held", []), indent=2, ensure_ascii=False)
-        )
-
-        # Emotional Baseline
-        emotional = self._memory.get("emotional_baseline", {})
-        self.confidence_spin.setValue(emotional.get("confidence", 50))
-        self.anxiety_spin.setValue(emotional.get("anxiety", 50))
-        self.hope_spin.setValue(emotional.get("hope", 50))
-        self.guilt_spin.setValue(emotional.get("guilt", 0))
-        self.anger_spin.setValue(emotional.get("anger", 0))
-        self.loneliness_spin.setValue(emotional.get("loneliness", 50))
-
-        # Memories
-        memories = self._memory.get("memories", {})
-        self.stable_memories_edit.setPlainText(
-            json.dumps(memories.get("stable", []), indent=2, ensure_ascii=False)
-        )
-        self.episodic_memories_edit.setPlainText(
-            json.dumps(memories.get("episodic", []), indent=2, ensure_ascii=False)
-        )
-
-        open_threads = self._memory.get("open_threads", [])
-        self.open_threads_edit.setPlainText(
-            json.dumps(open_threads, indent=2, ensure_ascii=False)
-        )
-
-        # Scene Flags
-        flags = self._memory.get("scene_flags", {})
-        self.available_checkbox.setChecked(flags.get("available_for_interaction", True))
-        self.injured_checkbox.setChecked(flags.get("injured", False))
-        self.hostile_mode_checkbox.setChecked(flags.get("hostile_mode", False))
-        self.romance_locked_checkbox.setChecked(flags.get("romance_locked", False))
-
-        # Character Reference
-        char_ref = self._memory.get("character_ref", {})
-        self.char_id_label.setText(char_ref.get("id", ""))
-        self.char_slug_label.setText(char_ref.get("slug", ""))
-        self.char_name_label.setText(char_ref.get("name", ""))
-
-    def _on_save(self) -> None:
-        """Validate form data and save to memory."""
         try:
-            # Validate the JSON-only text field(s)
             list_fields = [
                 ("Relationships with Characters", self.relationships_with_chars_edit),
             ]
-
             for field_name, widget in list_fields:
                 text = widget.toPlainText().strip()
                 if text:
@@ -712,8 +625,7 @@ class EditCharacterMemoryDialog(QDialog):
                         self.error_label.setText(f"Invalid JSON in {field_name}: {e}")
                         return
 
-            # Reconstruct memory object
-            payload = {
+            memory_payload = {
                 "character_ref": self._memory.get("character_ref", {}),
                 "knowledge": {
                     "suspicions": self._parse_json_or_lines(self.suspicions_edit.toPlainText(), "Suspicions"),
@@ -756,14 +668,15 @@ class EditCharacterMemoryDialog(QDialog):
                     "romance_locked": self.romance_locked_checkbox.isChecked(),
                 },
             }
-
             self.character_manager.save_character_memory(
-                str(self._character.get('id', '')),
-                payload,
+                str(self._character.get("id", "")),
+                memory_payload,
             )
-            self.accept()
         except Exception as exc:
             self.error_label.setText(f"Error saving memory: {exc}")
+            return
+
+        self.accept()
 
 
 class CharacterDetailPanel(QWidget):
@@ -772,7 +685,6 @@ class CharacterDetailPanel(QWidget):
     chat_requested = Signal(dict)
     edit_requested = Signal(dict)
     delete_requested = Signal(str)
-    memory_requested = Signal(dict)
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -871,12 +783,6 @@ class CharacterDetailPanel(QWidget):
         self.edit_btn.clicked.connect(self._on_edit)
         btn_row.addWidget(self.edit_btn)
 
-        self.memory_btn = QPushButton("🧠  Edit Memory")
-        self.memory_btn.setObjectName("secondary_btn")
-        self.memory_btn.setFixedHeight(36)
-        self.memory_btn.clicked.connect(self._on_memory)
-        btn_row.addWidget(self.memory_btn)
-
         self.delete_btn = QPushButton("🗑  Delete")
         self.delete_btn.setObjectName("danger_btn")
         self.delete_btn.setFixedHeight(36)
@@ -963,7 +869,6 @@ class CharacterDetailPanel(QWidget):
 
         is_discover = str(character.get("source", "")) == "discover"
         self.edit_btn.setEnabled(not is_discover)
-        self.memory_btn.setEnabled(not is_discover)
         self.delete_btn.setEnabled(not is_discover)
 
     def _on_chat(self) -> None:
@@ -973,10 +878,6 @@ class CharacterDetailPanel(QWidget):
     def _on_edit(self) -> None:
         if self._character:
             self.edit_requested.emit(self._character)
-
-    def _on_memory(self) -> None:
-        if self._character:
-            self.memory_requested.emit(self._character)
 
     def _on_delete(self) -> None:
         if self._character:
@@ -1071,7 +972,6 @@ class MyCharactersPage(QWidget):
         self.detail_panel = CharacterDetailPanel()
         self.detail_panel.chat_requested.connect(self.chat_requested.emit)
         self.detail_panel.edit_requested.connect(self._on_edit_character)
-        self.detail_panel.memory_requested.connect(self._on_edit_memory)
         self.detail_panel.delete_requested.connect(self._on_delete_character)
         splitter.addWidget(self.detail_panel)
 
@@ -1222,20 +1122,6 @@ class MyCharactersPage(QWidget):
                 if item:
                     c = item.data(Qt.ItemDataRole.UserRole)
                     if str(c.get("name", "")) == edited_name:
-                        self.char_list.setCurrentRow(i)
-                        break
-
-    def _on_edit_memory(self, character: dict[str, Any]) -> None:
-        dialog = EditCharacterMemoryDialog(character, self.character_manager, parent=self)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            self.refresh()
-            # keep the same character selected after memory save
-            selected_name = character.get("name", "")
-            for i in range(self.char_list.count()):
-                item = self.char_list.item(i)
-                if item:
-                    c = item.data(Qt.ItemDataRole.UserRole)
-                    if str(c.get("name", "")) == selected_name:
                         self.char_list.setCurrentRow(i)
                         break
 
