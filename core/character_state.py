@@ -78,6 +78,47 @@ def _clamp(value: Any, low: int = 0, high: int = 100, default: int = 0) -> int:
     return max(low, min(high, _clean_int(value, default)))
 
 
+LEVEL_THRESHOLDS = {
+    1: 0,
+    2: 75,
+    3: 150,
+    4: 300,
+    5: 900,
+    6: 3000,
+    7: 5000,
+    8: 7000,
+    9: 9000,
+    10: 10000,
+}
+
+def calculate_level_progress(current_points: float, previous_points: float) -> dict[str, Any]:
+    """Calculate level changes and if halfway points are crossed."""
+    def get_level(points: float) -> int:
+        for lvl in range(10, 0, -1):
+            if points >= LEVEL_THRESHOLDS[lvl]:
+                return lvl
+        return 1
+
+    current_lvl = get_level(current_points)
+    prev_lvl = get_level(previous_points)
+    
+    halfway_crossed = False
+    if current_lvl < 10:
+        base = LEVEL_THRESHOLDS[current_lvl]
+        next_base = LEVEL_THRESHOLDS[current_lvl + 1]
+        halfway_point = base + (next_base - base) / 2.0
+        
+        if previous_points < halfway_point <= current_points:
+            halfway_crossed = True
+
+    return {
+        'level': current_lvl,
+        'level_up': current_lvl > prev_lvl,
+        'halfway_crossed': halfway_crossed,
+        'next_level': current_lvl + 1 if current_lvl < 10 else 10,
+    }
+
+
 def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
 
@@ -115,6 +156,8 @@ def _empty_relationship_block() -> dict[str, Any]:
         'attraction': 0,
         'last_change_reason': '',
         'interpretation': '',
+        'level': 1,
+        'level_points': 0.0,
     }
 
 
@@ -132,6 +175,8 @@ def _extract_relationship_block(source: dict[str, Any], defaults: dict[str, Any]
         'attraction': _clamp(source.get('attraction', defaults['attraction'])),
         'last_change_reason': str(source.get('last_change_reason', defaults['last_change_reason'])).strip(),
         'interpretation': str(source.get('interpretation', defaults['interpretation'])).strip(),
+        'level': _clamp(source.get('level', defaults.get('level', 1)), low=1, high=10, default=1),
+        'level_points': max(0.0, float(source.get('level_points', defaults.get('level_points', 0.0)) or 0.0)),
     }
 
 
@@ -728,6 +773,13 @@ def apply_message_to_character_memory(
             existing_lower.add(item_text.casefold())
         knowledge[knowledge_key] = existing
 
+    previous_level_points = relationship.get('level_points', 0.0)
+    current_level_points = previous_level_points + float(delta_payload.get('level_points_earned', 0.0))
+    relationship['level_points'] = current_level_points
+    
+    level_status = calculate_level_progress(current_level_points, previous_level_points)
+    relationship['level'] = level_status['level']
+
     updated['relationship_with_user'] = relationship
     updated['relationships_with_characters'] = memory_payload['relationships_with_characters']
     updated['emotional_baseline'] = emotional
@@ -741,4 +793,5 @@ def apply_message_to_character_memory(
     merged_knowledge['unknowns'] = knowledge.get('unknowns', merged_knowledge.get('unknowns', []))
     updated['knowledge'] = merged_knowledge
     updated['character_ref'] = memory_payload['character_ref']
+    updated['_level_status'] = level_status
     return updated

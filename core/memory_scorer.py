@@ -76,6 +76,7 @@ def empty_delta_payload() -> dict[str, Any]:
         'resolved_thread_ids': [],
         'new_suspicions': [],
         'new_unknowns': [],
+        'level_points_earned': 0.0,
     }
 
 
@@ -95,6 +96,7 @@ Scoring principles:
 - If the message is the character's own dialogue (role=assistant), score it as self-expression. Do not treat the character's own fear dialogue as evidence the user scared them.
 - Only add new open threads for genuinely new narrative hooks the character should remember to pursue. Do not restate existing threads.
 - Only add suspicions or unknowns when the message actually creates one. Most turns will have none.
+- Level Points: Score level_points_earned based on User behavior: surprising character (+1), respectful challenges (+0.5 to +1.5), showing understanding (+1.0 to +1.8), maintaining composure (+0.8 to +1.1), or offering helpful distractions (+0.9 to +1.5). Extraordinary interactions can earn up to 4.0. Max total 4.0. Default 0.0.
 
 Schema (all fields required, use empty arrays or zeros when nothing applies):
 {
@@ -114,7 +116,8 @@ Schema (all fields required, use empty arrays or zeros when nothing applies):
   "new_open_threads": [{"summary": "...", "priority": int 0-100}],
   "resolved_thread_ids": ["thread_id strings from the existing open threads list"],
   "new_suspicions": ["short phrases, max 2"],
-  "new_unknowns": ["short phrases, max 2"]
+  "new_unknowns": ["short phrases, max 2"],
+  "level_points_earned": float between 0.0 and 4.0
 }
 
 All integer deltas must be in the range -15 to +15 inclusive."""
@@ -362,6 +365,12 @@ def _validate_delta_payload(
         max_items=MAX_NEW_KNOWLEDGE_PER_TURN,
         max_chars=KNOWLEDGE_MAX_CHARS,
     )
+
+    try:
+        level_points = float(raw_payload.get('level_points_earned', 0.0))
+    except (TypeError, ValueError):
+        level_points = 0.0
+    result['level_points_earned'] = max(0.0, min(4.0, level_points))
 
     return result
 

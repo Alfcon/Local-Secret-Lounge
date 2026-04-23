@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QObject, QThread, Signal, Slot, Qt
+from PySide6.QtCore import QObject, QThread, Signal, Slot, Qt, QUrl
 from PySide6.QtGui import QCloseEvent, QPixmap, QTextCursor
 from PySide6.QtWidgets import (
     QFrame,
@@ -24,6 +24,8 @@ from PySide6.QtWidgets import (
     QTextEdit,
     QVBoxLayout,
     QWidget,
+    QTextBrowser,
+    QDialog,
 )
 
 from core.character_manager import CharacterManager
@@ -270,7 +272,7 @@ class ChatWindow(QMainWindow):
         self._streaming_base_html = ''
         self._streaming_preview_text = ''
 
-        self.transcript: QTextEdit | None = None
+        self.transcript: QTextBrowser | None = None
         self.input_box: QTextEdit | None = None
         self.send_button: QPushButton | None = None
         self.cancel_button: QPushButton | None = None
@@ -350,11 +352,13 @@ class ChatWindow(QMainWindow):
         self.chat_title_label.setWordWrap(True)
         content_layout.addWidget(self.chat_title_label)
 
-        self.transcript = QTextEdit()
+        self.transcript = QTextBrowser()
         self.transcript.setReadOnly(True)
         self.transcript.setAcceptRichText(True)
+        self.transcript.setOpenExternalLinks(False)
+        self.transcript.anchorClicked.connect(self._handle_link_click)
         self.transcript.setStyleSheet(
-            'QTextEdit { background-color: #0a1020; color: #ece7ff; border: 1px solid #30395b; '
+            'QTextBrowser { background-color: #0a1020; color: #ece7ff; border: 1px solid #30395b; '
             'border-radius: 16px; selection-background-color: #5b4da0; padding: 10px; }'
         )
         content_layout.addWidget(self.transcript, stretch=1)
@@ -419,6 +423,33 @@ class ChatWindow(QMainWindow):
 
         outer.addWidget(sidebar, stretch=1)
         outer.addWidget(content, stretch=2)
+
+    @Slot(QUrl)
+    def _handle_link_click(self, url: QUrl) -> None:
+        scheme = url.scheme()
+        if scheme == 'reward':
+            dialog = QDialog(self)
+            dialog.setWindowTitle("Reward Unlocked!")
+            dialog.resize(400, 400)
+            layout = QVBoxLayout(dialog)
+            
+            image_label = QLabel()
+            image_label.setAlignment(Qt.AlignCenter)
+            
+            avatar_path = str(self.character.get('avatar_path', '')).strip()
+            if avatar_path and Path(avatar_path).exists():
+                pixmap = QPixmap(avatar_path)
+                image_label.setPixmap(pixmap.scaled(380, 380, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            else:
+                image_label.setText("No reward image available.")
+                
+            layout.addWidget(image_label)
+            
+            close_btn = QPushButton("Close")
+            close_btn.clicked.connect(dialog.accept)
+            layout.addWidget(close_btn)
+            
+            dialog.exec()
 
     def _resolve_user_display_name(self, chat_session: dict[str, Any] | None) -> str:
         if isinstance(chat_session, dict):
@@ -795,20 +826,39 @@ class ChatWindow(QMainWindow):
             return
         mentioned_any = any(self._message_mentions_character(participant, cleaned) for participant in self.participants)
         refreshed: list[dict[str, Any]] = []
+        level_up_messages: list[str] = []
         for participant in self.participants:
             if self._should_update_character_memory(participant, text=cleaned, role=role, speaker=speaker, mentioned_any=mentioned_any):
-                refreshed.append(apply_message_to_character_memory(
+                updated_participant = apply_message_to_character_memory(
                     participant,
                     text=cleaned,
                     role=role,
                     speaker=speaker,
                     user_name=self.user_display_name,
-                ))
+                )
+                level_status = updated_participant.get('_level_status', {})
+                pname = str(participant.get('name', 'Character')).strip()
+                if level_status.get('level_up'):
+                    level = level_status.get('level')
+                    level_up_messages.append(
+                        f'🎉 <b>Level Up!</b> You have reached <b>Level {level}</b> with {pname}. '
+                        f'<a href="reward:level_up" style="color: #8d6bf0; text-decoration: underline;">[View Reward]</a>'
+                    )
+                elif level_status.get('halfway_crossed'):
+                    next_level = level_status.get('next_level')
+                    level_up_messages.append(
+                        f'⭐ You are halfway to <b>Level {next_level}</b> with {pname}! '
+                        f'<a href="reward:halfway" style="color: #8d6bf0; text-decoration: underline;">[View Reward]</a>'
+                    )
+                refreshed.append(updated_participant)
             else:
                 refreshed.append(dict(participant))
         self.participants = self._normalize_participants(refreshed)
         self._sync_primary_character_from_participants()
         self._refresh_sidebar_cards()
+
+        for msg in level_up_messages:
+            self._append_message('System', msg, role='system', timestamp=datetime.now().replace(microsecond=0).isoformat())
 
     @staticmethod
     def _normalize_inline_timestamps(text: str) -> str:
