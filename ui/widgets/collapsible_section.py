@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFrame, QLabel
+    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFrame, QLabel, QCheckBox
 )
 
 
@@ -12,12 +12,15 @@ class CollapsibleSection(QWidget):
     """A collapsible section with a header button and content area."""
     
     toggled = Signal(bool)  # Emitted when section is expanded/collapsed
+    checked = Signal(bool)  # Emitted when checkbox state changes
     
-    def __init__(self, title: str, parent: QWidget | None = None) -> None:
+    def __init__(self, title: str, parent: QWidget | None = None, checkable: bool = False) -> None:
         super().__init__(parent)
         self.title = title
+        self.checkable = checkable
         self._is_expanded = True
         self._content_widget: QWidget | None = None
+        self.checkbox: QCheckBox | None = None
         
         self._build_ui()
     
@@ -79,6 +82,18 @@ class CollapsibleSection(QWidget):
         header_layout.addWidget(title_label)
         header_layout.addStretch()
         
+        if self.checkable:
+            self.checkbox = QCheckBox()
+            self.checkbox.toggled.connect(self.checked.emit)
+            self.checkbox.setObjectName("collapsibleCheckbox")
+            self.checkbox.setStyleSheet("""
+                QCheckBox#collapsibleCheckbox::indicator {
+                    width: 16px;
+                    height: 16px;
+                }
+            """)
+            header_layout.addWidget(self.checkbox)
+        
         layout.addWidget(header)
         
         # Content container
@@ -132,3 +147,14 @@ class CollapsibleSection(QWidget):
     def is_expanded(self) -> bool:
         """Return whether this section is expanded."""
         return self._is_expanded
+
+    def is_checked(self) -> bool:
+        """Return whether the checkbox is checked. Returns False if not checkable."""
+        if self.checkbox is not None:
+            return self.checkbox.isChecked()
+        return False
+
+    def set_checked(self, checked: bool) -> None:
+        """Set the checked state of the checkbox."""
+        if self.checkbox is not None:
+            self.checkbox.setChecked(checked)

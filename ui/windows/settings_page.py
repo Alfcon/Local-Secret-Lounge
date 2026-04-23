@@ -127,8 +127,14 @@ class SettingsPage(QWidget):
         story_section.set_content_widget(story_widget)
         layout.addWidget(story_section)
 
+        # ── Local LLM Server ──────────────────────────────────────────────
+        local_llm_section = CollapsibleSection("Local LLM Server")
+        local_llm_layout = QVBoxLayout()
+        local_llm_layout.setSpacing(16)
+
         # ── LM Studio ────────────────────────────────────────────────────
-        lm_section = CollapsibleSection("LM Studio Local Server")
+        self.lm_section = CollapsibleSection("LM Studio Local Server", checkable=True)
+        self.lm_section.checked.connect(lambda c: self._on_local_server_checked("lm_studio", c))
         lm_form = QFormLayout()
         lm_form.setHorizontalSpacing(24)
         lm_form.setVerticalSpacing(12)
@@ -171,12 +177,12 @@ class SettingsPage(QWidget):
 
         lm_widget = QWidget()
         lm_widget.setLayout(lm_form)
-        lm_section.set_content_widget(lm_widget)
-        layout.addWidget(lm_section)
+        self.lm_section.set_content_widget(lm_widget)
+        local_llm_layout.addWidget(self.lm_section)
 
         # ── Ollama ────────────────────────────────────────────────────────
-        ollama_section = CollapsibleSection("Ollama Local Server")
-        ollama_section = CollapsibleSection("Ollama Local Server")
+        self.ollama_section = CollapsibleSection("Ollama Local Server", checkable=True)
+        self.ollama_section.checked.connect(lambda c: self._on_local_server_checked("ollama", c))
         ollama_form = QFormLayout()
         ollama_form.setHorizontalSpacing(24)
         ollama_form.setVerticalSpacing(12)
@@ -191,10 +197,20 @@ class SettingsPage(QWidget):
         self.ollama_api_key_input.setFixedHeight(34)
         ollama_form.addRow("API Key:", self.ollama_api_key_input)
 
-        self.ollama_model_input = QLineEdit()
-        self.ollama_model_input.setPlaceholderText("Optional preferred model id")
+        ollama_model_layout = QHBoxLayout()
+        ollama_model_layout.setContentsMargins(0, 0, 0, 0)
+        self.ollama_model_input = QComboBox()
+        self.ollama_model_input.setEditable(True)
+        self.ollama_model_input.lineEdit().setPlaceholderText("Optional preferred model id")
         self.ollama_model_input.setFixedHeight(34)
-        ollama_form.addRow("Model ID:", self.ollama_model_input)
+        ollama_model_layout.addWidget(self.ollama_model_input)
+
+        self.ollama_refresh_models_btn = QPushButton("↻ Refresh")
+        self.ollama_refresh_models_btn.setFixedHeight(34)
+        self.ollama_refresh_models_btn.clicked.connect(self._refresh_ollama_models)
+        ollama_model_layout.addWidget(self.ollama_refresh_models_btn)
+
+        ollama_form.addRow("Model ID:", ollama_model_layout)
 
         self.ollama_timeout_spin = QSpinBox()
         self.ollama_timeout_spin.setRange(0, 3600)
@@ -218,8 +234,8 @@ class SettingsPage(QWidget):
 
         ollama_widget = QWidget()
         ollama_widget.setLayout(ollama_form)
-        ollama_section.set_content_widget(ollama_widget)
-        layout.addWidget(ollama_section)
+        self.ollama_section.set_content_widget(ollama_widget)
+        local_llm_layout.addWidget(self.ollama_section)
 
         # ── Chat Backend ──────────────────────────────────────────────────
         backend_section = CollapsibleSection("Chat Backend")
@@ -259,7 +275,8 @@ class SettingsPage(QWidget):
         layout.addWidget(advisor_section)
 
         # ── Local Models ──────────────────────────────────────────────────
-        models_section = CollapsibleSection("Local GGUF Models")
+        self.models_section = CollapsibleSection("Local GGUF Models", checkable=True)
+        self.models_section.checked.connect(lambda c: self._on_local_server_checked("local", c))
         models_layout = QVBoxLayout()
         models_layout.setSpacing(10)
 
@@ -307,8 +324,13 @@ class SettingsPage(QWidget):
 
         models_widget = QWidget()
         models_widget.setLayout(models_layout)
-        models_section.set_content_widget(models_widget)
-        layout.addWidget(models_section)
+        self.models_section.set_content_widget(models_widget)
+        local_llm_layout.addWidget(self.models_section)
+
+        local_llm_widget = QWidget()
+        local_llm_widget.setLayout(local_llm_layout)
+        local_llm_section.set_content_widget(local_llm_widget)
+        layout.addWidget(local_llm_section)
 
 
         # ── Generation Defaults ───────────────────────────────────────────
@@ -410,6 +432,7 @@ class SettingsPage(QWidget):
         idx = self.backend_combo.findText(backend, Qt.MatchFlag.MatchFixedString)
         if idx >= 0:
             self.backend_combo.setCurrentIndex(idx)
+        self._on_backend_changed(backend)
 
         self.lm_url_input.setText(str(sm.get("lm_studio_base_url", "http://127.0.0.1:1234/v1") or ""))
         self.lm_api_key_input.setText(str(sm.get("lm_studio_api_key", "") or ""))
@@ -418,7 +441,7 @@ class SettingsPage(QWidget):
 
         self.ollama_url_input.setText(str(sm.get("ollama_base_url", "http://127.0.0.1:11434/v1") or ""))
         self.ollama_api_key_input.setText(str(sm.get("ollama_api_key", "") or ""))
-        self.ollama_model_input.setText(str(sm.get("ollama_model_id", "") or ""))
+        self.ollama_model_input.setCurrentText(str(sm.get("ollama_model_id", "") or ""))
         self.ollama_timeout_spin.setValue(int(sm.get("ollama_timeout_seconds", 0) or 0))
 
         self.ctx_spin.setValue(int(sm.get("default_context_size", 4096) or 4096))
@@ -460,7 +483,7 @@ class SettingsPage(QWidget):
             "lm_studio_timeout_seconds": self.lm_timeout_spin.value(),
             "ollama_base_url": self.ollama_url_input.text().strip() or "http://127.0.0.1:11434/v1",
             "ollama_api_key": self.ollama_api_key_input.text().strip(),
-            "ollama_model_id": self.ollama_model_input.text().strip(),
+            "ollama_model_id": self.ollama_model_input.currentText().strip(),
             "ollama_timeout_seconds": self.ollama_timeout_spin.value(),
             "default_context_size": self.ctx_spin.value(),
             "default_threads": self.threads_spin.value(),
@@ -488,7 +511,37 @@ class SettingsPage(QWidget):
         QMessageBox.information(self, "Settings Saved", "Settings have been saved successfully.")
 
     def _on_backend_changed(self, backend: str) -> None:
+        # Sync the checkboxes silently by blocking signals temporarily
+        self.lm_section.blockSignals(True)
+        self.ollama_section.blockSignals(True)
+        self.models_section.blockSignals(True)
+        
+        self.lm_section.set_checked(backend == "lm_studio")
+        self.ollama_section.set_checked(backend == "ollama")
+        self.models_section.set_checked(backend == "local")
+        
+        self.lm_section.blockSignals(False)
+        self.ollama_section.blockSignals(False)
+        self.models_section.blockSignals(False)
+        
         self._refresh_backend_status()
+
+    def _on_local_server_checked(self, backend: str, checked: bool) -> None:
+        if not checked:
+            # Prevent unchecking the currently active one
+            if self.backend_combo.currentText() == backend:
+                if backend == "lm_studio":
+                    self.lm_section.set_checked(True)
+                elif backend == "ollama":
+                    self.ollama_section.set_checked(True)
+                elif backend == "local":
+                    self.models_section.set_checked(True)
+            return
+
+        # It is checked, update the backend_combo which will update the others via _on_backend_changed
+        idx = self.backend_combo.findText(backend, Qt.MatchFlag.MatchFixedString)
+        if idx >= 0:
+            self.backend_combo.setCurrentIndex(idx)
 
     def _on_default_model_changed(self, model_id: str | None = None) -> None:  # noqa: ARG002
         """Invoked by ModelManager whenever the default local model changes.
@@ -729,3 +782,25 @@ class SettingsPage(QWidget):
             )
         except Exception as exc:
             QMessageBox.warning(self, "Connection Failed", str(exc))
+
+    def _refresh_ollama_models(self) -> None:
+        from core.ollama_client import OllamaClient
+        url = self.ollama_url_input.text().strip() or "http://127.0.0.1:11434/v1"
+        api_key = self.ollama_api_key_input.text().strip()
+        try:
+            client = OllamaClient(base_url=url, api_key=api_key or None)
+            models = client.list_models()
+            names = [str(m.get("id", "")) for m in models if m.get("id")]
+            
+            current_text = self.ollama_model_input.currentText()
+            self.ollama_model_input.clear()
+            self.ollama_model_input.addItems(names)
+            
+            if current_text in names:
+                self.ollama_model_input.setCurrentText(current_text)
+            elif names:
+                self.ollama_model_input.setCurrentIndex(0)
+                
+            QMessageBox.information(self, "Models Refreshed", f"Found {len(names)} models.")
+        except Exception as exc:
+            QMessageBox.warning(self, "Refresh Failed", f"Could not fetch models:\n{exc}")

@@ -10,7 +10,7 @@
     "secrets_held": []
   },
   "relationship_with_user": {
-    "status_label": "",
+    "status_label": "Neutral",
     "trust": 0,
     "affection": 0,
     "respect": 0,
@@ -36,5 +36,10 @@
     "episodic": []
   },
   "open_threads": [],
-  "scene_flags": {}
+  "scene_flags": {
+    "available_for_interaction": true,
+    "injured": false,
+    "hostile_mode": false,
+    "romance_locked": false
+  }
 }
