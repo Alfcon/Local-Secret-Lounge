@@ -317,6 +317,23 @@ class SettingsPage(QWidget):
         startup_section.set_content_widget(startup_widget)
         layout.addWidget(startup_section)
 
+        # ── Application Updates ───────────────────────────────────────────
+        updates_section = CollapsibleSection("Application Updates")
+        updates_form = QFormLayout()
+        updates_form.setHorizontalSpacing(24)
+        updates_form.setVerticalSpacing(12)
+
+        self.update_app_btn = QPushButton("Pull Latest Updates")
+        self.update_app_btn.setToolTip("Update the app to the latest version while keeping your user-created character files safe.")
+        self.update_app_btn.setFixedHeight(34)
+        self.update_app_btn.clicked.connect(self._pull_latest_updates)
+        updates_form.addRow("Update App:", self.update_app_btn)
+
+        updates_widget = QWidget()
+        updates_widget.setLayout(updates_form)
+        updates_section.set_content_widget(updates_widget)
+        layout.addWidget(updates_section)
+
         layout.addStretch()
         scroll.setWidget(content)
         outer.addWidget(scroll)
@@ -553,3 +570,46 @@ class SettingsPage(QWidget):
             logger.debug("Ollama model refresh failed: %s", exc)
             if not silent:
                 QMessageBox.warning(self, "Refresh Failed", f"Could not fetch models from Ollama:\n{exc}")
+
+    def _pull_latest_updates(self) -> None:
+        import subprocess
+        try:
+            # Stash any local changes to tracked files (e.g. user characters)
+            subprocess.run(["git", "stash", "push", "-m", "Auto stash before update"], check=False, capture_output=True)
+            
+            # Pull the latest updates via rebase to avoid unnecessary merge commits
+            result = subprocess.run(["git", "pull", "--rebase"], check=True, capture_output=True, text=True)
+            
+            # Try to pop the stashed changes back into the working tree
+            subprocess.run(["git", "stash", "pop"], check=False, capture_output=True)
+            
+            QMessageBox.information(
+                self,
+                "Update Successful",
+                f"Application updated successfully!\n\n{result.stdout.strip()}\n\nPlease restart the application to apply the changes."
+            )
+        except subprocess.CalledProcessError as exc:
+            logger.error("Update failed: %s", exc.stderr)
+            
+            # Try to restore user changes if pull failed
+            subprocess.run(["git", "stash", "pop"], check=False, capture_output=True)
+            
+            QMessageBox.warning(
+                self,
+                "Update Failed",
+                f"Failed to pull latest updates.\n\n{exc.stderr}"
+            )
+        except FileNotFoundError:
+            QMessageBox.warning(
+                self,
+                "Git Not Found",
+                "Git is not installed or not in your system PATH."
+            )
+        except Exception as exc:
+            logger.error("Unexpected error during update: %s", exc)
+            QMessageBox.warning(
+                self,
+                "Update Error",
+                f"An unexpected error occurred:\n\n{exc}"
+            )
+
