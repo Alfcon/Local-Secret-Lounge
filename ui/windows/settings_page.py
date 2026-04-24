@@ -14,7 +14,6 @@ from PySide6.QtCore import Qt, Signal
 
 from core.settings_manager import SettingsManager
 from core.model_manager import ModelManager
-from core.chat_backend import describe_active_backend
 from ui.widgets.system_info_widget import SystemInfoWidget
 from ui.widgets.collapsible_section import CollapsibleSection
 
@@ -38,19 +37,14 @@ class SettingsPage(QWidget):
         self._build_ui()
         self._load_values()
 
-        # Auto-refresh backend status whenever the default local model
-        # changes (either via import-as-default, or via any future UI that
-        # calls model_manager.set_default_model).
         try:
             self.model_manager.add_default_changed_listener(
                 self._on_default_model_changed
             )
         except AttributeError:
-            # Older ModelManager without listener support — fall back to
-            # manual refresh; status will still update on the next click.
             logger.debug(
                 "ModelManager has no add_default_changed_listener; "
-                "backend status will not auto-refresh on default change."
+                "model list will not auto-refresh on default change."
             )
 
     def _build_ui(self) -> None:
@@ -134,7 +128,6 @@ class SettingsPage(QWidget):
 
         # ── LM Studio ────────────────────────────────────────────────────
         self.lm_section = CollapsibleSection("LM Studio Local Server", checkable=True)
-        self.lm_section.checked.connect(lambda c: self._on_local_server_checked("lm_studio", c))
         lm_form = QFormLayout()
         lm_form.setHorizontalSpacing(24)
         lm_form.setVerticalSpacing(12)
@@ -182,7 +175,6 @@ class SettingsPage(QWidget):
 
         # ── Ollama ────────────────────────────────────────────────────────
         self.ollama_section = CollapsibleSection("Ollama Local Server", checkable=True)
-        self.ollama_section.checked.connect(lambda c: self._on_local_server_checked("ollama", c))
         ollama_form = QFormLayout()
         ollama_form.setHorizontalSpacing(24)
         ollama_form.setVerticalSpacing(12)
@@ -243,33 +235,6 @@ class SettingsPage(QWidget):
         self.ollama_section.set_content_widget(ollama_widget)
         local_llm_layout.addWidget(self.ollama_section)
 
-        # ── Chat Backend ──────────────────────────────────────────────────
-        backend_section = CollapsibleSection("Chat Backend")
-        backend_layout = QVBoxLayout()
-        backend_layout.setSpacing(12)
-
-        self.backend_combo = QComboBox()
-        self.backend_combo.addItems(["local", "ollama", "lm_studio"])
-        self.backend_combo.setFixedHeight(34)
-        self.backend_combo.currentTextChanged.connect(self._on_backend_changed)
-        backend_layout.addWidget(QLabel("Backend:"))
-        backend_layout.addWidget(self.backend_combo)
-
-        self.backend_status_label = QLabel("")
-        self.backend_status_label.setWordWrap(True)
-        self.backend_status_label.setStyleSheet("color: #c8c8e0; font-size: 11px;")
-        backend_layout.addWidget(self.backend_status_label)
-
-        refresh_status_btn = QPushButton("Check Backend Status")
-        refresh_status_btn.setObjectName("secondary_btn")
-        refresh_status_btn.setFixedHeight(32)
-        refresh_status_btn.clicked.connect(self._refresh_backend_status)
-        backend_layout.addWidget(refresh_status_btn)
-
-        backend_widget = QWidget()
-        backend_widget.setLayout(backend_layout)
-        backend_section.set_content_widget(backend_widget)
-        layout.addWidget(backend_section)
 
         # ── System & Model Advisor ────────────────────────────────────────
         # Small card above the Local GGUF Models section that shows the
@@ -282,7 +247,6 @@ class SettingsPage(QWidget):
 
         # ── Local Models ──────────────────────────────────────────────────
         self.models_section = CollapsibleSection("Local GGUF Models", checkable=True)
-        self.models_section.checked.connect(lambda c: self._on_local_server_checked("local", c))
         models_layout = QVBoxLayout()
         models_layout.setSpacing(10)
 
@@ -434,12 +398,6 @@ class SettingsPage(QWidget):
         self.city_input.setText(str(sm.get("story_location_city", "") or ""))
         self.country_input.setText(str(sm.get("story_location_country", "") or ""))
 
-        backend = sm.get_chat_backend_preference()
-        idx = self.backend_combo.findText(backend, Qt.MatchFlag.MatchFixedString)
-        if idx >= 0:
-            self.backend_combo.setCurrentIndex(idx)
-        self._on_backend_changed(backend)
-
         self.lm_url_input.setText(str(sm.get("lm_studio_base_url", "http://127.0.0.1:1234/v1") or ""))
         self.lm_api_key_input.setText(str(sm.get("lm_studio_api_key", "") or ""))
         self.lm_model_input.setText(str(sm.get("lm_studio_model_id", "") or ""))
@@ -483,7 +441,6 @@ class SettingsPage(QWidget):
             "user_sex": self.user_sex_combo.currentText(),
             "story_location_city": self.city_input.text().strip(),
             "story_location_country": self.country_input.text().strip(),
-            "chat_backend_preference": self.backend_combo.currentText(),
             "lm_studio_base_url": self.lm_url_input.text().strip() or "http://127.0.0.1:1234/v1",
             "lm_studio_api_key": self.lm_api_key_input.text().strip(),
             "lm_studio_model_id": self.lm_model_input.text().strip(),
@@ -498,8 +455,6 @@ class SettingsPage(QWidget):
             "startup_page": self.startup_combo.currentText(),
             "offline_mode": self.offline_check.isChecked(),
             "developer_mode": self.developer_mode_check.isChecked(),
-            "lm_studio_enabled": self.backend_combo.currentText() == "lm_studio",
-            "ollama_enabled": self.backend_combo.currentText() == "ollama",
             "ui_font_size": new_font_size,
         })
 
@@ -516,39 +471,6 @@ class SettingsPage(QWidget):
 
         self.settings_changed.emit()
         QMessageBox.information(self, "Settings Saved", "Settings have been saved successfully.")
-
-    def _on_backend_changed(self, backend: str) -> None:
-        # Sync the checkboxes silently by blocking signals temporarily
-        self.lm_section.blockSignals(True)
-        self.ollama_section.blockSignals(True)
-        self.models_section.blockSignals(True)
-        
-        self.lm_section.set_checked(backend == "lm_studio")
-        self.ollama_section.set_checked(backend == "ollama")
-        self.models_section.set_checked(backend == "local")
-        
-        self.lm_section.blockSignals(False)
-        self.ollama_section.blockSignals(False)
-        self.models_section.blockSignals(False)
-        
-        self._refresh_backend_status()
-
-    def _on_local_server_checked(self, backend: str, checked: bool) -> None:
-        if not checked:
-            # Prevent unchecking the currently active one
-            if self.backend_combo.currentText() == backend:
-                if backend == "lm_studio":
-                    self.lm_section.set_checked(True)
-                elif backend == "ollama":
-                    self.ollama_section.set_checked(True)
-                elif backend == "local":
-                    self.models_section.set_checked(True)
-            return
-
-        # It is checked, update the backend_combo which will update the others via _on_backend_changed
-        idx = self.backend_combo.findText(backend, Qt.MatchFlag.MatchFixedString)
-        if idx >= 0:
-            self.backend_combo.setCurrentIndex(idx)
 
     def _on_default_model_changed(self, model_id: str | None = None) -> None:  # noqa: ARG002
         """Invoked by ModelManager whenever the default local model changes.
@@ -568,16 +490,6 @@ class SettingsPage(QWidget):
             logger.debug("Model list auto-refresh failed: %s", exc)
 
     def _refresh_backend_status(self) -> None:
-        try:
-            description, is_ready = describe_active_backend(self.settings_manager, self.model_manager)
-            color = "#4caf50" if is_ready else "#e94560"
-            self.backend_status_label.setText(description)
-            self.backend_status_label.setStyleSheet(f"color: {color}; font-size: 11px;")
-        except Exception as exc:
-            self.backend_status_label.setText(f"Status check failed: {exc}")
-
-        # Update the Active Model row inside the LM Studio Local Server group.
-        # Only visible when the lm_studio backend is active.
         try:
             from core.chat_backend import get_chat_backend_preference, get_preferred_chat_model
             backend = get_chat_backend_preference(self.settings_manager)
@@ -795,9 +707,8 @@ class SettingsPage(QWidget):
 
             # Sync the UI to reflect the now-active model and backend
             self.ollama_model_input.setText(active_model_id)
-            idx = self.backend_combo.findText("ollama", Qt.MatchFlag.MatchFixedString)
-            if idx >= 0:
-                self.backend_combo.setCurrentIndex(idx)
+            self._current_backend = "ollama"
+            self._on_backend_changed("ollama")
 
             self.ollama_active_model_label.setText(active_model_id)
             self.ollama_active_model_label.setStyleSheet(
