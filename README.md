@@ -9,7 +9,8 @@
 - **Adult Chat Program** powered by a Local LLM via LM Studio or Ollama.
 - **Desktop PySide6** character-chat application.
 - Supports LM Studio Local Server and Ollama through their OpenAI-compatible chat endpoints.
-- Saves chats, character snapshots, and chat settings under `data/`.
+- Saves chats, character snapshots, character creation, and chat settings under `data/`.
+- Example character is Julie Jones.
 - Includes retrieval-augmented prompting, a SQLite-backed memory store, prompt asset loading, streaming output, and a persisted scene state machine.
 
 ## Architecture
