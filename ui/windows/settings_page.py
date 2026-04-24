@@ -190,6 +190,7 @@ class SettingsPage(QWidget):
         self.ollama_url_input = QLineEdit()
         self.ollama_url_input.setPlaceholderText("http://127.0.0.1:11434/v1")
         self.ollama_url_input.setFixedHeight(34)
+        self.ollama_url_input.editingFinished.connect(lambda: self._refresh_ollama_models(silent=True))
         ollama_form.addRow("Base URL:", self.ollama_url_input)
 
         self.ollama_api_key_input = QLineEdit()
@@ -199,9 +200,8 @@ class SettingsPage(QWidget):
 
         ollama_model_layout = QHBoxLayout()
         ollama_model_layout.setContentsMargins(0, 0, 0, 0)
-        self.ollama_model_input = QComboBox()
-        self.ollama_model_input.setEditable(True)
-        self.ollama_model_input.lineEdit().setPlaceholderText("Optional preferred model id")
+        self.ollama_model_input = QLineEdit()
+        self.ollama_model_input.setPlaceholderText("Optional preferred model id")
         self.ollama_model_input.setFixedHeight(34)
         ollama_model_layout.addWidget(self.ollama_model_input)
 
@@ -211,6 +211,12 @@ class SettingsPage(QWidget):
         ollama_model_layout.addWidget(self.ollama_refresh_models_btn)
 
         ollama_form.addRow("Model ID:", ollama_model_layout)
+
+        self.ollama_model_list = QComboBox()
+        self.ollama_model_list.setFixedHeight(34)
+        self.ollama_model_list.addItem("— select an installed model —")
+        self.ollama_model_list.currentIndexChanged.connect(self._on_ollama_model_selected)
+        ollama_form.addRow("Available:", self.ollama_model_list)
 
         self.ollama_timeout_spin = QSpinBox()
         self.ollama_timeout_spin.setRange(0, 3600)
@@ -226,7 +232,7 @@ class SettingsPage(QWidget):
         self.ollama_active_model_label.setVisible(False)
         ollama_form.addRow("Active Model:", self.ollama_active_model_label)
 
-        ollama_test_btn = QPushButton("Test Ollama Connection")
+        ollama_test_btn = QPushButton("Connect & Set Active Model")
         ollama_test_btn.setObjectName("secondary_btn")
         ollama_test_btn.setFixedHeight(32)
         ollama_test_btn.clicked.connect(self._test_ollama)
@@ -441,8 +447,9 @@ class SettingsPage(QWidget):
 
         self.ollama_url_input.setText(str(sm.get("ollama_base_url", "http://127.0.0.1:11434/v1") or ""))
         self.ollama_api_key_input.setText(str(sm.get("ollama_api_key", "") or ""))
-        self.ollama_model_input.setCurrentText(str(sm.get("ollama_model_id", "") or ""))
+        self.ollama_model_input.setText(str(sm.get("ollama_model_id", "") or ""))
         self.ollama_timeout_spin.setValue(int(sm.get("ollama_timeout_seconds", 0) or 0))
+        self._refresh_ollama_models(silent=True)
 
         self.ctx_spin.setValue(int(sm.get("default_context_size", 4096) or 4096))
         self.threads_spin.setValue(int(sm.get("default_threads", 4) or 4))
@@ -483,7 +490,7 @@ class SettingsPage(QWidget):
             "lm_studio_timeout_seconds": self.lm_timeout_spin.value(),
             "ollama_base_url": self.ollama_url_input.text().strip() or "http://127.0.0.1:11434/v1",
             "ollama_api_key": self.ollama_api_key_input.text().strip(),
-            "ollama_model_id": self.ollama_model_input.currentText().strip(),
+            "ollama_model_id": self.ollama_model_input.text().strip(),
             "ollama_timeout_seconds": self.ollama_timeout_spin.value(),
             "default_context_size": self.ctx_spin.value(),
             "default_threads": self.threads_spin.value(),
@@ -771,36 +778,80 @@ class SettingsPage(QWidget):
         from core.ollama_client import OllamaClient, OllamaError
         url = self.ollama_url_input.text().strip() or "http://127.0.0.1:11434/v1"
         api_key = self.ollama_api_key_input.text().strip()
+        preferred_model = self.ollama_model_input.text().strip()
         try:
             client = OllamaClient(base_url=url, api_key=api_key or None)
-            models = client.list_models()
-            names = [str(m.get("id", "")) for m in models[:5]]
+            model_entry = client.resolve_model(preferred_model or None)
+            active_model_id = str(model_entry.get("ollama_model_id", ""))
+
+            # Persist the resolved model and activate the Ollama backend
+            self.settings_manager.update({
+                "ollama_base_url": url,
+                "ollama_api_key": api_key,
+                "ollama_model_id": active_model_id,
+                "ollama_enabled": True,
+                "chat_backend_preference": "ollama",
+            })
+
+            # Sync the UI to reflect the now-active model and backend
+            self.ollama_model_input.setText(active_model_id)
+            idx = self.backend_combo.findText("ollama", Qt.MatchFlag.MatchFixedString)
+            if idx >= 0:
+                self.backend_combo.setCurrentIndex(idx)
+
+            self.ollama_active_model_label.setText(active_model_id)
+            self.ollama_active_model_label.setStyleSheet(
+                "color: #4caf50; font-size: 11px; padding: 4px 0px;"
+            )
+            self.ollama_active_model_label.setVisible(True)
+
+            # Highlight the active model in the dropdown
+            self._refresh_ollama_models(silent=True)
+
+            self.settings_changed.emit()
             QMessageBox.information(
                 self,
                 "Ollama Connected",
-                f"Connection successful!\n\nAvailable models:\n" + "\n".join(names or ["(none loaded)"]),
+                f"Connection successful!\n\nActive model set to:\n{active_model_id}",
             )
         except Exception as exc:
             QMessageBox.warning(self, "Connection Failed", str(exc))
 
-    def _refresh_ollama_models(self) -> None:
+    def _on_ollama_model_selected(self, index: int) -> None:
+        text = self.ollama_model_list.itemText(index)
+        if text and not text.startswith("—"):
+            self.ollama_model_input.setText(text)
+
+    def _refresh_ollama_models(self, silent: bool = False) -> None:
         from core.ollama_client import OllamaClient
         url = self.ollama_url_input.text().strip() or "http://127.0.0.1:11434/v1"
         api_key = self.ollama_api_key_input.text().strip()
         try:
-            client = OllamaClient(base_url=url, api_key=api_key or None)
+            client = OllamaClient(base_url=url, api_key=api_key or None, timeout_seconds=5.0)
             models = client.list_models()
             names = [str(m.get("id", "")) for m in models if m.get("id")]
-            
-            current_text = self.ollama_model_input.currentText()
-            self.ollama_model_input.clear()
-            self.ollama_model_input.addItems(names)
-            
-            if current_text in names:
-                self.ollama_model_input.setCurrentText(current_text)
-            elif names:
-                self.ollama_model_input.setCurrentIndex(0)
-                
-            QMessageBox.information(self, "Models Refreshed", f"Found {len(names)} models.")
+
+            self.ollama_model_list.blockSignals(True)
+            self.ollama_model_list.clear()
+            if names:
+                self.ollama_model_list.addItem("— select an installed model —")
+                self.ollama_model_list.addItems(names)
+                # If the current model ID is in the list, highlight it
+                current = self.ollama_model_input.text().strip()
+                if current in names:
+                    self.ollama_model_list.setCurrentIndex(names.index(current) + 1)
+            else:
+                self.ollama_model_list.addItem("— no models found —")
+            self.ollama_model_list.blockSignals(False)
+
+            if not silent:
+                model_list = "\n".join(names) if names else "(none found)"
+                QMessageBox.information(
+                    self,
+                    "Ollama Models Refreshed",
+                    f"Found {len(names)} model(s):\n\n{model_list}",
+                )
         except Exception as exc:
-            QMessageBox.warning(self, "Refresh Failed", f"Could not fetch models:\n{exc}")
+            logger.debug("Ollama model refresh failed: %s", exc)
+            if not silent:
+                QMessageBox.warning(self, "Refresh Failed", f"Could not fetch models from Ollama:\n{exc}")
