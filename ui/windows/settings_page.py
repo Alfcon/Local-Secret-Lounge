@@ -225,6 +225,9 @@ class SettingsPage(QWidget):
         self.ollama_section.set_content_widget(ollama_widget)
         local_llm_layout.addWidget(self.ollama_section)
 
+        # Make LM Studio and Ollama sections mutually exclusive in the UI
+        self.lm_section.checked.connect(lambda checked: self.ollama_section.set_checked(False) if checked else None)
+        self.ollama_section.checked.connect(lambda checked: self.lm_section.set_checked(False) if checked else None)
 
 
         local_llm_widget = QWidget()
