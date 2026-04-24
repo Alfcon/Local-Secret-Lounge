@@ -233,6 +233,11 @@ class SettingsPage(QWidget):
         layout.addWidget(local_llm_section)
 
 
+        # ── Hardware Advisor ───────────────────────────────────────────
+        from ui.widgets.hardware_advisor_widget import HardwareAdvisorWidget
+        self.hardware_advisor = HardwareAdvisorWidget(model_manager=self.model_manager, parent=self)
+        layout.addWidget(self.hardware_advisor)
+
         # ── Generation Defaults ───────────────────────────────────────────
         gen_section = CollapsibleSection("Default Generation Settings")
         gen_form = QFormLayout()
