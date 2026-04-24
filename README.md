@@ -98,6 +98,11 @@ If using Ollama, you can download and run this HuggingFace model directly using 
 ```bash
 ollama run hf.co/TheDrunkenSnail/Dirty-Muse-Writer-v01-Uncensored-Erotica-NSFW-Q4_K_M-GGUF
 ```
+#### LM Studio Steps To Load The Recommended Model:
+Open LM Studio
+Go to Model search.
+Search for: Dirty-Muse-Writer-v01-Uncensored-Erotica-NSFW-Q4_K_M-GGUF
+Click Download 
 
 ### Windows (using Miniconda)
 
@@ -153,10 +158,12 @@ You must use an external application like LM Studio or Ollama to run the models.
 1. Download and open [LM Studio](https://lmstudio.ai/).
 2. Download your preferred model within LM Studio.
 3. Start the Local Server from the Developer tab.
-4. In Local Secret Lounge, open **Settings**.
-5. Enter the LM Studio base URL (usually `http://127.0.0.1:1234/v1`).
-6. Set the chat backend preference to **LM Studio**.
-7. Optionally set a preferred LM Studio model id, then test the connection.
+4. Click: + Load Model.
+5. Select: Dirty-Muse-Writer-v01-Uncensored-Erotica-NSFW-Q4_K_M-GGUF.
+6. In Local Secret Lounge, open **Settings**.
+7. Enter the LM Studio base URL (usually `http://127.0.0.1:1234/v1`).
+8. Set the chat backend preference to **LM Studio**.
+9. Optionally set a preferred LM Studio model id, then test the connection.
 
 ## Notes
 - The Discover Characters page is the active entry point for starting a new chat.
