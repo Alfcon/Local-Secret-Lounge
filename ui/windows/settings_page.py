@@ -14,7 +14,6 @@ from PySide6.QtCore import Qt, Signal
 
 from core.settings_manager import SettingsManager
 from core.model_manager import ModelManager
-from ui.widgets.system_info_widget import SystemInfoWidget
 from ui.widgets.collapsible_section import CollapsibleSection
 
 logger = logging.getLogger(__name__)
@@ -37,15 +36,6 @@ class SettingsPage(QWidget):
         self._build_ui()
         self._load_values()
 
-        try:
-            self.model_manager.add_default_changed_listener(
-                self._on_default_model_changed
-            )
-        except AttributeError:
-            logger.debug(
-                "ModelManager has no add_default_changed_listener; "
-                "model list will not auto-refresh on default change."
-            )
 
     def _build_ui(self) -> None:
         outer = QVBoxLayout(self)
@@ -236,66 +226,6 @@ class SettingsPage(QWidget):
         local_llm_layout.addWidget(self.ollama_section)
 
 
-        # ── System & Model Advisor ────────────────────────────────────────
-        # Small card above the Local GGUF Models section that shows the
-        # user's CPU / RAM / GPU (VRAM) and recommended settings based on
-        # their hardware and the currently-default model.
-        advisor_section = CollapsibleSection("System & Model Advisor")
-        self.system_info_widget = SystemInfoWidget(model_manager=self.model_manager)
-        advisor_section.set_content_widget(self.system_info_widget)
-        layout.addWidget(advisor_section)
-
-        # ── Local Models ──────────────────────────────────────────────────
-        self.models_section = CollapsibleSection("Local GGUF Models", checkable=True)
-        models_layout = QVBoxLayout()
-        models_layout.setSpacing(10)
-
-        self.models_table = QTableWidget()
-        self.models_table.setColumnCount(3)
-        self.models_table.setHorizontalHeaderLabels(["Name", "Size (MB)", "Status"])
-        self.models_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
-        self.models_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        self.models_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        self.models_table.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.models_table.setSelectionMode(QAbstractItemView.SingleSelection)
-        self.models_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.models_table.verticalHeader().setVisible(False)
-        self.models_table.itemSelectionChanged.connect(self._on_model_selection_changed)
-        self.models_table.setFixedHeight(200)
-        models_layout.addWidget(self.models_table)
-
-        models_btn_row = QHBoxLayout()
-        import_btn = QPushButton("Import GGUF Model…")
-        import_btn.setObjectName("secondary_btn")
-        import_btn.setFixedHeight(32)
-        import_btn.clicked.connect(self._import_model)
-        models_btn_row.addWidget(import_btn)
-
-        self.set_default_model_btn = QPushButton("Set Default")
-        self.set_default_model_btn.setObjectName("secondary_btn")
-        self.set_default_model_btn.setFixedHeight(32)
-        self.set_default_model_btn.setEnabled(False)
-        self.set_default_model_btn.clicked.connect(self._set_selected_model_default)
-        models_btn_row.addWidget(self.set_default_model_btn)
-
-        self.delete_model_btn = QPushButton("Delete")
-        self.delete_model_btn.setObjectName("danger_btn")
-        self.delete_model_btn.setFixedHeight(32)
-        self.delete_model_btn.setEnabled(False)
-        self.delete_model_btn.clicked.connect(self._delete_selected_model)
-        models_btn_row.addWidget(self.delete_model_btn)
-
-        refresh_models_btn = QPushButton("↻ Refresh Models")
-        refresh_models_btn.setObjectName("secondary_btn")
-        refresh_models_btn.setFixedHeight(32)
-        refresh_models_btn.clicked.connect(self._refresh_models)
-        models_btn_row.addWidget(refresh_models_btn)
-        models_layout.addLayout(models_btn_row)
-
-        models_widget = QWidget()
-        models_widget.setLayout(models_layout)
-        self.models_section.set_content_widget(models_widget)
-        local_llm_layout.addWidget(self.models_section)
 
         local_llm_widget = QWidget()
         local_llm_widget.setLayout(local_llm_layout)
@@ -430,7 +360,6 @@ class SettingsPage(QWidget):
         font_size = max(9, min(28, font_size))
         self.font_size_spin.setValue(font_size)
 
-        self._refresh_models()
         self._refresh_backend_status()
 
     def _save_all(self) -> None:
@@ -472,22 +401,6 @@ class SettingsPage(QWidget):
         self.settings_changed.emit()
         QMessageBox.information(self, "Settings Saved", "Settings have been saved successfully.")
 
-    def _on_default_model_changed(self, model_id: str | None = None) -> None:  # noqa: ARG002
-        """Invoked by ModelManager whenever the default local model changes.
-
-        Refreshes the backend status card so the user sees the new model
-        reflected immediately, and repaints the model list so the '[default]'
-        marker moves without a manual Refresh click.
-        """
-        try:
-            self._refresh_backend_status()
-        except Exception as exc:  # noqa: BLE001
-            logger.debug("Backend auto-refresh failed: %s", exc)
-        try:
-            # Re-render list so the [default] marker and advisor follow along.
-            self._refresh_models()
-        except Exception as exc:  # noqa: BLE001
-            logger.debug("Model list auto-refresh failed: %s", exc)
 
     def _refresh_backend_status(self) -> None:
         try:
@@ -541,134 +454,6 @@ class SettingsPage(QWidget):
             logging.getLogger(__name__).debug("LM Studio active model label refresh failed: %s", exc)
             self.lm_active_model_label.setVisible(False)
 
-    def _refresh_models(self) -> None:
-        try:
-            models = self.model_manager.reload_registry()
-        except Exception as exc:
-            logger.error("Model refresh failed: %s", exc)
-            models = []
-            
-        self.models_table.setRowCount(0)
-        self.models_table.setRowCount(len(models))
-        
-        for row, m in enumerate(models):
-            status = str(m.get("status", ""))
-            status_icon = "✓" if status == "available" else "✗"
-            name = m.get('name', 'Unknown')
-            default_mark = " [default]" if m.get("is_default") else ""
-            
-            name_item = QTableWidgetItem(f"{name}{default_mark}")
-            name_item.setData(Qt.UserRole, m.get("id"))
-            
-            size_mb = int(m.get("size_bytes", 0) or 0) // (1024 * 1024)
-            size_item = QTableWidgetItem(f"{size_mb}")
-            size_item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
-            
-            status_item = QTableWidgetItem(status_icon)
-            status_item.setTextAlignment(Qt.AlignCenter)
-            
-            self.models_table.setItem(row, 0, name_item)
-            self.models_table.setItem(row, 1, size_item)
-            self.models_table.setItem(row, 2, status_item)
-
-        self.models_table.clearSelection()
-        self._on_model_selection_changed()
-
-        # Refresh the System & Model Advisor so recommendations reflect the
-        # current default model (or the first available model as a fallback).
-        self._refresh_system_advisor(models)
-
-    def _on_model_selection_changed(self) -> None:
-        has_selection = len(self.models_table.selectedItems()) > 0
-        self.set_default_model_btn.setEnabled(has_selection)
-        self.delete_model_btn.setEnabled(has_selection)
-
-    def _set_selected_model_default(self) -> None:
-        selected = self.models_table.selectedItems()
-        if not selected:
-            return
-            
-        row = selected[0].row()
-        item = self.models_table.item(row, 0)
-        model_id = str(item.data(Qt.UserRole))
-        
-        try:
-            self.model_manager.set_default_model(model_id)
-            self._refresh_models()
-        except Exception as exc:
-            logger.error("Failed to set default model: %s", exc)
-            QMessageBox.warning(self, "Error", f"Failed to set default model:\n{exc}")
-
-    def _delete_selected_model(self) -> None:
-        selected = self.models_table.selectedItems()
-        if not selected:
-            return
-            
-        row = selected[0].row()
-        item = self.models_table.item(row, 0)
-        model_id = str(item.data(Qt.UserRole))
-        
-        reply = QMessageBox.question(
-            self,
-            "Delete Model",
-            f"Are you sure you want to delete the model:\n{item.text()}?",
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.No,
-        )
-        
-        if reply == QMessageBox.Yes:
-            try:
-                self.model_manager.remove_model(model_id, delete_file=True, allow_external_delete=True)
-                self._refresh_models()
-            except Exception as exc:
-                logger.error("Failed to delete model: %s", exc)
-                QMessageBox.warning(self, "Error", f"Failed to delete model:\n{exc}")
-
-    def _refresh_system_advisor(self, models: list[dict[str, Any]] | None = None) -> None:
-        """Push the default model's id into the System & Model Advisor."""
-        if getattr(self, "system_info_widget", None) is None:
-            return
-        if models is None:
-            try:
-                models = self.model_manager.list_models()
-            except Exception:
-                models = []
-
-        target_id: str | None = None
-        for m in models or []:
-            if m.get("is_default") and str(m.get("status", "")) == "available":
-                target_id = str(m.get("id")) if m.get("id") else None
-                break
-        if target_id is None:
-            for m in models or []:
-                if str(m.get("status", "")) == "available" and m.get("id"):
-                    target_id = str(m.get("id"))
-                    break
-
-        try:
-            self.system_info_widget.update_for_model(target_id)
-        except Exception as exc:
-            logger.warning("System advisor refresh failed: %s", exc)
-
-    def _import_model(self) -> None:
-        path, _ = QFileDialog.getOpenFileName(
-            self, "Select GGUF Model File", "", "GGUF Models (*.gguf)"
-        )
-        if not path:
-            return
-        from pathlib import Path
-        display_name = Path(path).stem
-        try:
-            self.model_manager.import_local_model(
-                source_path=path,
-                display_name=display_name,
-                copy_to_managed_storage=False,
-                set_default=True,
-            )
-            self._refresh_models()
-            QMessageBox.information(self, "Model Imported", f"'{display_name}' was imported and set as default.")
-        except Exception as exc:
-            QMessageBox.warning(self, "Import Failed", str(exc))
 
     def _test_lm_studio(self) -> None:
         from core.lm_studio_client import LMStudioClient, LMStudioError
@@ -696,19 +481,16 @@ class SettingsPage(QWidget):
             model_entry = client.resolve_model(preferred_model or None)
             active_model_id = str(model_entry.get("ollama_model_id", ""))
 
-            # Persist the resolved model and activate the Ollama backend
+            # Persist the resolved model
             self.settings_manager.update({
                 "ollama_base_url": url,
                 "ollama_api_key": api_key,
                 "ollama_model_id": active_model_id,
                 "ollama_enabled": True,
-                "chat_backend_preference": "ollama",
             })
 
-            # Sync the UI to reflect the now-active model and backend
+            # Sync the UI to reflect the now-active model
             self.ollama_model_input.setText(active_model_id)
-            self._current_backend = "ollama"
-            self._on_backend_changed("ollama")
 
             self.ollama_active_model_label.setText(active_model_id)
             self.ollama_active_model_label.setStyleSheet(
