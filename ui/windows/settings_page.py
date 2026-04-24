@@ -390,6 +390,13 @@ class SettingsPage(QWidget):
     def _save_all(self) -> None:
         sm = self.settings_manager
         new_font_size = int(self.font_size_spin.value())
+        
+        backend_preference = "local"
+        if self.lm_section.is_checked():
+            backend_preference = "lm_studio"
+        elif self.ollama_section.is_checked():
+            backend_preference = "ollama"
+
         sm.update({
             "user_name": self.user_name_input.text().strip(),
             "user_sex": self.user_sex_combo.currentText(),
@@ -403,6 +410,7 @@ class SettingsPage(QWidget):
             "ollama_api_key": self.ollama_api_key_input.text().strip(),
             "ollama_model_id": self.ollama_model_input.text().strip(),
             "ollama_timeout_seconds": self.ollama_timeout_spin.value(),
+            "chat_backend_preference": backend_preference,
             "default_context_size": self.ctx_spin.value(),
             "default_threads": self.threads_spin.value(),
             "default_max_tokens": self.max_tokens_spin.value(),
