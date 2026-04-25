@@ -1081,18 +1081,7 @@ class ChatWindow(QMainWindow):
                 f'The default story location for this chat is {story_location}. Keep environmental details broadly consistent with that location unless the user clearly moves the scene somewhere else.'
             )
         starting_scenario = self._personalize_text(str(self.character.get('starting_scenario', '')).strip())
-        # Only embed the opening scenario in the system prompt when it is NOT already
-        # present as a 'scene' message in the conversation history. Otherwise the
-        # greeting/scenario gets fed to the model twice (once here, once as an
-        # assistant/scene turn) and small local models will echo it verbatim on
-        # later turns.
-        scenario_in_history = any(
-            str(m.get('role', '')).strip() == 'scene'
-            and str(m.get('format', '')).strip() == 'scenario'
-            for m in self.messages
-            if isinstance(m, dict)
-        )
-        if starting_scenario and not scenario_in_history:
+        if starting_scenario:
             scene_lines.append(f'Opening scene context: {starting_scenario}')
         if len(self.participants) > 1:
             scene_lines.append(
@@ -1471,12 +1460,12 @@ class ChatWindow(QMainWindow):
                 used,
                 budget,
             )
-            return [], used, budget
 
         for message in reversed(conversation):
             candidate = [system_message, message, *selected]
             candidate_tokens = self._count_request_tokens(candidate)
-            if candidate_tokens > budget:
+            # Always ensure at least one message is selected so the chat doesn't restart
+            if candidate_tokens > budget and selected:
                 break
             selected.insert(0, message)
             used = candidate_tokens
