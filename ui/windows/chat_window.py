@@ -264,11 +264,9 @@ class ChatWindow(QMainWindow):
         self.messages: list[dict[str, Any]] = []
         self.user_display_name = self._resolve_user_display_name(chat_session)
         self.participants: list[dict[str, Any]] = []
-        self.story_location_city = str(self.settings_manager.get('story_location_city', '') or '').strip()
-        self.story_location_country = str(self.settings_manager.get('story_location_country', '') or '').strip()
         self.rolling_summary = ''
         self.rolling_summary_message_count = 0
-        self.scene_state_machine = SceneStateMachine(default_location=self._story_location_text())
+        self.scene_state_machine = SceneStateMachine(default_location=None)
         self._streaming_base_html = ''
         self._streaming_preview_text = ''
 
@@ -520,13 +518,6 @@ class ChatWindow(QMainWindow):
         else:
             normalized = [primary] + [item for item in normalized if str(item.get('id', '')).strip() != primary_id]
         return normalized
-
-    def _story_location_text(self) -> str:
-        city = self.story_location_city.strip()
-        country = self.story_location_country.strip()
-        if city and country:
-            return f'{city}, {country}'
-        return city or country
 
     def _speaker_profile_text(self, speaker: str) -> str:
         target = str(speaker or '').strip().casefold()
@@ -1075,11 +1066,6 @@ class ChatWindow(QMainWindow):
             f'Current focal character: {character_name}.',
             "Do not decide the user's actions, dialogue, feelings, or internal thoughts for them."
         ]
-        story_location = self._story_location_text()
-        if story_location:
-            scene_lines.append(
-                f'The default story location for this chat is {story_location}. Keep environmental details broadly consistent with that location unless the user clearly moves the scene somewhere else.'
-            )
         starting_scenario = self._personalize_text(str(self.character.get('starting_scenario', '')).strip())
         if starting_scenario:
             scene_lines.append(f'Opening scene context: {starting_scenario}')
@@ -1174,15 +1160,13 @@ class ChatWindow(QMainWindow):
             )
 
         self.chat_session['user_name'] = self.user_display_name
-        self.story_location_city = str(self.chat_session.get('story_location_city', self.story_location_city) or '').strip()
-        self.story_location_country = str(self.chat_session.get('story_location_country', self.story_location_country) or '').strip()
         self.character = dict(self.chat_session.get('character', self.character))
         self.participants = self._normalize_participants(self.chat_session.get('participants', [self.character]))
         self.setWindowTitle(self.chat_session.get('title', f"Chat with {self.character.get('name', 'Character')}"))
 
         self.rolling_summary = str(self.chat_session.get('rolling_summary', '') or '').strip()
         self.rolling_summary_message_count = max(0, int(self.chat_session.get('rolling_summary_message_count', 0) or 0))
-        self.scene_state_machine = SceneStateMachine(self.chat_session.get('scene_state'), default_location=self._story_location_text())
+        self.scene_state_machine = SceneStateMachine(self.chat_session.get('scene_state'), default_location=None)
         self.scene_state_machine.set_participants(self.participants)
         self.memory_store.upsert_character_context(str(self.chat_session.get('id', '')).strip(), self.participants)
 
@@ -1307,8 +1291,6 @@ class ChatWindow(QMainWindow):
         self.chat_session['model'] = dict(self.model_entry)
         self.chat_session['character'] = dict(self.character)
         self.chat_session['participants'] = [dict(item) for item in self.participants]
-        self.chat_session['story_location_city'] = self.story_location_city
-        self.chat_session['story_location_country'] = self.story_location_country
         self.chat_session['story_mode'] = 'group' if len(self.participants) > 1 else 'single'
         self.chat_session['rolling_summary'] = self.rolling_summary
         self.chat_session['rolling_summary_message_count'] = self.rolling_summary_message_count

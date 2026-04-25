@@ -8,70 +8,13 @@ from typing import Any
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QListWidget, QListWidgetItem, QFrame, QLineEdit,
-    QMessageBox, QInputDialog, QFileDialog, QTextEdit, QDialog,
-    QDialogButtonBox, QSizePolicy,
+    QMessageBox, QInputDialog, QFileDialog, QSizePolicy,
 )
 from PySide6.QtCore import Qt, Signal
 
 from core.chat_storage import ChatStorage
 
 logger = logging.getLogger(__name__)
-
-
-# ── Chat Preview Dialog (last 10 messages) ───────────────────────────────────
-
-class ChatPreviewDialog(QDialog):
-    """Shows the last 10 messages of a chat as they appear in the conversation."""
-
-    def __init__(self, chat: dict[str, Any], chat_storage: ChatStorage, parent: QWidget | None = None) -> None:
-        super().__init__(parent)
-        self.setWindowTitle(f"Preview — {chat.get('title', 'Chat')}")
-        self.setMinimumSize(640, 520)
-        self.setModal(True)
-        self._build_ui(chat, chat_storage)
-
-    def _build_ui(self, chat: dict[str, Any], chat_storage: ChatStorage) -> None:
-        layout = QVBoxLayout(self)
-        layout.setSpacing(10)
-        layout.setContentsMargins(20, 20, 20, 20)
-
-        heading = QLabel(f"Last 10 messages — {chat.get('title', 'Chat')}")
-        heading.setStyleSheet("font-weight: bold; font-size: 13px; color: #ffffff;")
-        layout.addWidget(heading)
-
-        self.text_area = QTextEdit()
-        self.text_area.setReadOnly(True)
-        self.text_area.setStyleSheet(
-            "background-color: #12122a; color: #f0f0ff; "
-            "border: 1px solid #3a3a5a; border-radius: 6px; font-size: 12px;"
-        )
-        layout.addWidget(self.text_area)
-
-        btns = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
-        btns.rejected.connect(self.reject)
-        layout.addWidget(btns)
-
-        # Load last 10 messages
-        try:
-            full_chat = chat_storage.load_chat(str(chat.get("id", "")))
-            messages = [
-                m for m in full_chat.get("messages", [])
-                if m.get("role") != "system"
-            ]
-            last_10 = messages[-10:]
-            char_name = str(full_chat.get("character", {}).get("name", "Character"))
-            user_name = str(full_chat.get("user_name", "") or "You").strip() or "You"
-            lines = []
-            for msg in last_10:
-                role = str(msg.get("role", "user"))
-                speaker = str(msg.get("speaker", "")).strip()
-                if not speaker:
-                    speaker = user_name if role == "user" else char_name
-                content = str(msg.get("content", "")).strip()
-                lines.append(f"[{speaker}]\n{content}\n")
-            self.text_area.setPlainText("\n".join(lines) if lines else "No messages yet.")
-        except Exception as exc:
-            self.text_area.setPlainText(f"Could not load messages: {exc}")
 
 
 # ── Chat List Item ────────────────────────────────────────────────────────────
@@ -199,13 +142,6 @@ class MyChatsPage(QWidget):
         self.rename_btn.clicked.connect(self._on_rename)
         action_layout.addWidget(self.rename_btn)
 
-        self.preview_btn = QPushButton("👁  Edit")
-        self.preview_btn.setObjectName("secondary_btn")
-        self.preview_btn.setFixedHeight(34)
-        self.preview_btn.setEnabled(False)
-        self.preview_btn.clicked.connect(self._on_preview)
-        action_layout.addWidget(self.preview_btn)
-
         self.export_btn = QPushButton("⬇  Export")
         self.export_btn.setObjectName("secondary_btn")
         self.export_btn.setFixedHeight(34)
@@ -272,8 +208,7 @@ class MyChatsPage(QWidget):
             self.chat_list.setItemWidget(item, widget)
 
     def _set_buttons_enabled(self, enabled: bool) -> None:
-        for btn in (self.open_btn, self.rename_btn, self.preview_btn,
-                    self.export_btn, self.delete_btn):
+        for btn in (self.open_btn, self.rename_btn, self.export_btn, self.delete_btn):
             btn.setEnabled(enabled)
 
     def _on_selection_changed(self, row: int) -> None:
@@ -308,17 +243,6 @@ class MyChatsPage(QWidget):
                 self.refresh()
             except Exception as exc:
                 QMessageBox.warning(self, "Rename Failed", str(exc))
-
-    def _on_preview(self) -> None:
-        """Open preview dialog showing the last 10 messages."""
-        item = self.chat_list.currentItem()
-        if not item:
-            return
-        chat = item.data(Qt.ItemDataRole.UserRole)
-        if not chat:
-            return
-        dlg = ChatPreviewDialog(chat, self.chat_storage, parent=self)
-        dlg.exec()
 
     def _on_export(self) -> None:
         """Export the selected chat as a .md file."""

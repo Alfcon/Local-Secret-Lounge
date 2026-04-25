@@ -34,8 +34,6 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     'ollama_api_key': '',
     'ollama_model_id': '',
     'ollama_timeout_seconds': 300,
-    'story_location_city': '',
-    'story_location_country': '',
     'ui_font_size': 13,
     'developer_mode': False,
 }

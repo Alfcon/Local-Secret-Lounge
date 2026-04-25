@@ -90,27 +90,6 @@ class SettingsPage(QWidget):
         profile_section.set_content_widget(profile_widget)
         layout.addWidget(profile_section)
 
-        # ── Story / Scene context ─────────────────────────────────────────
-        story_section = CollapsibleSection("Story Location (Optional)")
-        story_form = QFormLayout()
-        story_form.setHorizontalSpacing(24)
-        story_form.setVerticalSpacing(12)
-
-        self.city_input = QLineEdit()
-        self.city_input.setPlaceholderText("e.g. London")
-        self.city_input.setFixedHeight(34)
-        story_form.addRow("City:", self.city_input)
-
-        self.country_input = QLineEdit()
-        self.country_input.setPlaceholderText("e.g. United Kingdom")
-        self.country_input.setFixedHeight(34)
-        story_form.addRow("Country:", self.country_input)
-
-        story_widget = QWidget()
-        story_widget.setLayout(story_form)
-        story_section.set_content_widget(story_widget)
-        layout.addWidget(story_section)
-
         # ── Local LLM Server ──────────────────────────────────────────────
         local_llm_section = CollapsibleSection("Local LLM Server")
         local_llm_layout = QVBoxLayout()
@@ -355,9 +334,6 @@ class SettingsPage(QWidget):
         if idx >= 0:
             self.user_sex_combo.setCurrentIndex(idx)
 
-        self.city_input.setText(str(sm.get("story_location_city", "") or ""))
-        self.country_input.setText(str(sm.get("story_location_country", "") or ""))
-
         self.lm_url_input.setText(str(sm.get("lm_studio_base_url", "http://127.0.0.1:1234/v1") or ""))
         self.lm_api_key_input.setText(str(sm.get("lm_studio_api_key", "") or ""))
         self.lm_model_input.setText(str(sm.get("lm_studio_model_id", "") or ""))
@@ -405,8 +381,6 @@ class SettingsPage(QWidget):
         sm.update({
             "user_name": self.user_name_input.text().strip(),
             "user_sex": self.user_sex_combo.currentText(),
-            "story_location_city": self.city_input.text().strip(),
-            "story_location_country": self.country_input.text().strip(),
             "lm_studio_base_url": self.lm_url_input.text().strip() or "http://127.0.0.1:1234/v1",
             "lm_studio_api_key": self.lm_api_key_input.text().strip(),
             "lm_studio_model_id": self.lm_model_input.text().strip(),
