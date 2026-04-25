@@ -332,6 +332,11 @@ class SettingsPage(QWidget):
         self.update_app_btn.clicked.connect(self._pull_latest_updates)
         updates_form.addRow("Update App:", self.update_app_btn)
 
+        self.about_app_btn = QPushButton("About Application")
+        self.about_app_btn.setFixedHeight(34)
+        self.about_app_btn.clicked.connect(self._show_about_dialog)
+        updates_form.addRow("About:", self.about_app_btn)
+
         updates_widget = QWidget()
         updates_widget.setLayout(updates_form)
         updates_section.set_content_widget(updates_widget)
@@ -623,4 +628,15 @@ class SettingsPage(QWidget):
                 "Update Error",
                 f"An unexpected error occurred:\n\n{exc}"
             )
+
+    def _show_about_dialog(self) -> None:
+        about_text = (
+            "<h3>Local Secret Lounge</h3>"
+            "<p><b>Version 1.0.0</b></p>"
+            "<p>Local Secret Lounge is an immersive roleplay chat application designed "
+            "to connect you with AI characters locally. It features advanced memory "
+            "retrieval, narrative scene tracking, persistent multi-user chats, and "
+            "real-time streaming powered by your local LLM server (LM Studio or Ollama).</p>"
+        )
+        QMessageBox.about(self, "About Local Secret Lounge", about_text)
 
