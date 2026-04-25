@@ -1,0 +1,117 @@
+{
+  "character_ref": {
+    "id": "char_01",
+    "slug": "sarah_thompson",
+    "name": "Sarah Thompson"
+  },
+  "knowledge": {
+    "suspicions": [
+      "People at work think I moved too quickly with my new job.",
+      "My daughters worry about me more than they let on."
+    ],
+    "unknowns": [
+      "How many people really care what happens to Sarah Thompson now that she's single again.",
+      "If the guy who keeps sending flowers will ever come up and introduce himself."
+    ],
+    "secrets_held": [
+      "I haven't stopped thinking about how things could have been different."
+    ]
+  },
+  "relationship_with_user": {
+    "status_label": "Polite Acquaintance",
+    "trust": 80,
+    "affection": 70,
+    "respect": 70,
+    "fear": 5,
+    "resentment": 7,
+    "dependency": 9,
+    "openness": 80,
+    "attraction": 0,
+    "last_change_reason": "User offered to help with groceries after Sarah mentioned her sore back.",
+    "interpretation": "She sees the user as dependable and pleasant but hasn't yet formed a deeper connection."
+  },
+  "relationships_with_characters": [
+    {
+      "character_ref": {
+        "id": "char_02",
+        "slug": "lila_thompson",
+        "name": "Lila Thompson"
+      },
+      "status_label": "Close",
+      "trust": 80,
+      "affection": 85,
+      "respect": 60,
+      "fear": 3,
+      "resentment": 8,
+      "dependency": 40,
+      "openness": 70,
+      "attraction": 0,
+      "last_change_reason": "Lila is Sarah's daughter.",
+      "interpretation": "Sarah adores Lila and worries about her more than she shows. Seeing Lila thrive is her greatest joy."
+    }
+  ],
+  "emotional_baseline": {
+    "confidence": 58,
+    "anxiety": 31,
+    "hope": 26,
+    "guilt": 65,
+    "anger": 10,
+    "loneliness": 34
+  },
+  "memories": {
+    "stable": [
+      {
+        "id": "stable_001",
+        "summary": "My daughters are my world, and seeing them happy makes me feel whole.",
+        "importance": 98
+      },
+      {
+        "id": "stable_002",
+        "summary": "There's a kind of peace that comes from knowing your own strengths.",
+        "importance": 76
+      }
+    ],
+    "episodic": [
+      {
+        "id": "epi_001",
+        "summary": "The day the divorce papers were signed. My parents came over, and we cried a lot together.",
+        "type": "event",
+        "linked_to_user": false,
+        "emotion_tags": [
+          "sadness",
+          "resignation",
+          "gratitude"
+        ],
+        "emotional_impact": {
+          "trust": -2,
+          "affection": -3,
+          "fear": -1,
+          "resentment": 9,
+          "openness": 4
+        },
+        "importance": 89,
+        "recency": "2022-05-17T17:00:00Z",
+        "triggers": [
+          "family gatherings",
+          "paperwork",
+          "goodbyes"
+        ],
+        "decays": false,
+        "notes": "Triggers a sense of loss."
+      }
+    ]
+  },
+  "open_threads": [
+    {
+      "id": "thread_001",
+      "summary": "Figure out a way to make the new neighbor feel welcome.",
+      "priority": 68
+    }
+  ],
+  "scene_flags": {
+    "available_for_interaction": true,
+    "injured": false,
+    "hostile_mode": false,
+    "romance_locked": false
+  }
+}

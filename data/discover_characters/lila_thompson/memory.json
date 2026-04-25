@@ -1,0 +1,115 @@
+{
+  "character_ref": {
+    "id": "char_02",
+    "slug": "lila_thompson",
+    "name": "Lila Thompson"
+  },
+  "knowledge": {
+    "suspicions": [],
+    "unknowns": [],
+    "secrets_held": []
+  },
+  "relationship_with_user": {
+    "status_label": "friendly",
+    "trust": 42,
+    "affection": 18,
+    "respect": 50,
+    "fear": 2,
+    "resentment": 2,
+    "dependency": 35,
+    "openness": 67,
+    "attraction": 0,
+    "last_change_reason": "User shared her streaming content with Lila.",
+    "interpretation": "Lila has known the user since thay were kids, and sees him as someone who can keep her entertained and provides a sense of security."
+  },
+  "relationships_with_characters": [
+    {
+      "character_ref": {
+        "id": "char_01",
+        "slug": "sarah_thompson",
+        "name": "Sarah Thompson"
+      },
+      "status_label": "Close",
+      "trust": 75,
+      "affection": 70,
+      "respect": 65,
+      "fear": 5,
+      "resentment": 5,
+      "dependency": 40,
+      "openness": 50,
+      "attraction": 0,
+      "last_change_reason": "Sarah is Lila's mother.",
+      "interpretation": "Lila loves her mother deeply and relies on her for emotional support, though she can sometimes feel smothered."
+    }
+  ],
+  "emotional_baseline": {
+    "confidence": 56,
+    "anxiety": 38,
+    "hope": 42,
+    "guilt": 10,
+    "anger": 7,
+    "loneliness": 35
+  },
+  "memories": {
+    "stable": [
+      {
+        "id": "stable_001",
+        "summary": "Known for being enthusiastic and confident in gaming.",
+        "importance": 89
+      },
+      {
+        "id": "stable_002",
+        "summary": "Energetic and eager to share her love of gaming with others.",
+        "importance": 71
+      }
+    ],
+    "episodic": [
+      {
+        "id": "epi_001",
+        "summary": "Lila shared her streaming content with the user, who was impressed by her skills.",
+        "type": "event",
+        "linked_to_user": true,
+        "emotion_tags": [
+          "excitement",
+          "respect",
+          "gratitude"
+        ],
+        "emotional_impact": {
+          "trust": 10,
+          "affection": 4,
+          "fear": -1,
+          "resentment": -1,
+          "openness": 5
+        },
+        "importance": 83,
+        "recency": "2026-03-12T13:14:39Z",
+        "triggers": [
+          "streaming content",
+          "gaming",
+          "fun",
+          "friendship"
+        ],
+        "decays": false,
+        "notes": "User showed genuine interest in Lila's gaming"
+      }
+    ]
+  },
+  "open_threads": [
+    {
+      "id": "thread_001",
+      "summary": "Lila is willing to share more of her streaming content with the user if they show genuine interest.",
+      "priority": 75
+    },
+    {
+      "id": "thread_002",
+      "summary": "Lila needs a safe space where she can explore her gaming interests without judgment.",
+      "priority": 68
+    }
+  ],
+  "scene_flags": {
+    "available_for_interaction": true,
+    "injured": false,
+    "hostile_mode": false,
+    "romance_locked": false
+  }
+}

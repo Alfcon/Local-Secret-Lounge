@@ -1,7 +1,7 @@
 Character rules files created in each discover character folder:
 
 - data/discover_characters/jane_reed/character_rules_jane.txt
-- data/discover_characters/jane_reed/character_rules_julie.txt
+- data/characters/julie_jones/character_rules_julie.txt
 - data/discover_characters/lila_thompson/character_rules_lila.txt
 - data/discover_characters/maya_johnson/character_rules_maya.txt
 - data/discover_characters/sarah_thompson/character_rules_sarah.txt
