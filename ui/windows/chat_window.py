@@ -1892,13 +1892,17 @@ class ChatWindow(QMainWindow):
             return
         self._streaming_preview_text = partial_text
         speaker = self._detect_partial_speaker(partial_text)
+        self.transcript.setUpdatesEnabled(False)
         self.transcript.setHtml(self._streaming_base_html + self._streaming_block_html(speaker, partial_text))
+        self.transcript.setUpdatesEnabled(True)
         scrollbar = self.transcript.verticalScrollBar()
         scrollbar.setValue(scrollbar.maximum())
 
     def _clear_streaming_preview(self) -> None:
         if self.transcript is not None and self._streaming_preview_text:
+            self.transcript.setUpdatesEnabled(False)
             self.transcript.setHtml(self._streaming_base_html)
+            self.transcript.setUpdatesEnabled(True)
             scrollbar = self.transcript.verticalScrollBar()
             scrollbar.setValue(scrollbar.maximum())
         self._streaming_preview_text = ''
